@@ -17,7 +17,7 @@ const Register = (props) => {
         bornOn: "19980919",
         username: "mulaKingg",
         email: "frontendtest",
-        password: "jebotebog",
+        password: "test",
       })
       .then((res) => {
         console.log(res.status);

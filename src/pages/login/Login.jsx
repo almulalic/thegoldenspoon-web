@@ -3,6 +3,7 @@ import { InputText } from "primereact/inputtext";
 import identities from "../../api/identities";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
+import UserData from "../../components/userData/UserData";
 
 const Login = (props) => {
   const [emailInput, setEmailInput] = useState("");
@@ -17,6 +18,12 @@ const Login = (props) => {
 
   return (
     <div>
+      <UserData
+        name={"Frejya"}
+        surname={"nema"}
+        zanimanje={"budi emu citavu noc"}
+      />
+
       <InputText
         label="email"
         value={emailInput}
