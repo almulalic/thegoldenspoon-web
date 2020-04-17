@@ -1,27 +1,23 @@
 import React, { useState } from "react";
 import { Link, withRouter, useHistory } from "react-router-dom";
+import "./Navbar.css";
+import { InputText } from "primereact/inputtext";
 
 const Navbar = (props) => {
-  const [nameInput, setNameInput] = useState("");
-  let history = useHistory();
-  const logOut = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("token");
-    history.push("/");
-  };
   return (
-    <div>
-      <Link to="/login">LOGIN</Link>
-      <br />
-      <Link to="/register">REGISTER</Link>
-      <br />
-      <a
-        onClick={(e) => {
-          logOut(e);
-        }}
-      >
-        LOGOUT
-      </a>
+    <div className="NavbarContainer">
+      <div className="Logo"></div>
+      <div className="SearchBar">
+        <input type="text" size="50" placeholder="Search user..." />
+      </div>
+      <div className="UserProfile">
+        <img
+          className="icon"
+          src="https://cdn2.iconfinder.com/data/icons/avatar-profile/458/avatar_contact_starwars_user_default_mickey-512.png"
+          alt=""
+        />
+        Emily Disney
+      </div>
     </div>
   );
 };

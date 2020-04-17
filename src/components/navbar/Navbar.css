@@ -1,0 +1,28 @@
+.NavbarContainer {
+  font-family: "Dancing Script", cursive;
+  font-size: 20px;
+  color: #e8eff5;
+  background-color: #475562;
+  padding: 10px;
+  display: flex;
+}
+.Logo {
+  flex: 1;
+}
+.SearchBar {
+  flex: 2;
+}
+.SearchBar input[type="text"] {
+  float: left;
+  padding: 3px;
+  border-radius: 8px;
+  font-size: 17px;
+}
+.UserProfile {
+  flex: 1;
+  display: inline-block;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+}

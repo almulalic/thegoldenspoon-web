@@ -1,0 +1,20 @@
+#column {
+  position: relative;
+  font-family: "Dancing Script";
+  font-size: 20px;
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+.left {
+  margin-top: 8%;
+}
+.login,
+.register {
+  padding: 10px;
+}
+.right {
+  margin-top: 8%;
+  display: flexbox;
+  align-items: center;
+}
