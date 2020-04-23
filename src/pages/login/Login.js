@@ -5,28 +5,47 @@ import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import "./Login.css";
 import { Dropdown } from "primereact/dropdown";
+import { InputMask } from "primereact/inputmask";
 
 const Login = (props) => {
-  const [emailInput, setEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
+  const [loginEmailInput, setLoginEmailInput] = useState("");
+  const [registerEmailInput, setRegisterEmailInput] = useState("");
+  const [loginPasswordInput, setLoginPasswordInput] = useState("");
+  const [registerPasswordInput, setRegisterPasswordInput] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [usernameInput, setUsernameInput] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-
-  const handleInput = (val) => {
-    console.log(val);
-  };
+  const [nameInput, setNameInput] = useState("");
+  const [surnameInput, setSurnameInput] = useState("");
+  const [adressInput, setAdressInput] = useState("");
+  const [dateInput, setDateInput] = useState("");
 
   const login = (email, password) => {
     identities.login({ email: email, password: password }).then((res) => {});
   };
-
-  const register = (email, username, password) => {
+  const register = (
+    email,
+    name,
+    surname,
+    username,
+    password,
+    adress,
+    date,
+    gender,
+    city
+  ) => {
     identities
       .register({
+        name: name,
+        surname: surname,
+        date: date,
         email: email,
         username: username,
         password: password,
+        gender: gender,
+        city: city,
+        adress: adress,
       })
       .then((res) => {});
   };
@@ -45,30 +64,34 @@ const Login = (props) => {
   ];
 
   return (
-    <div>
+    <div className="body">
       <div id="column" className="left">
         <h1>Welcome back!</h1>
         <h1>Please Login</h1>
         <div className="login">
           <InputText
+            placeholder="Email"
             label="email"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
+            value={loginEmailInput}
+            onChange={(e) => setLoginEmailInput(e.target.value)}
+            size="50"
           />
         </div>
         <div className="login">
           <Password
+            placeholder="Password"
             label="password"
-            value={passwordInput}
-            onChange={(e) => setPasswordInput(e.target.value)}
+            value={loginPasswordInput}
+            onChange={(e) => setLoginPasswordInput(e.target.value)}
+            size="50"
           />
         </div>
         <div className="login">
           <Button
-            className="p-button-raised p-button-rounded"
+            className="button"
             label="Login"
             onClick={() => {
-              login(emailInput, passwordInput);
+              login(loginEmailInput, loginPasswordInput);
             }}
           />
         </div>
@@ -80,52 +103,118 @@ const Login = (props) => {
         <h1>Are you new? Come on in</h1>
         <div className="register">
           <InputText
-            placeholder="Email "
-            label="email"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
+            id="names"
+            placeholder="Name"
+            label="name"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            size="16"
           />
+          <InputText
+            id="names"
+            placeholder="Surname"
+            label="suename"
+            value={surnameInput}
+            onChangemailInpute={(e) => setSurnameInput(e.target.value)}
+            size="16"
+          />
+        </div>
+
+        <div className="register">
+          <InputMask
+            mask="99/99/9999"
+            placeholder="Birth date (dd/mm/yyyy)"
+            label="date"
+            value={dateInput}
+            onChange={(e) => setDateInput({ value: e.value })}
+            size="40"
+          ></InputMask>
         </div>
         <div className="register">
           <InputText
-            placeholder="Username "
+            id="names"
+            placeholder="Email"
+            label="email"
+            value={registerEmailInput}
+            onChange={(e) => setRegisterEmailInput(e.target.value)}
+            size="16"
+          />
+          <InputText
+            id="names"
+            placeholder="Username"
             label="username"
             value={usernameInput}
             onChange={(e) => setUsernameInput(e.target.value)}
+            size="16"
           />
         </div>
         <div className="register">
           <Password
+            id="names"
             placeholder="Password "
             label="password"
-            value={passwordInput}
-            onChange={(e) => setPasswordInput(e.value)}
+            value={registerPasswordInput}
+            onChange={(e) => setRegisterPasswordInput(e.target.value)}
+            size="16"
+          />
+          <Password
+            id="names"
+            placeholder="Confirm assword "
+            label="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            size="16"
+          />
+        </div>
+        <div className="register">
+          <InputText
+            placeholder="Adress"
+            label="adress"
+            value={adressInput}
+            onChange={(e) => setAdressInput(e.target.value)}
+            size="40"
           />
         </div>
         <div className="register">
           <Dropdown
+            className="dropdown"
+            placeholder="Set gender"
+            label="gender"
             value={selectedGender}
             options={genderSelectItems}
             onChange={(e) => {
-              setSelectedGender(e.value);
+              setSelectedGender({ gender: e.value });
             }}
-            placeholder="Set gender"
           />
+
           <Dropdown
+            className="dropdown"
+            placeholder="Select a City"
+            label="city"
             value={selectedCity}
             options={citiesSelectItems}
             onChange={(e) => {
-              setSelectedCity(e.value);
+              setSelectedCity({ city: e.value });
             }}
-            placeholder="Select a City"
           />
         </div>
+
         <div className="register">
           <Button
-            className="p-button-raised p-button-rounded"
-            label="Login"
+            className="button"
+            label="Register"
             onClick={() => {
-              login(emailInput, passwordInput);
+              login(
+                registerEmailInput,
+                registerPasswordInput,
+                usernameInput,
+                selectedGender,
+                selectedCity,
+                nameInput,
+                surnameInput,
+                adressInput,
+                dateInput
+              );
             }}
           />
         </div>

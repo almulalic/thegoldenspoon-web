@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #column {
   position: relative;
   font-family: "Dancing Script";
@@ -18,3 +19,45 @@
   display: flexbox;
   align-items: center;
 }
+=======
+.body {
+  background-color: #36096d;
+  background-image: linear-gradient(315deg, #36096d 0%, #37d5d6 74%);
+}
+#column {
+  position: relative;
+  font-family: "Dancing Script";
+  font-size: 20px;
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+.left {
+  margin-top: 8%;
+}
+.login,
+.register {
+  padding: 10px;
+}
+.right {
+  margin-top: 6%;
+  align-items: center;
+}
+#names {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.button {
+  width: 160px;
+  border-radius: 20px;
+  background-color: #009ffd;
+}
+.dropdown {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+.date {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+>>>>>>> 8aa39232a1bb06ae5e84a6e76b4112021011f429
