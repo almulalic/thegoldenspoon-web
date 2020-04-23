@@ -1,0 +1,68 @@
+$navigation-width: 0px !default;
+
+////
+/// Layout
+/// @group foundation/layout
+////
+
+$layout-width-data: (
+  primary: (
+    min: rem(540px),
+    max: rem(962px)
+  ),
+  secondary: (
+    min: rem(230px),
+    max: rem(300px)
+  ),
+  one-half-width: (
+    base: rem(435px)
+  ),
+  one-third-width: (
+    base: rem(240px)
+  ),
+  nav: (
+    base: rem($navigation-width)
+  ),
+  page-with-nav: (
+    base: rem(860px)
+  ),
+  page-content: (
+    not-condensed: rem(680px),
+    partially-condensed: rem(450px)
+  ),
+  inner-spacing: (
+    base: spacing()
+  ),
+  outer-spacing: (
+    min: spacing(),
+    max: spacing(large)
+  )
+);
+
+/// Returns the widths of the specified column.
+/// @param {String} $name - The column name.
+/// @return {Number} The width for the column.
+
+@function layout-width($name, $value: base) {
+  $fetched-value: map-get(map-get($layout-width-data, $name), $value);
+
+  @if type-of($fetched-value) != null {
+    @return $fetched-value;
+  } @else {
+    @error 'Column `#{$name} - #{$value}` not found. Available columns: #{available-names($layout-width-data)}';
+  }
+}
+
+$dismiss-icon-size: 32px;
+
+@function top-bar-height() {
+  @return rem(50px);
+}
+
+@function mobile-nav-width() {
+  @return 0;
+}
+
+@function nav-min-window-corrected() {
+  @return rem(860px);
+}

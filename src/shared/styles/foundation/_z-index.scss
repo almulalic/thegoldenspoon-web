@@ -1,0 +1,34 @@
+$global-elements: (
+  content: 100,
+  overlay: 519
+);
+
+$fixed-element-stacking-order: (
+  global-ribbon: 510,
+  loading-bar: 511,
+  context-bar: 512,
+  small-screen-loading-bar: 513,
+  nav-backdrop: 514,
+  nav: 515,
+  top-bar: 516,
+  skip-to-content: 517,
+  backdrop: 518,
+  modal: 519,
+  toast: 520,
+  dev-ui: 521
+);
+
+/// Returns the z-index of the specified element.
+/// @param {String} $element - The key for the element.
+/// @param {Map} $context - The map in which to search for the element.
+/// @return {Number} The z-index for the element.
+
+@function z-index($element, $context: $global-elements) {
+  $index: map-get($context, $element);
+
+  @if $index {
+    @return $index;
+  } @else {
+    @error 'z-index `#{$element}` in `#{$context}` not found.';
+  }
+}

@@ -1,3 +1,40 @@
-.a {
-  background-color: black;
+body {
+  font-family: "Times New Roman", Times, serif;
+  color: #e8eff5;
+  background: #1c5fa0;
+}
+.slika {
+  content: url(GoingForGoldenSpoon.gif);
+  background-repeat: no-repeat;
+  width: auto;
+  height: auto;
+  border-radius: 50% 50% 10% 10%;
+  margin: 2% auto 0% auto;
+}
+
+.intro {
+  display: flex;
+  padding: 0% 10% 0% 10%;
+  font-size: 22px;
+  margin: 50px;
+  text-align: center;
+}
+.explenation {
+  outline: 2px solid #76d0c0;
+  padding: 15px;
+  margin: 0% 2% 0% 2%;
+}
+a:link {
+  color: #e8eff5;
+}
+a:visited {
+  color: #e8eff5;
+  background-color: transparent;
+  text-decoration: none;
+}
+h4 {
+  float: left;
+  margin-left: 2%;
+}
+.restaurants {
 }

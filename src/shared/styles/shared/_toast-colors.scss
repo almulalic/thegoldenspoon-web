@@ -1,0 +1,31 @@
+@import "../../Variables.scss";
+
+.Toastify__toast--default {
+    box-shadow: var(--p-banner-border, inset 0 3px 0 0 var(--p-border-on-surface, #637381), inset 0 0 0 0 transparent, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)) !important;
+    background: var(--p-banner-background, #f4f6f8) !important;
+    color:black;
+}
+
+.Toastify__toast--info {
+    box-shadow: var(--p-banner-border, inset 0 3px 0 0 var(--p-highlight-border, #47c1bf), inset 0 0 0 0 transparent, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)) !important;
+    background: var(--p-banner-background, #eef9f9) !important;
+    color:black;
+}
+
+.Toastify__toast--success {
+    box-shadow: var(--p-banner-border, inset 0 3px 0 0 var(--p-success-border, #50b83c), inset 0 0 0 0 transparent, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)) !important;
+    background:var(--p-banner-background, #eff7ed) !important;
+    color:black;
+}
+
+.Toastify__toast--warning {
+    box-shadow: var(--p-banner-border, inset 0 3px 0 0 var(--p-warning-border, #eec200), inset 0 0 0 0 transparent, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)) !important;
+    background:var(--p-banner-background, #fdf7e3) !important;
+    color:black;
+}
+
+.Toastify__toast--error {
+    box-shadow:var(--p-banner-border, inset 0 3px 0 0 var(--p-critical-diviver, #de3618), inset 0 0 0 0 transparent, 0 0 0 1px rgba(63, 63, 68, 0.05), 0 1px 3px 0 rgba(63, 63, 68, 0.15)) !important;
+    background:var(--p-banner-background, #fdf3f0) !important;
+    color:black;
+}

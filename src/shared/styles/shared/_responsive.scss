@@ -1,0 +1,94 @@
+$attribute-type: ('spacing', 'padding', 'distribution', 'alignment', 'wrap');
+
+@function capitalize($string) {
+  @return to-upper-case(str-slice($string, 1, 1)) + str-slice($string, 2);
+}
+
+/// Generate classes dynamicaly for responsivnes [mobile, web].
+/// example: <Stack spacing={['loose', 'tight']}>...</Stack>
+/// => loose is for mobile screens, tight is for screens larger then 768px
+@mixin generateResponsiveClasses($map, $prefix: $string, $attribute: $attribute-type) {
+  @each $smallScreenName, $smallScreenValue in $map {
+    @each $largeScreenName, $largeScreenValue in $map {
+      @if $smallScreenName != $largeScreenName {
+        .#{$classNameBase}-#{$prefix}#{capitalize(#{$smallScreenName})}-#{capitalize(#{$largeScreenName})} {
+          @if $attribute == spacing {
+            @include stack-spacing($smallScreenValue);
+
+            @include breakpoint-after(768px) {
+              @include stack-spacing($largeScreenValue);
+            }
+          } @else if $attribute == alignment {
+            align-items: #{$smallScreenValue};
+
+            @include breakpoint-after(768px) {
+              align-items: #{$largeScreenValue};
+            }
+          } @else if $attribute == 'padding' {
+            padding: spacing(#{$smallScreenValue});
+
+            @include breakpoint-after(768px) {
+              padding: spacing(#{$largeScreenValue});
+            }
+          } @else if $attribute == 'wrap' {
+            flex-wrap: #{$smallScreenValue};
+
+            @include breakpoint-after(768px) {
+              flex-wrap: #{$largeScreenValue};
+            }
+          } @else if $attribute == distribution {
+            @if $smallScreenName == 'fill' {
+              > .#{$classNameBase}-Stack--Item {
+                flex: #{$smallScreenValue};
+              }
+
+              @include breakpoint-after(768px) {
+                justify-content: #{$largeScreenValue};
+              }
+            } @else if $smallScreenName == 'fillEqually' {
+              > .#{$classNameBase}-Stack--Item {
+                flex: #{$smallScreenValue};
+
+                @supports (min-width: fit-content) {
+                  flex: 1 0 0%;
+                  min-width: fit-content;
+                }
+              }
+
+              @include breakpoint-after(768px) {
+                justify-content: #{$largeScreenValue};
+              }
+            } @else if $largeScreenName == 'fill' {
+              justify-content: #{$smallScreenValue};
+
+              @include breakpoint-after(768px) {
+                > .#{$classNameBase}-Stack--Item {
+                  flex: #{$largeScreenValue};
+                }
+              }
+            } @else if $largeScreenName == 'fillEqually' {
+              justify-content: #{$smallScreenValue};
+
+              @include breakpoint-after(768px) {
+                > .#{$classNameBase}-Stack--Item {
+                  flex: #{$largeScreenValue};
+
+                  @supports (min-width: fit-content) {
+                    flex: 1 0 0%;
+                    min-width: fit-content;
+                  }
+                }
+              }
+            } @else {
+              justify-content: #{$smallScreenValue};
+
+              @include breakpoint-after(768px) {
+                justify-content: #{$largeScreenValue};
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

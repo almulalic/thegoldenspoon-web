@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import identities from "../../api/identities";
+import { Stack } from "../../elements/stack/Stack";
 
 const Register = (props) => {
   const [nameInput, setNameInput] = useState("");
@@ -31,8 +32,6 @@ const Register = (props) => {
         onChange={(e) => setNameInput({ value: e.target.value })}
       />
       <Button label="Register" onClick={() => reg()} />
-
-      <p>REGISTERRRRRRRRRRRR</p>
     </div>
   );
 };

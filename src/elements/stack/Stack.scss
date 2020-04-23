@@ -1,0 +1,220 @@
+@import "../../shared/Variable.scss";
+
+/// Adjusts the spacing for the stack and contained items.
+/// @param {String} $spacing - The spacing variant to use.
+@mixin stack-spacing($spacing: normal) {
+  margin-top: -1 * spacing($spacing);
+  margin-left: -1 * spacing($spacing);
+
+  > .#{$classNameBase}-Stack--Item {
+    margin-top: spacing($spacing);
+    margin-left: spacing($spacing);
+    max-width: 100%;
+  }
+
+  &.#{$classNameBase}-Stack--Vertical.#{$classNameBase}-Stack--AffectFirst
+    > .#{$classNameBase}-Stack--Item:first-child {
+    margin-top: spacing($spacing) * 2;
+  }
+}
+
+.#{$classNameBase}-Stack {
+  @include stack-spacing;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.#{$classNameBase}-Stack--noWrap {
+  flex-wrap: nowrap;
+}
+
+.#{$classNameBase}-Stack--spacingNone {
+  @include stack-spacing(none);
+}
+
+.#{$classNameBase}-Stack--spacingExtraTight {
+  @include stack-spacing(extraSmall);
+}
+
+.#{$classNameBase}-Stack--spacingTight {
+  @include stack-spacing(small);
+}
+
+.#{$classNameBase}-Stack--spacingLoose {
+  @include stack-spacing(large);
+}
+
+.#{$classNameBase}-Stack--spacingExtraLoose {
+  @include stack-spacing(extraLarge);
+}
+
+.#{$classNameBase}-Stack--distributionLeading {
+  justify-content: flex-start;
+}
+
+.#{$classNameBase}-Stack--distributionTrailing {
+  justify-content: flex-end;
+}
+
+.#{$classNameBase}-Stack--distributionCenter {
+  justify-content: center;
+}
+
+.#{$classNameBase}-Stack--distributionEqualSpacing {
+  justify-content: space-between;
+}
+
+.#{$classNameBase}-Stack--distributionFill > .#{$classNameBase}-Stack--Item {
+  flex: 1 1 auto;
+}
+
+.#{$classNameBase}-Stack--distributionFillEvenly
+  > .#{$classNameBase}-Stack--Item {
+  flex: 1 1 auto;
+
+  @supports (min-width: fit-content) {
+    flex: 1 0 0%;
+    min-width: fit-content;
+  }
+}
+
+.#{$classNameBase}-Stack--alignmentLeading {
+  align-items: flex-start;
+}
+
+.#{$classNameBase}-Stack--alignmentTrailing {
+  align-items: flex-end;
+}
+
+.#{$classNameBase}-Stack--alignmentCenter {
+  align-items: center;
+}
+
+.#{$classNameBase}-Stack--alignmentFill {
+  align-items: stretch;
+}
+
+.#{$classNameBase}-Stack--alignmentBaseline {
+  align-items: baseline;
+}
+
+.#{$classNameBase}-Stack--Vertical {
+  flex-direction: column;
+  margin-left: spacing(none);
+
+  > .#{$classNameBase}-Stack--Item {
+    margin-left: spacing(none);
+  }
+}
+
+.#{$classNameBase}-Stack--Item {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.#{$classNameBase}-Stack--Item .#{$classNameBase}-Stack--Item-Fill:first-child {
+  flex: 1 1 auto;
+}
+
+.#{$classNameBase}-Stack--Item-Fill {
+  flex: 1 1 auto;
+}
+
+.#{$classNameBase}-Stack--PaddingNone {
+  padding: spacing("none");
+}
+
+.#{$classNameBase}-Stack--PaddingExtraSmall {
+  padding: spacing("extraSmall");
+}
+
+.#{$classNameBase}-Stack--PaddingSmall {
+  padding: spacing("small");
+}
+
+.#{$classNameBase}-Stack--PaddingMedium {
+  padding: spacing("medium");
+}
+
+.#{$classNameBase}-Stack--PaddingNormal {
+  padding: spacing();
+}
+
+.#{$classNameBase}-Stack--PaddingLarge {
+  padding: spacing("large");
+}
+
+.#{$classNameBase}-Stack--PaddingExtraLarge {
+  padding: spacing("extraLarge");
+}
+
+.#{$classNameBase}-Stack--onClick {
+  cursor: pointer;
+}
+
+.#{$classNameBase}-Stack--Item-KeepWidth {
+  flex: 0 1 auto !important;
+}
+
+$stack-spacing-map: (
+  none: "none",
+  extraTight: "extraSmall",
+  tight: "small",
+  loose: "large",
+  extraLoose: "extraLarge",
+);
+
+$stack-alignment-map: (
+  leading: "flex-start",
+  trailing: "flex-end",
+  center: "center",
+  fill: "stretch",
+  baseline: "baseline",
+);
+
+$stack-distribution-map: (
+  leading: "flex-start",
+  trailing: "flex-end",
+  center: "center",
+  equalSpacing: "space-between",
+  fill: "1 1 auto;",
+  fillEvenly: "1 1 auto",
+);
+
+$stack-padding-map: (
+  none: "none",
+  extraSmall: "extraSmall",
+  small: "small",
+  medium: "medium",
+  normal: "normal",
+  large: "large",
+  extraLarge: "extraLarge",
+);
+
+$stack-wrap-map: (
+  noWrap: "nowrap",
+  wrap: "wrap",
+);
+
+@include generateResponsiveClasses(
+  $stack-spacing-map,
+  "Stack--spacing",
+  "spacing"
+);
+@include generateResponsiveClasses(
+  $stack-alignment-map,
+  "Stack--alignment",
+  "alignment"
+);
+@include generateResponsiveClasses(
+  $stack-distribution-map,
+  "Stack--distribution",
+  "distribution"
+);
+@include generateResponsiveClasses(
+  $stack-padding-map,
+  "Stack--Padding",
+  "padding"
+);
+@include generateResponsiveClasses($stack-wrap-map, "Stack--", "wrap");
