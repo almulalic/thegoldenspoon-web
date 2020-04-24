@@ -1,0 +1,6 @@
+@import "../../shared/Variable.scss";
+
+.#{$classNameBase}-Heading {
+  @include text-style-heading;
+  margin: 0;
+}

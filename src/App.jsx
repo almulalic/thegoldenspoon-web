@@ -1,7 +1,7 @@
 import React from "react";
-import "./App.css";
+import "./App.scss";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Profile, Login, Register } from "./pages";
+import { Profile, LoginRegister } from "./pages";
 import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
@@ -13,8 +13,7 @@ function App(props) {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={Profile} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
+          <Route exact path="/loginRegister" component={LoginRegister} />
           <Route exact path="/profileTest" component={ProfileTest} />
           <Route path="/" render={() => <div>404</div>} />
         </Switch>

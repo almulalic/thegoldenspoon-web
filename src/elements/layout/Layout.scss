@@ -1,0 +1,114 @@
+@import "../../shared/Variable.scss";
+
+$secondary-basis: layout-width(secondary, min);
+$primary-basis: layout-width(primary, min);
+$one-half-basis: layout-width(one-half-width, base);
+$one-third-basis: layout-width(one-third-width, base);
+$relative-size: $primary-basis / $secondary-basis;
+
+.#{$classNameBase}-Layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: flex-start;
+  margin-top: -1 * spacing();
+  margin-left: -1 * spacing(large);
+}
+
+.#{$classNameBase}-Layout--Section {
+  flex: $relative-size $relative-size ($primary-basis + rem(100px));
+  min-width: 51%;
+}
+
+.#{$classNameBase}-Layout--Section-secondary {
+  flex: 1 1 $secondary-basis;
+  min-width: 0;
+}
+
+.#{$classNameBase}-Layout--Section-fullWidth {
+  flex: 1 1 100%;
+}
+
+.#{$classNameBase}-Layout--Section-oneHalf {
+  flex: 1 1 $one-half-basis;
+  min-width: 0;
+}
+
+.#{$classNameBase}-Layout--Section-oneThird {
+  flex: 1 1 $one-third-basis;
+  min-width: 0;
+}
+
+.#{$classNameBase}-Layout--AnnotatedSection {
+  min-width: 0;
+  flex: 1 1 100%;
+}
+
+.#{$classNameBase}-Layout--Section,
+.#{$classNameBase}-Layout--AnnotatedSection {
+  max-width: 100%;
+  margin-top: spacing();
+  margin-left: spacing(large);
+
+  + .#{$classNameBase}-Layout--Section {
+    margin-top: spacing();
+  }
+
+  + .#{$classNameBase}-Layout--AnnotatedSection {
+    @include page-content-when-not-fully-condensed {
+      padding-top: spacing();
+      border-top: border();
+    }
+  }
+}
+
+.#{$classNameBase}-Layout--AnnotationWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -1 * spacing(small);
+  margin-left: -1 * spacing(large);
+}
+
+.#{$classNameBase}-Layout--AnnotationContent {
+  flex: $relative-size $relative-size $primary-basis;
+}
+
+.#{$classNameBase}-Layout--Annotation {
+  flex: 1 1 $secondary-basis;
+  padding: spacing() 0;
+
+  @include page-content-when-not-fully-condensed {
+    padding: spacing() 0 0;
+  }
+
+  @include page-content-when-layout-not-stacked {
+    padding: spacing(small) spacing(large) spacing(large) 0;
+  }
+}
+
+.#{$classNameBase}-Layout--Annotation,
+.#{$classNameBase}-Layout--AnnotationContent {
+  min-width: 0;
+  max-width: calc(100% - #{spacing(large)});
+  margin-top: spacing(small);
+  margin-left: spacing(large);
+}
+
+.#{$classNameBase}-Layout--AnnotationDescription {
+  @include text-emphasis-subdued;
+}
+
+.#{$classNameBase}-Layout {
+  + .#{$classNameBase}-Layout {
+    margin-top: spacing(none);
+  }
+}
+
+.#{$classNameBase}-Layout--Seamless {
+  margin: 0;
+
+  .#{$classNameBase}-Layout--Section,
+  .#{$classNameBase}-Layout--AnnotatedSection {
+    margin: 0;
+  }
+}

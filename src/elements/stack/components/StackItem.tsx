@@ -1,6 +1,6 @@
-import React from "react";
-import { elementClassNames } from "../../../shared/utils";
-import "../Stack.scss";
+import React from 'react';
+import { elementClassNames } from '../../../shared/utils';
+import '../Stack.scss';
 
 export interface StackItemProps {
   /** Elements to display inside item */
@@ -13,11 +13,7 @@ export interface StackItemProps {
 }
 
 export function StackItem({ children, fill, keepWidth }: StackItemProps) {
-  const className = elementClassNames(
-    "Stack--Item",
-    fill && "Stack--Item-Fill",
-    keepWidth && "Stack--Item-KeepWidth"
-  );
+  const className = elementClassNames('Stack--Item', fill && 'Stack--Item-Fill', keepWidth && 'Stack--Item-KeepWidth');
 
   return <div className={className}>{children}</div>;
 }

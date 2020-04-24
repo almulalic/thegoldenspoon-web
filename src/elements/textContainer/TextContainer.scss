@@ -1,0 +1,35 @@
+@import "../../shared/Variable.scss";
+
+@mixin text-container-spacing($spacing: normal) {
+  > *:not(:first-child) {
+    margin-top: (spacing($spacing));
+  }
+}
+
+.#{$classNameBase}-TextContainer--spacingNormal {
+  @include text-container-spacing();
+}
+
+.#{$classNameBase}-TextContainer--spacingNone {
+  @include text-container-spacing(none);
+}
+
+.#{$classNameBase}-TextContainer--spacingExtraSmall {
+  @include text-container-spacing(extraSmall);
+}
+
+.#{$classNameBase}-TextContainer--spacingSmall {
+  @include text-container-spacing(small);
+}
+
+.#{$classNameBase}-TextContainer--spacingMedium {
+  @include text-container-spacing(medium);
+}
+
+.#{$classNameBase}-TextContainer--spacingLarge {
+  @include text-container-spacing(large);
+}
+
+.#{$classNameBase}-TextContainer--spacingExtraLarge {
+  @include text-container-spacing(extraLarge);
+}

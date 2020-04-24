@@ -1,6 +1,54 @@
 import React from "react";
 
 export const classNameBase = "Avis";
+export const WithinContentContext = React.createContext(false);
+export interface Action extends BaseAction {}
+export type AppBridgeTarget = "ADMIN_PATH" | "REMOTE" | "APP";
+
+export interface BaseAction {
+  /** A unique identifier for the action */
+  id?: string;
+  /** Content the action displays */
+  content?: any;
+  /** Visually hidden text for screen readers */
+  accessibilityLabel?: string;
+  /** A destination to link to, rendered in the action */
+  url?: string;
+  /** Forces url to open in a new tab */
+  external?: boolean;
+  /** Callback when an action takes place */
+  onAction?(e?: any): void;
+}
+export interface AppBridgeAction
+  extends Action,
+    DisableableAction,
+    DestructableAction,
+    AppBridgeActionTarget {}
+export interface IconableAction extends Action {
+  /** Source of the icon */
+  icon?: any;
+}
+
+export interface LoadableAction extends Action {
+  /** Should a spinner be displayed */
+  loading?: boolean;
+}
+
+export interface AppBridgeActionTarget {
+  /**
+   * Where to display the target link
+   * @default 'APP'
+   * @embeddedAppOnly
+   */
+  target?: AppBridgeTarget;
+}
+export interface ComplexAction
+  extends Action,
+    DisableableAction,
+    DestructableAction,
+    AppBridgeAction,
+    IconableAction,
+    LoadableAction {}
 
 export type Falsy = boolean | undefined | null | 0;
 export type Distribution =
@@ -13,7 +61,14 @@ export type Distribution =
 export type Spacing = "none" | "extraSmall" | "small" | "medium" | "normal";
 export type Responsive<T> = T | T[];
 export type Alignment = "leading" | "trailing" | "center" | "fill" | "baseline";
-
+export interface DisableableAction extends Action {
+  /** Should the action be disabled */
+  disabled?: boolean;
+}
+export interface DestructableAction extends Action {
+  /** Destructive action */
+  destructive?: boolean;
+}
 /** Appends @var classNameBase to each item passed to it, and joins them as a one element. Ex. 'Icon', 'Icon-Blue'; => @var classNameBase-Icon @var classNameBase-Icon-Blue */
 export const elementClassNames = (
   ...classes: (string | string[] | Falsy)[]

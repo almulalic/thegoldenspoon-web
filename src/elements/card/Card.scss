@@ -1,0 +1,144 @@
+@import "../../shared/Variable.scss";
+
+.#{$classNameBase}-Card {
+  overflow: hidden;
+  background-color: color("white");
+  color: color("ink");
+  box-shadow: shadow();
+
+  @include page-content-when-not-fully-condensed {
+    border-radius: border-radius();
+  }
+
+  @media (-ms-high-contrast: active) {
+    box-shadow: inset 0 0 0 border-width(base) ms-high-contrast-color("text");
+  }
+}
+
+.#{$classNameBase}-Card--ShowOverflow {
+  overflow: unset !important;
+}
+
+.#{$classNameBase}-Card--Subdued {
+  background-color: color("sky", "lighter");
+}
+
+.#{$classNameBase}-Card--Header {
+  padding: spacing() spacing() 0;
+
+  @include page-content-when-not-fully-condensed {
+    padding: spacing(large) spacing(large) 0;
+  }
+}
+
+.#{$classNameBase}-Card--Section {
+  padding: spacing();
+
+  @include page-content-when-not-fully-condensed {
+    padding: spacing(large);
+  }
+
+  + .#{$classNameBase}-Card--Section {
+    border-top: border();
+  }
+}
+
+.#{$classNameBase}-Card--Section-fullWidth {
+  padding: spacing(large) spacing(none);
+}
+
+.#{$classNameBase}-Card--Section-Seamless {
+  padding: spacing(none);
+}
+
+.#{$classNameBase}-Card--Section-Subdued {
+  background-color: color("sky", "lighter");
+
+  @media (-ms-high-contrast: active) {
+    background-color: transparent;
+  }
+
+  .#{$classNameBase}-Card--Header + & {
+    border-top: border();
+    margin-top: spacing(large);
+  }
+}
+
+.#{$classNameBase}-Card--SectionHeader {
+  padding-bottom: spacing(small);
+
+  .#{$classNameBase}-Card--Section-fullWidth & {
+    padding-left: spacing();
+    padding-right: spacing();
+
+    @include page-content-when-not-fully-condensed {
+      padding-left: spacing(large);
+      padding-right: spacing(large);
+    }
+  }
+}
+
+.#{$classNameBase}-Card--Subsection {
+  + .#{$classNameBase}-Card--Subsection {
+    margin-top: spacing();
+    padding-top: spacing();
+    border-top: border();
+  }
+}
+
+.#{$classNameBase}-Card--Footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 spacing() spacing();
+
+  @include page-content-when-not-fully-condensed {
+    padding: 0 spacing(large) spacing(large);
+  }
+
+  .#{$classNameBase}-Card--Section-Subdued + & {
+    border-top: border();
+    padding: spacing(large);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-None {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(none);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-ExtraSmall {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(extraSmall);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-Small {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(small);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-Medium {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(medium);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-Normal {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(normal);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-Large {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(large);
+  }
+}
+
+.#{$classNameBase}-Card--SpaceBetween-ExtraLarge {
+  + .#{$classNameBase}-Card {
+    margin-top: spacing(extraLarge);
+  }
+}

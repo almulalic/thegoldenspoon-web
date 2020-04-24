@@ -1,0 +1,41 @@
+@import "../../shared/Variable.scss";
+
+html,
+body {
+  min-height: 100%;
+  height: 100%;
+}
+
+.#{$classNameBase}-Page--marginFix {
+  @include margin-collapse-fix;
+}
+
+.#{$classNameBase}-Page {
+  height: 100%;
+  padding: spacing("small") spacing();
+
+  @include breakpoint-after(450px) {
+    padding: spacing() spacing("extraLarge");
+  }
+}
+
+.#{$classNameBase}-Page--paddingNone {
+  padding: spacing("none");
+}
+
+.#{$classNameBase}-Page--paddingSmall {
+  padding: spacing("small");
+}
+
+.#{$classNameBase}-Page--paddingLarge {
+  padding: spacing("extraLarge");
+}
+
+.#{$classNameBase}-Page--Header {
+  margin-bottom: spacing(small);
+}
+
+.#{$classNameBase}-Page.#{$classNameBase}-Page--narrowWidth {
+  margin: 0 auto;
+  max-width: layout-width(primary, max);
+}

@@ -9,4 +9,12 @@ export default {
     axios.post(`/identity/login`, body).catch((err) => {
       console.log(err);
     }),
+  isUniqueEmail: (email) =>
+    axios.get(`/identity/isUniqueEmail/${email}`).catch((err) => {
+      console.log(err);
+    }),
+  isUniqueUsername: (username) =>
+    axios.get(`/identity/isUniqueUsername/${username}`).catch((err) => {
+      console.log(err);
+    }),
 };

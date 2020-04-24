@@ -74,7 +74,7 @@ const ProfileTest = () => {
   useEffect(() => {
     setIsFetchinguserRecords(true);
     fetchUserRecords();
-    fetch();
+    // fetch();
   }, []);
 
   const [activeAccordionIndex, setActiveAccordionIndex] = useState();
@@ -90,7 +90,7 @@ const ProfileTest = () => {
     }
   };
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div style={{ display: "flex", justifyContent: "center" }} className="main">
       <div style={{ width: "400px", alignSelf: "center", textAlign: "left" }}>
         {isFetchingRestaruants ? (
           <ProgressSpinner />

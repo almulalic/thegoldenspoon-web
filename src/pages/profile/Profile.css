@@ -1,13 +1,4 @@
-html {
-  min-height: 100%;
-  min-width: 100%;
-  font-family: "Times New Roman", Times, serif;
-  color: #e8eff5;
-  background-color: #2a2a72;
-  background-image: linear-gradient(315deg, #2a2a72 0%, #009ffd 74%);
-  background-repeat: no-repeat;
-}
-.slika {
+/* .slika {
   content: url(GoingForGoldenSpoon.gif);
   background-repeat: no-repeat;
   width: auto;
@@ -39,6 +30,4 @@ a:visited {
 h4 {
   float: left;
   margin-left: 2%;
-}
-.restaurants {
-}
+} */
