@@ -12,7 +12,8 @@ function App(props) {
     <div className="App">
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={Profile} />
+          <Route exact path="/" component={LoginRegister} />
+          <Route exact path="/profile" component={Profile} />
           <Route exact path="/loginRegister" component={LoginRegister} />
           <Route exact path="/profileTest" component={ProfileTest} />
           <Route
