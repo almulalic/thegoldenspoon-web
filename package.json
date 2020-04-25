@@ -1,5 +1,6 @@
 {
   "name": "thegoldenspoon-web",
+  "homepage": "/registerLogin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
