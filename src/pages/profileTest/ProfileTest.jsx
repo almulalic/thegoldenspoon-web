@@ -90,34 +90,39 @@ const ProfileTest = () => {
     }
   };
   return (
-    <div style={{ display: "flex", justifyContent: "center" }} className="main">
-      <div style={{ width: "400px", alignSelf: "center", textAlign: "left" }}>
-        {isFetchingRestaruants ? (
-          <ProgressSpinner />
-        ) : (
-          <Accordion
-            activeIndex={activeAccordionIndex}
-            onTabChange={(e) => setActiveAccordionIndex(e.index)}
-          >
-            {allRecords.map((restaurant, key) => {
-              return (
-                <AccordionTab header={restaurant.name} key={key}>
-                  {_.isEmpty(restaurant.record) ? (
-                    <p> You didnt eat in this restaurant yet</p>
-                  ) : (
-                    <div>
-                      <Message
-                        severity="info"
-                        text={getStatusName(restaurant.record.status)}
-                      />
-                      <p>IsFavorite: {restaurant.record.isFavorite}</p>
-                    </div>
-                  )}
-                </AccordionTab>
-              );
-            })}
-          </Accordion>
-        )}
+    <div className="main">
+      <div
+        style={{ display: "flex", justifyContent: "center" }}
+        className="container"
+      >
+        <div style={{ width: "400px", alignSelf: "center", textAlign: "left" }}>
+          {isFetchingRestaruants ? (
+            <ProgressSpinner />
+          ) : (
+            <Accordion
+              activeIndex={activeAccordionIndex}
+              onTabChange={(e) => setActiveAccordionIndex(e.index)}
+            >
+              {allRecords.map((restaurant, key) => {
+                return (
+                  <AccordionTab header={restaurant.name} key={key}>
+                    {_.isEmpty(restaurant.record) ? (
+                      <p> You didnt eat in this restaurant yet</p>
+                    ) : (
+                      <div>
+                        <Message
+                          severity="info"
+                          text={getStatusName(restaurant.record.status)}
+                        />
+                        <p>IsFavorite: {restaurant.record.isFavorite}</p>
+                      </div>
+                    )}
+                  </AccordionTab>
+                );
+              })}
+            </Accordion>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -9,6 +9,9 @@ import {
 } from "../../shared/utils";
 import { CardHeader, CardSection, CardSubsection } from "./components";
 import "./Card.scss";
+import { Button } from "primereact/button";
+import { Stack } from "../stack/Stack";
+import { ButtonGroup } from "../buttonGroup/ButtonGroup";
 
 export interface CardProps {
   /** Title content for the card */
@@ -57,7 +60,11 @@ export class Card extends React.PureComponent<CardProps, State> {
 
   render() {
     const {
+      secondaryFooterActionsDisclosureText,
       spaceBetweenCards = "large",
+      footerText,
+      secondaryFooterActions,
+      primaryFooterAction,
       sectioned,
       minHeight,
       maxHeight,
@@ -79,7 +86,46 @@ export class Card extends React.PureComponent<CardProps, State> {
     const headerMarkup =
       title || actions ? <CardHeader actions={actions} title={title} /> : null;
 
-    const footerMarkup = null;
+    const content = sectioned ? (
+      <CardSection>{children}</CardSection>
+    ) : (
+      children
+    );
+
+    const scrollableContent = content;
+
+    const primaryFooterActionMarkup = primaryFooterAction
+      ? primaryFooterAction
+      : null;
+
+    let secondaryFooterActionsMarkup = null;
+    if (secondaryFooterActions && secondaryFooterActions.length) {
+      if (secondaryFooterActions.length === 1) {
+        secondaryFooterActionsMarkup = secondaryFooterActions[0];
+      } else {
+        secondaryFooterActionsMarkup = <React.Fragment></React.Fragment>;
+      }
+    }
+
+    const footerMarkup =
+      primaryFooterActionMarkup || secondaryFooterActionsMarkup ? (
+        footerText ? (
+          <Stack distribution="equalSpacing" alignment="center">
+            {footerText}
+            <ButtonGroup>
+              {secondaryFooterActionsMarkup}
+              {primaryFooterActionMarkup}
+            </ButtonGroup>
+          </Stack>
+        ) : (
+          <div className={elementClassNames("Card--Footer")}>
+            <ButtonGroup>
+              {secondaryFooterActionsMarkup}
+              {primaryFooterActionMarkup}
+            </ButtonGroup>
+          </div>
+        )
+      ) : null;
 
     return (
       <WithinContentContext.Provider value>
@@ -88,6 +134,7 @@ export class Card extends React.PureComponent<CardProps, State> {
           style={{ minHeight: minHeight, maxHeight: maxHeight }}
         >
           {headerMarkup}
+          {scrollableContent}
           {footerMarkup}
         </div>
       </WithinContentContext.Provider>

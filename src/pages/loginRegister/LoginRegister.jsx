@@ -8,15 +8,17 @@ import Register from "../../components/register/Register";
 import { Stack } from "../../elements/stack/Stack";
 import { Page } from "../../elements/page/Page";
 import Login from "../../components/login/Login";
+// import { Card } from "primereact/card";
+import { Card } from "../../elements/card/Card";
 
 const LoginRegister = (props) => {
   return (
     <Page padding="none" customClassName="main">
       <div className="main">
-        <div className="login">
-          <Login />
-        </div>
-        <div className="register">
+        <div className="container">
+          <div className="login">
+            <Login />
+          </div>
           <Register />
         </div>
       </div>

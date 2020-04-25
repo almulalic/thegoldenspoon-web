@@ -1,4 +1,16 @@
 .main {
+  // background: linear-gradient(to top, #5c258d, #4389a2);
+  background-image: url("./bg2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -6,4 +18,13 @@
   justify-items: center;
   margin: 0 17% 0 17%;
   font-family: "Dancing Script", cursive;
+}
+
+.register,
+.login {
+  background: whitesmoke;
+  border-radius: 5px;
+  box-shadow: 3px 3px 10px #333;
+  border-radius: 15px;
+  padding: 2rem;
 }

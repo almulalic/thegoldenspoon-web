@@ -6,11 +6,19 @@ import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
 import { Card } from "primereact/card";
 import { Message } from "primereact/message";
+import {
+  Inplace,
+  InplaceDisplay,
+  InplaceContent,
+} from "primereact/components/inplace/Inplace";
+import { Growl } from "primereact/growl";
 
 export default function Login() {
   // MAIN STATES
   const [loginEmailInput, setLoginEmailInput] = useState("");
   const [loginPasswordInput, setLoginPasswordInput] = useState("");
+  const [forgetPasswordEmailInput, setForgotPasswordInput] = useState("");
+  const [isForgetPasswordVisible, setForgetPasswordVisible] = useState(false);
 
   // LOADING STATES
   const [isLoadingResponse, setIsLoadingReposne] = useState(false);
@@ -33,8 +41,11 @@ export default function Login() {
     setInternalServerError(false);
     // setLoginPasswordInput("");
   };
+
   // FINAL STATES
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  var growl = new Growl();
 
   const login = (email, password) => {
     setIsLoadingReposne(true);
@@ -75,6 +86,8 @@ export default function Login() {
     <Stack vertical alignment="center" distribution="fillEvenly">
       <h1>Login</h1>
 
+      <Growl ref={(el) => (growl = el)} />
+
       <span className="p-float-label">
         <InputText
           id="float-input"
@@ -83,7 +96,7 @@ export default function Login() {
           onChange={(e) => setLoginEmailInput(e.target.value)}
           size="50"
         />
-        <label htmlFor="float-input">Email</label>
+        <label htmlFor="float-input loginLabel">Email</label>
       </span>
 
       <span className="p-float-label">
@@ -94,7 +107,9 @@ export default function Login() {
           size="50"
           feedback={false}
         />
-        <label htmlFor="float-input">Password</label>
+        <label htmlFor="float-input ">
+          <span className="loginLabel">Password</span>
+        </label>
       </span>
       <div className="loginButton">
         <Button
@@ -106,7 +121,28 @@ export default function Login() {
         />
       </div>
 
-      <h3 onClick={() => {}}>Forgot your password ?</h3>
+      <Inplace onOpen={isForgetPasswordVisible}>
+        <InplaceDisplay>
+          <span className="forgotPasswordText">Forgot your password ?</span>
+        </InplaceDisplay>
+        <InplaceContent>
+          <Stack vertical alignment="center">
+            <span className="p-float-label">
+              <InputText
+                id="primaryEmailAdress"
+                label="email"
+                value={forgetPasswordEmailInput}
+                onChange={(e) => setForgotPasswordInput(e.target.value)}
+                size="50"
+              />
+              <label htmlFor="float-input" className="loginLabel">
+                Primariy email adress
+              </label>
+            </span>
+            <Button label="Submit" />
+          </Stack>
+        </InplaceContent>
+      </Inplace>
 
       <div>
         {userDoesentExistError ? (
@@ -131,16 +167,14 @@ export default function Login() {
           />
         ) : null}
       </div>
-      {isLoggedIn ? (
-        <p style={{ color: "green", fontWeight: "bold" }}>
-          {" "}
-          Credentials OK, logged in
-        </p>
-      ) : (
-        <p style={{ color: "red", fontWeight: "bold" }}>
-          {" "}
-          Credentials not ok, try again
-        </p>
+
+      {isLoggedIn && (
+        // growl.show({
+        //   severity: "success",
+        //   summary: "Successfully logged in",
+        //   detail: "Enjoy",
+        // })
+        <p>Successfully logged in !</p>
       )}
     </Stack>
   );

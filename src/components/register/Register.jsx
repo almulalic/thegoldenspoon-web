@@ -11,24 +11,25 @@ import CountiresData from "../../shared/json/countriesByAbbreviation.json";
 import { Message } from "primereact/message";
 import { Captcha } from "primereact/captcha";
 import "./Register.scss";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function Register() {
   // MAIN STATES
-  const [emailInput, setEmailInput] = useState("");
-  const [passwordInput, setPasswordInput] = useState("");
-  const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
-  const [usernameInput, setUsernameInput] = useState("");
-  const [selectedGender, setSelectedGender] = useState("");
-  const [selectedCountry, setSelectedCity] = useState("");
-  const [nameInput, setNameInput] = useState("");
-  const [surnameInput, setSurnameInput] = useState("");
+  const [emailInput, setEmailInput] = useState("almir.mulalic.am+3@gmail.com");
+  const [passwordInput, setPasswordInput] = useState("a");
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState("a");
+  const [usernameInput, setUsernameInput] = useState("a");
+  const [selectedGender, setSelectedGender] = useState("a");
+  const [selectedCountry, setSelectedCity] = useState("a");
+  const [nameInput, setNameInput] = useState("a");
+  const [surnameInput, setSurnameInput] = useState("a");
   const [adressInput, setAdressInput] = useState("");
   const [dateInput, setDateInput] = useState("");
 
   const genderSelectItems = [
     { label: "Male", value: 0 },
-    { label: "Female", value: "Female" },
-    { label: "Rather not say", value: "RNT" },
+    { label: "Female", value: 1 },
+    { label: "Rather not say", value: 2 },
   ];
 
   // LOADING STATES
@@ -55,12 +56,12 @@ export default function Register() {
     identities
       .isUniqueEmail(emailInput)
       .then((response) => {
-        if (response == 1) return true;
-        else return false;
+        if (response == 1) return 1;
+        else return 0;
       })
       .catch((err) => {
         console.log(err);
-        return false;
+        return 0;
       });
   };
 
@@ -68,12 +69,12 @@ export default function Register() {
     identities
       .isUniqueUsername(usernameInput)
       .then((response) => {
-        if (response == 1) return true;
-        else return false;
+        if (response == 1) return 1;
+        else return 0;
       })
       .catch((err) => {
         console.log(err);
-        return false;
+        return 0;
       });
   };
 
@@ -84,6 +85,25 @@ export default function Register() {
   };
 
   // API CALL
+
+  const RegisterUser = () => {
+    identities
+      .register({
+        firstName: nameInput,
+        lastName: surnameInput,
+        username: usernameInput,
+        email: emailInput,
+        password: passwordInput,
+        sex: selectedGender,
+        country: selectedCountry,
+      })
+      .then(() => {
+        console.log("all gucci");
+      })
+      .catch(() => {
+        console.log("nevalajti nesto");
+      });
+  };
 
   const ValidateForm = () => {
     setIsValidatingFormData(true);
@@ -103,94 +123,148 @@ export default function Register() {
       handleErrorClear();
       setInvalidEmailTypeError(true);
       setIsValidatingFormData(false);
-    } else if (!isUniqueEmail) {
-      handleErrorClear();
-      setEmailNotUnique(true);
-      setIsValidatingFormData(false);
-    } else if (!isUniqueUsername) {
-      handleErrorClear();
-      setUsernameNotUnique(true);
-      setIsValidatingFormData(false);
-    } else if (passwordInput !== confirmPasswordInput) {
-      handleErrorClear();
-      setPasswordDontMatchError(true);
-      setIsValidatingFormData(false);
-    } else {
-      setIsValidatingFormData(false);
+      return;
     }
+
+    identities
+      .isUniqueEmail(emailInput)
+      .then((response) => {
+        if (response.data !== 1) {
+          handleErrorClear();
+          setEmailNotUnique(true);
+          setIsValidatingFormData(false);
+          return;
+        } else {
+          identities
+            .isUniqueUsername(usernameInput)
+            .then((response) => {
+              if (response.data !== 1) {
+                handleErrorClear();
+                setUsernameNotUnique(true);
+                setIsValidatingFormData(false);
+                return;
+              } else {
+                handleErrorClear();
+                setIsValidatingFormData(false);
+              }
+
+              if (passwordInput !== confirmPasswordInput) {
+                handleErrorClear();
+                setPasswordDontMatchError(true);
+                setIsValidatingFormData(false);
+                return;
+              } else {
+                setIsValidatingFormData(false);
+                RegisterUser();
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              return;
+            });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        return;
+      });
+
+    // isUniqueEmail
+    //   .then((res) => {
+    //     if (res !== 1)
+    //   })
+    //   .finally(() => {
+    //     isUniqueUsername.then((res) => {
+    //       if (res !== 1) {
+    //         handleErrorClear();
+    //         setUsernameNotUnique(true);
+    //         setIsValidatingFormData(false);
+    //       } else if (passwordInput !== confirmPasswordInput) {
+    //         handleErrorClear();
+    //         setPasswordDontMatchError(true);
+    //         setIsValidatingFormData(false);
+    //         return;
+    //       } else setIsValidatingFormData(false);
+    //     });
+    //   });
+
+    // }
   };
 
   return (
-    <Stack alignment="center" vertical>
-      <h1>Are you new? Come on in</h1>
-      <Stack distribution="fillEvenly" alignment="center">
+    <div className="register">
+      <div className="overlay"></div>
+      <Stack alignment="center" vertical>
+        <h1>Are you new? Come on in</h1>
+        <Stack distribution="fillEvenly" alignment="center">
+          <span className="p-float-label">
+            <InputText
+              id="firstName"
+              label="name"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              size="16"
+            />
+            <label htmlFor="float-input">Name</label>
+          </span>
+          <span className="p-float-label">
+            <InputText
+              id="lastName"
+              label="surname"
+              value={surnameInput}
+              onChange={(e) => setSurnameInput(e.target.value)}
+              size="16"
+            />
+            <label htmlFor="float-input">Surname</label>
+          </span>
+        </Stack>
+
         <span className="p-float-label">
           <InputText
-            id="firstName"
-            label="name"
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-            size="16"
+            id="email"
+            label="email"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+            size="40"
           />
-          <label htmlFor="float-input">Name</label>
+          <label htmlFor="float-input">Email</label>
         </span>
+
         <span className="p-float-label">
           <InputText
-            id="lastName"
-            label="surname"
-            value={surnameInput}
-            onChange={(e) => setSurnameInput(e.target.value)}
-            size="16"
+            id="username"
+            label="username"
+            value={usernameInput}
+            onChange={(e) => setUsernameInput(e.target.value)}
+            size="40"
           />
-          <label htmlFor="float-input">Surname</label>
+          <label htmlFor="float-input">Username</label>
         </span>
-      </Stack>
 
-      <span className="p-float-label">
-        <InputText
-          id="email"
-          label="email"
-          value={emailInput}
-          onChange={(e) => setEmailInput(e.target.value)}
-          size="40"
-        />
-        <label htmlFor="float-input">Email</label>
-      </span>
-
-      <span className="p-float-label">
-        <InputText
-          id="username"
-          label="username"
-          value={usernameInput}
-          onChange={(e) => setUsernameInput(e.target.value)}
-          size="40"
-        />
-        <label htmlFor="float-input">Username</label>
-      </span>
-
-      <Stack>
-        <span className="p-float-label">
-          <Password
-            id="password"
-            label="password"
-            value={passwordInput}
-            onChange={(e) => setPasswordInput(e.target.value)}
-            size="16"
-          />
-          <label htmlFor="float-input">Password</label>
-        </span>
-        <span className="p-float-label">
-          <Password
-            id="password"
-            label="password"
-            value={confirmPasswordInput}
-            onChange={(e) => setConfirmPasswordInput(e.target.value)}
-            size="16"
-          />
-          <label htmlFor="float-input">Confirm password</label>
-        </span>
-      </Stack>
-      {/* <InputMask
+        <Stack vertical distribution="fill">
+          <span className="p-float-label">
+            <Password
+              id="password"
+              label="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              size="40"
+            />
+            <label htmlFor="float-input">Password</label>
+          </span>
+          <span className="p-float-label">
+            <Password
+              id="password"
+              label="password"
+              value={confirmPasswordInput}
+              onChange={(e) => setConfirmPasswordInput(e.target.value)}
+              size="40"
+              feedback={false}
+            />
+            <label htmlFor="float-input">Confirm password</label>
+          </span>
+        </Stack>
+        {/* <InputMask
         mask="99/99/9999"
         placeholder="Birth date (dd/mm/yyyy)"
         label="date"
@@ -208,62 +282,68 @@ export default function Register() {
           size="40"
         />
       </div> */}
-      <Stack vertical>
-        <Stack distribution="fill" alignment="center">
-          <Dropdown
-            id="genderDropdown"
-            className="dropdown"
-            placeholder="Set gender"
-            label="gender"
-            value={selectedGender}
-            options={genderSelectItems}
-            onChange={(e) => {
-              setSelectedGender(e.value);
-            }}
-          />
+        <Stack vertical>
+          <Stack distribution="fillEvenly" alignment="center">
+            <Dropdown
+              id="genderDropdown"
+              className="dropdown"
+              placeholder="Select gender"
+              label="gender"
+              value={selectedGender}
+              options={genderSelectItems}
+              onChange={(e) => {
+                setSelectedGender(e.value);
+              }}
+            />
 
-          <Dropdown
-            id="countryDropdown"
-            className="dropdown"
-            placeholder="Select a Country"
-            label="country"
-            value={selectedCountry}
-            options={CountiresData}
-            onChange={(e) => {
-              setSelectedCity(e.value);
-            }}
-            filter
-            filterPlaceholder="Search by name"
+            <Dropdown
+              id="countryDropdown"
+              className="dropdown"
+              placeholder="Select country"
+              label="country"
+              value={selectedCountry}
+              options={CountiresData}
+              onChange={(e) => {
+                setSelectedCity(e.value);
+              }}
+              filter
+              filterPlaceholder="Search by name"
+            />
+          </Stack>
+
+          <Captcha
+            siteKey="ASTAKVIRULLAH"
+            onResponse={() => console.log("a")}
           />
         </Stack>
 
-        <Captcha siteKey="ASTAKVIRULLAH" onResponse={() => console.log("a")} />
-      </Stack>
-
-      <div>
-        {emptyFieldsError ? (
-          <Message severity="error" text="You must fill out every field" />
-        ) : emailNotUnique ? (
-          <Message
-            severity="error"
-            text="Account with that email already exists"
+        <div>
+          {emptyFieldsError ? (
+            <Message severity="error" text="You must fill out every field" />
+          ) : invalidEmailTypeError ? (
+            <Message severity="error" text="Invalid email format" />
+          ) : emailNotUnique ? (
+            <Message
+              severity="error"
+              text="Account with that email already exists"
+            />
+          ) : usernameNotUnique ? (
+            <Message severity="error" text="Username already exists" />
+          ) : passwordDontMatchError ? (
+            <Message severity="error" text="Password's doesen't match" />
+          ) : null}
+        </div>
+        <div className="registerButton">
+          <Button
+            disabled={isValidatingFormData}
+            onClick={() => {
+              ValidateForm();
+            }}
+            className="button"
+            label="Register"
           />
-        ) : usernameNotUnique ? (
-          <Message severity="error" text="Username already exists" />
-        ) : passwordDontMatchError ? (
-          <Message severity="error" text="Password's doesen't match" />
-        ) : null}
-      </div>
-      <div className="registerButton">
-        <Button
-          disabled={isValidatingFormData}
-          onClick={() => {
-            ValidateForm();
-          }}
-          className="button"
-          label="Register"
-        />
-      </div>
-    </Stack>
+        </div>
+      </Stack>
+    </div>
   );
 }

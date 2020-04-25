@@ -17,4 +17,8 @@ export default {
     axios.get(`/identity/isUniqueUsername/${username}`).catch((err) => {
       console.log(err);
     }),
+  confirmation: (token) =>
+    axios.get(`/identity/confirmation/${token}`).catch((err) => {
+      console.log(err);
+    }),
 };
