@@ -15,14 +15,14 @@ import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function Register() {
   // MAIN STATES
-  const [emailInput, setEmailInput] = useState("almir.mulalic.am+3@gmail.com");
-  const [passwordInput, setPasswordInput] = useState("a");
-  const [confirmPasswordInput, setConfirmPasswordInput] = useState("a");
-  const [usernameInput, setUsernameInput] = useState("a");
-  const [selectedGender, setSelectedGender] = useState("a");
-  const [selectedCountry, setSelectedCity] = useState("a");
-  const [nameInput, setNameInput] = useState("a");
-  const [surnameInput, setSurnameInput] = useState("a");
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
+  const [usernameInput, setUsernameInput] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedCountry, setSelectedCity] = useState("");
+  const [nameInput, setNameInput] = useState("");
+  const [surnameInput, setSurnameInput] = useState("");
   const [adressInput, setAdressInput] = useState("");
   const [dateInput, setDateInput] = useState("");
 
