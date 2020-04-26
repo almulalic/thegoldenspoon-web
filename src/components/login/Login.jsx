@@ -4,7 +4,6 @@ import identities from "../../api/identities";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
-import { Card } from "primereact/card";
 import { Message } from "primereact/message";
 import { useHistory } from "react-router-dom";
 import {
@@ -16,8 +15,6 @@ export const Login = ({ setRedirectingState }) => {
   // MAIN STATES
   const [loginEmailInput, setLoginEmailInput] = useState("");
   const [loginPasswordInput, setLoginPasswordInput] = useState("");
-  const [forgetPasswordEmailInput, setForgotPasswordInput] = useState("");
-  const [isForgetPasswordVisible, setForgetPasswordVisible] = useState(false);
 
   let history = useHistory();
 
@@ -117,29 +114,9 @@ export const Login = ({ setRedirectingState }) => {
           }}
         />
       </div>
-
-      <Inplace onOpen={isForgetPasswordVisible}>
-        <InplaceDisplay>
-          <span className="forgotPasswordText">Forgot your password ?</span>
-        </InplaceDisplay>
-        <InplaceContent>
-          <Stack vertical alignment="center">
-            <span className="p-float-label">
-              <InputText
-                id="primaryEmailAdress"
-                label="email"
-                value={forgetPasswordEmailInput}
-                onChange={(e) => setForgotPasswordInput(e.target.value)}
-                size="50"
-              />
-              <label htmlFor="float-input" className="loginLabel">
-                Primariy email adress
-              </label>
-            </span>
-            <Button label="Submit" />
-          </Stack>
-        </InplaceContent>
-      </Inplace>
+      <span>
+        <a href="">Forgot password?</a>
+      </span>
 
       <div>
         {userDoesentExistError ? (

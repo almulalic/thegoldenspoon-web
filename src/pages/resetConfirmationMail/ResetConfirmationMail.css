@@ -1,0 +1,20 @@
+.main {
+  font-family: "Dancing Script", cursive;
+  background-image: url("./bg2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  align-self: center;
+}
+.card {
+  padding: 1rem;
+  border-radius: 5px;
+}
+.p-card-footer {
+  margin-left: 40%;
+}
+.p-float-label {
+  padding: 5px 0 5px 0;
+}
