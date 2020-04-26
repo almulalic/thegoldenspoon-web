@@ -1,0 +1,25 @@
+.loginRedirect {
+  background: #0076ac;
+  height: 100%;
+  width: 100%;
+}
+
+.overlay {
+  display: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(245, 245, 245, 0.815);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+}

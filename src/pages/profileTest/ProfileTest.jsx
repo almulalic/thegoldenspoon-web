@@ -5,7 +5,7 @@ import _ from "lodash";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Message } from "primereact/message";
 
-const ProfileTest = () => {
+const ProfileTest = (props) => {
   const [allRestaurants, setAllRestaurants] = useState([]);
   const [userRecords, setUserRecords] = useState([]);
   const [allRecords, setAllRecords] = useState([]);
@@ -24,8 +24,6 @@ const ProfileTest = () => {
   //   setCategoriesFullData(_categoriesFullData);
   //   setIsFetchinguserRecords(false);
   // };
-
-  console.log(categoriesFullData);
 
   const generateFullData = (fullData, userData) => {
     let _allRecords = fullData.map((restaurant) => {

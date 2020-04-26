@@ -6,28 +6,27 @@ import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
 import { Card } from "primereact/card";
 import { Message } from "primereact/message";
+import { useHistory } from "react-router-dom";
 import {
   Inplace,
   InplaceDisplay,
   InplaceContent,
 } from "primereact/components/inplace/Inplace";
-import { Growl } from "primereact/growl";
-
-export default function Login() {
+export const Login = ({ setRedirectingState }) => {
   // MAIN STATES
   const [loginEmailInput, setLoginEmailInput] = useState("");
   const [loginPasswordInput, setLoginPasswordInput] = useState("");
   const [forgetPasswordEmailInput, setForgotPasswordInput] = useState("");
   const [isForgetPasswordVisible, setForgetPasswordVisible] = useState(false);
 
+  let history = useHistory();
+
   // LOADING STATES
   const [isLoadingResponse, setIsLoadingReposne] = useState(false);
 
   // ERROR HANDLING
   const [userDoesentExistError, setUserDoesentExistError] = useState(false);
-
   const [loginDataNotValidError, setLoginDataNotValidError] = useState(false);
-
   const [accountNotConfirmedError, setAccountNotConfirmedError] = useState(
     false
   );
@@ -45,13 +44,10 @@ export default function Login() {
   // FINAL STATES
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  var growl = new Growl();
-
   const login = (email, password) => {
     setIsLoadingReposne(true);
     identities.login({ email: email, password: password }).then((res) => {
       if (res !== undefined) {
-        console.log(res);
         if (res.data === 1) {
           handleErrorClear();
           setUserDoesentExistError(true);
@@ -74,7 +70,10 @@ export default function Login() {
           setIsLoadingReposne(false);
         } else {
           handleErrorClear();
-          localStorage.setItem("token", 123);
+          history.push({
+            pathname: `/loginRedirect/${res.data.token}`,
+            state: { previousLocation: "loginRegister" },
+          });
           setIsLoggedIn(true);
           setIsLoadingReposne(false);
         }
@@ -85,8 +84,6 @@ export default function Login() {
   return (
     <Stack vertical alignment="center" distribution="fillEvenly">
       <h1>Login</h1>
-
-      <Growl ref={(el) => (growl = el)} />
 
       <span className="p-float-label">
         <InputText
@@ -168,14 +165,7 @@ export default function Login() {
         ) : null}
       </div>
 
-      {isLoggedIn && (
-        // growl.show({
-        //   severity: "success",
-        //   summary: "Successfully logged in",
-        //   detail: "Enjoy",
-        // })
-        <p>Successfully logged in !</p>
-      )}
+      {isLoggedIn && <p>Successfully logged in !</p>}
     </Stack>
   );
-}
+};

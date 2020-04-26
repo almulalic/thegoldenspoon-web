@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import Navbar from "../../components/navbar/Navbar";
+import React, { useState, useEffect } from "react";
+import { Navbar, RestaurantRecords } from "../../components/index";
 import "./Profile.css";
 
 const Profile = (props) => {
+  // MAIN STATES
   const [nameInput, setNameInput] = useState("");
+
   return (
     <div>
       <Navbar />
@@ -66,7 +68,9 @@ const Profile = (props) => {
         ones you plan to try real soon. If you have some favorite places, mark
         those, too. They'll get special recognition in your list.
       </p>
-      <div className="restaurants"></div>
+      <div className="restaurants">
+        <RestaurantRecords />
+      </div>
     </div>
   );
 };

@@ -1,15 +1,25 @@
+.heading {
+  font-family: "Dancing Script", cursive;
+}
+
 .registerButton {
-  .p-button {
-    height: 2.5rem;
-    width: 100%;
-  }
+  width: 100% !important;
+  font-weight: bold;
+  padding: 0.15rem !important;
+  position: relative !important;
+  letter-spacing: 1px;
+}
+
+.registerDropdown {
+  margin: 0;
+  width: 140px;
 }
 
 .overlay {
   position: relative;
   height: 100%;
   width: 100%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.6);
   top: 0;
   left: 0;
   right: 0;

@@ -3,7 +3,7 @@ import { Link, withRouter, useHistory } from "react-router-dom";
 import "./Navbar.css";
 import { InputText } from "primereact/inputtext";
 
-const Navbar = (props) => {
+export const Navbar = (props) => {
   return (
     <div className="NavbarContainer">
       <div className="Logo"></div>
@@ -21,5 +21,3 @@ const Navbar = (props) => {
     </div>
   );
 };
-
-export default Navbar;

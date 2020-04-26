@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { InputText } from "primereact/inputtext";
-import identities from "../../api/identities";
-import { Password } from "primereact/password";
-import { Button } from "primereact/button";
-import { InputMask } from "primereact/inputmask";
-import { Dropdown } from "primereact/dropdown";
+import CountiresData from "../../shared/json/countriesList.json";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { Stack } from "../../elements/stack/Stack";
-import { Card } from "primereact/card";
-import CountiresData from "../../shared/json/countriesByAbbreviation.json";
+import { InputText } from "primereact/inputtext";
+import { Password } from "primereact/password";
+import { Dropdown } from "primereact/dropdown";
+import identities from "../../api/identities";
 import { Message } from "primereact/message";
 import { Captcha } from "primereact/captcha";
+import { Button } from "primereact/button";
+import React, { useState } from "react";
 import "./Register.scss";
-import { ProgressSpinner } from "primereact/progressspinner";
 
-export default function Register() {
+export const Register = () => {
   // MAIN STATES
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -34,22 +32,38 @@ export default function Register() {
 
   // LOADING STATES
   const [isValidatingFormData, setIsValidatingFormData] = useState(false);
+  const [isRegisteringUser, setIsRegisteringUser] = useState(false);
 
-  // ERROR HANDLING
+  // ERROR HANDLING PRE-API
   const [emptyFieldsError, setEmptyFieldsError] = useState(false);
   const [invalidEmailTypeError, setInvalidEmailTypeError] = useState(false);
   const [passwordDontMatchError, setPasswordDontMatchError] = useState(false);
   const [passwordNotStrongError, setPasswordNotStrongError] = useState(false);
-  const [emailNotUnique, setEmailNotUnique] = useState(false);
-  const [usernameNotUnique, setUsernameNotUnique] = useState(false);
+  const [emailNotUniqueError, setEmailNotUniqueError] = useState(false);
+  const [usernameNotUniqueError, setUsernameNotUniqueError] = useState(false);
+
+  // ERROR HANDLING POST-API
+  const [notUniqueError, setNotUniqueError] = useState(false);
+  const [internalServerError, setInternalServerError] = useState(false);
+  const [registerConfirmationError, setRegisterConfirmationError] = useState(
+    false
+  );
+
+  // SUCCESSFULL STATES
+  const [registrationSuccessfull, setRegistrationSuccessfull] = useState(false);
+  const [registrationMessage, setRegistrationMessage] = useState("");
 
   const handleErrorClear = () => {
     setEmptyFieldsError(false);
     setInvalidEmailTypeError(false);
     setPasswordDontMatchError(false);
     setPasswordNotStrongError(false);
-    setEmailNotUnique(false);
-    setUsernameNotUnique(false);
+    setEmailNotUniqueError(false);
+    setUsernameNotUniqueError(false);
+    setNotUniqueError(false);
+    setRegistrationSuccessfull(false);
+    setInternalServerError(false);
+    setRegisterConfirmationError(false);
   };
 
   const isUniqueEmail = () => {
@@ -85,8 +99,8 @@ export default function Register() {
   };
 
   // API CALL
-
   const RegisterUser = () => {
+    setIsRegisteringUser(true);
     identities
       .register({
         firstName: nameInput,
@@ -97,11 +111,39 @@ export default function Register() {
         sex: selectedGender,
         country: selectedCountry,
       })
-      .then(() => {
-        console.log("all gucci");
+      .then((response) => {
+        console.log(response);
+        handleErrorClear();
+        switch (response.data.status) {
+          case 1:
+            setNotUniqueError(true);
+            break;
+          case 2:
+            setRegistrationSuccessfull(true);
+            setRegisterConfirmationError(false);
+            setRegistrationMessage(
+              "Successfully registered, check your email to proceed !"
+            );
+            break;
+          case 3:
+            setRegistrationSuccessfull(true);
+            setRegisterConfirmationError(true);
+            setRegistrationMessage(
+              "Successfully registered but we failed to send confirmation email. Please try to resend it "
+            );
+            break;
+          default:
+            setInternalServerError(true);
+            break;
+        }
+        setIsRegisteringUser(false);
       })
-      .catch(() => {
-        console.log("nevalajti nesto");
+      .catch((err) => {
+        handleErrorClear();
+        setInternalServerError(true);
+
+        setIsRegisteringUser(false);
+        console.log(err);
       });
   };
 
@@ -131,7 +173,7 @@ export default function Register() {
       .then((response) => {
         if (response.data !== 1) {
           handleErrorClear();
-          setEmailNotUnique(true);
+          setEmailNotUniqueError(true);
           setIsValidatingFormData(false);
           return;
         } else {
@@ -140,7 +182,7 @@ export default function Register() {
             .then((response) => {
               if (response.data !== 1) {
                 handleErrorClear();
-                setUsernameNotUnique(true);
+                setUsernameNotUniqueError(true);
                 setIsValidatingFormData(false);
                 return;
               } else {
@@ -168,35 +210,14 @@ export default function Register() {
         console.log(err);
         return;
       });
-
-    // isUniqueEmail
-    //   .then((res) => {
-    //     if (res !== 1)
-    //   })
-    //   .finally(() => {
-    //     isUniqueUsername.then((res) => {
-    //       if (res !== 1) {
-    //         handleErrorClear();
-    //         setUsernameNotUnique(true);
-    //         setIsValidatingFormData(false);
-    //       } else if (passwordInput !== confirmPasswordInput) {
-    //         handleErrorClear();
-    //         setPasswordDontMatchError(true);
-    //         setIsValidatingFormData(false);
-    //         return;
-    //       } else setIsValidatingFormData(false);
-    //     });
-    //   });
-
-    // }
   };
 
   return (
     <div className="register">
       <div className="overlay"></div>
-      <Stack alignment="center" vertical>
-        <h1>Are you new? Come on in</h1>
-        <Stack distribution="fillEvenly" alignment="center">
+      <Stack distribution="fill" alignment="center" vertical>
+        <h1 className="heading">Are you new? Come on in</h1>
+        <Stack distribution="fill" alignment="center">
           <span className="p-float-label">
             <InputText
               id="firstName"
@@ -282,38 +303,47 @@ export default function Register() {
           size="40"
         />
       </div> */}
-        <Stack vertical>
-          <Stack distribution="fillEvenly" alignment="center">
-            <Dropdown
-              id="genderDropdown"
-              className="dropdown"
-              placeholder="Select gender"
-              label="gender"
-              value={selectedGender}
-              options={genderSelectItems}
-              onChange={(e) => {
-                setSelectedGender(e.value);
-              }}
-            />
+        <Stack distribution="fill">
+          <Dropdown
+            id="genderDropdown"
+            className="registerDropdown genderDropdown"
+            placeholder="Select gender"
+            label="gender"
+            value={selectedGender}
+            options={genderSelectItems}
+            onChange={(e) => {
+              setSelectedGender(e.value);
+            }}
+          />
 
-            <Dropdown
-              id="countryDropdown"
-              className="dropdown"
-              placeholder="Select country"
-              label="country"
-              value={selectedCountry}
-              options={CountiresData}
-              onChange={(e) => {
-                setSelectedCity(e.value);
-              }}
-              filter
-              filterPlaceholder="Search by name"
-            />
-          </Stack>
+          <Dropdown
+            id="countryDropdown"
+            className="registerDropdown countryDropdown"
+            placeholder="Select country"
+            label="country"
+            value={selectedCountry}
+            options={CountiresData}
+            onChange={(e) => {
+              setSelectedCity(e.value);
+            }}
+            filter
+            filterPlaceholder="Search by name"
+          />
+        </Stack>
 
+        <Stack vertical distribution="fill">
           <Captcha
             siteKey="ASTAKVIRULLAH"
             onResponse={() => console.log("a")}
+          />
+
+          <Button
+            disabled={isValidatingFormData}
+            onClick={() => {
+              ValidateForm();
+            }}
+            className="registerButton"
+            label="REGISTER"
           />
         </Stack>
 
@@ -322,28 +352,43 @@ export default function Register() {
             <Message severity="error" text="You must fill out every field" />
           ) : invalidEmailTypeError ? (
             <Message severity="error" text="Invalid email format" />
-          ) : emailNotUnique ? (
+          ) : emailNotUniqueError ? (
             <Message
               severity="error"
               text="Account with that email already exists"
             />
-          ) : usernameNotUnique ? (
+          ) : usernameNotUniqueError ? (
             <Message severity="error" text="Username already exists" />
           ) : passwordDontMatchError ? (
             <Message severity="error" text="Password's doesen't match" />
           ) : null}
         </div>
-        <div className="registerButton">
-          <Button
-            disabled={isValidatingFormData}
-            onClick={() => {
-              ValidateForm();
-            }}
-            className="button"
-            label="Register"
-          />
+
+        <div>
+          {notUniqueError ? (
+            <Message severity="error" text="User must be unique !" />
+          ) : (
+            internalServerError && (
+              <Message
+                severity="error"
+                text={
+                  "Internal server error. If this persists please contact your administrator "
+                }
+              />
+            )
+          )}
+
+          {registrationMessage !== "" && (
+            <div>
+              {registerConfirmationError ? (
+                <Message severity="warning" text={registrationMessage} />
+              ) : (
+                <Message severity="success" text={registrationMessage} />
+              )}
+            </div>
+          )}
         </div>
       </Stack>
     </div>
   );
-}
+};

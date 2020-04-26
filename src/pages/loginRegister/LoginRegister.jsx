@@ -4,12 +4,11 @@ import identities from "../../api/identities";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import "./LoginRegister.scss";
-import Register from "../../components/register/Register";
 import { Stack } from "../../elements/stack/Stack";
 import { Page } from "../../elements/page/Page";
-import Login from "../../components/login/Login";
 // import { Card } from "primereact/card";
 import { Card } from "../../elements/card/Card";
+import { Login, Register } from "../../components";
 
 const LoginRegister = (props) => {
   return (

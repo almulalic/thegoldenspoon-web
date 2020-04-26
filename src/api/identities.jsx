@@ -26,4 +26,10 @@ export default {
     axios.get(BASE_API_URL + `/identity/confirmation/${token}`).catch((err) => {
       console.log(err);
     }),
+  validateToken: (token) =>
+    axios
+      .get(BASE_API_URL + `/identity/validateToken/${token}`)
+      .catch((err) => {
+        console.log(err);
+      }),
 };
