@@ -78,18 +78,14 @@ const RestaurantCard = ({ restaurant }) => {
               value={selectedStatus}
               options={statusOptions}
               className="RestaurantCard-StatusE"
-              onChange={(e) =>
-                handleStatusChange(e.value, restaurant.record.isFavorite)
-              }
+              onChange={(e) => handleStatusChange(e.value, isFavorite)}
               // itemTemplate={renderStatusButton}
             />
             <p>
               Favorite:{" "}
               <Rating
                 value={isFavorite}
-                onChange={(e) =>
-                  handleStatusChange(restaurant.record.Status, e.value)
-                }
+                onChange={(e) => handleStatusChange(selectedStatus, e.value)}
                 stars={1}
                 cancel={1}
               />{" "}

@@ -1,8 +1,10 @@
-.loginButton {
-  width: 100%;
-  font-size: 20px;
+.Login-loginButton {
+  width: 100% !important;
+  font-weight: bold;
+  padding: 0.15rem !important;
+  position: relative !important;
+  letter-spacing: 1px;
 }
-
 .forgotPasswordText {
   font-weight: bold;
 }

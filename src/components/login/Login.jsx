@@ -11,6 +11,9 @@ import {
   InplaceDisplay,
   InplaceContent,
 } from "primereact/components/inplace/Inplace";
+import { Captcha } from "primereact/captcha";
+import "./Login.scss";
+
 export const Login = ({ setRedirectingState }) => {
   // MAIN STATES
   const [loginEmailInput, setLoginEmailInput] = useState("");
@@ -79,45 +82,48 @@ export const Login = ({ setRedirectingState }) => {
   };
 
   return (
-    <Stack vertical alignment="center" distribution="fillEvenly">
+    <Stack distribution="fill" alignment="center" vertical spacing="loose">
       <h1>Login</h1>
 
-      <span className="p-float-label">
-        <InputText
-          id="float-input"
-          label="email"
-          value={loginEmailInput}
-          onChange={(e) => setLoginEmailInput(e.target.value)}
-          size="50"
-        />
-        <label htmlFor="float-input loginLabel">Email</label>
-      </span>
+      <Stack vertical distribution="fill" spacing="loose">
+        <Stack vertical distribution="fill" spacing="tight">
+          <span className="p-float-label">
+            <InputText
+              id="float-input"
+              label="email"
+              value={loginEmailInput}
+              onChange={(e) => setLoginEmailInput(e.target.value)}
+              size="40"
+            />
+            <label htmlFor="float-input ">Email</label>
+          </span>
 
-      <span className="p-float-label">
-        <Password
-          label="password"
-          value={loginPasswordInput}
-          onChange={(e) => setLoginPasswordInput(e.target.value)}
-          size="50"
-          feedback={false}
-        />
-        <label htmlFor="float-input ">
-          <span className="loginLabel">Password</span>
-        </label>
-      </span>
-      <div className="loginButton">
+          <span className="p-float-label">
+            <Password
+              label="password"
+              value={loginPasswordInput}
+              onChange={(e) => setLoginPasswordInput(e.target.value)}
+              size="40"
+              feedback={false}
+            />
+            <label htmlFor="float-input ">
+              <span className="float-input ">Password</span>
+            </label>
+          </span>
+        </Stack>
+
         <Button
-          className="p-button-raised "
-          label="Login"
+          className="p-button-raised Login-loginButton"
+          label="LOGIN"
           onClick={() => {
             login(loginEmailInput, loginPasswordInput);
           }}
         />
-      </div>
+      </Stack>
+
       <span>
         <a href="">Forgot password?</a>
       </span>
-
       <div>
         {userDoesentExistError ? (
           <Message

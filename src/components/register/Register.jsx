@@ -333,6 +333,7 @@ export const Register = () => {
         <Captcha siteKey="ASTAKVIRULLAH" onResponse={() => console.log("a")} />
 
         <Button
+          className="p-button-raised"
           disabled={isValidatingFormData}
           onClick={() => {
             ValidateForm();
