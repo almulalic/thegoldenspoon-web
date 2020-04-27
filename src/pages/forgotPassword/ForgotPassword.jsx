@@ -3,9 +3,9 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
 import { Card } from "primereact/card";
-import "./ForgotPassword.css";
+import "./ForgotPassword.scss";
 
-export default function ForgotPassword() {
+export const ForgotPassword = () => {
   const footer = (
     <span>
       <Button className="button" label="Submit" />
@@ -38,4 +38,4 @@ export default function ForgotPassword() {
       </Stack>
     </div>
   );
-}
+};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.scss";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import {
@@ -6,14 +6,14 @@ import {
   LoginRegister,
   AccountConfirmation,
   LoginRedirect,
+  ForgotPassword,
+  ResetPassword,
+  ResetConfirmationMail,
 } from "./pages";
 import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
-import ProfileTest from "./pages/profileTest/ProfileTest";
-import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
-import ResetPassword from "./pages/resetPassword/ResetPassword";
-import ResetConfirmationMail from "./pages/resetConfirmationMail/ResetConfirmationMail";
+import Routes from "./shared/routes/Routes";
 
 function App(props) {
   return (
@@ -21,10 +21,7 @@ function App(props) {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={LoginRegister} />
-          <Route exact path="/profile" component={Profile} />
           <Route exact path="/loginRegister" component={LoginRegister} />
-          <Route exact path="/profileTest" component={ProfileTest} />
-
           <Route exact path="/loginRedirect/:token" component={LoginRedirect} />
           <Route
             exact
@@ -38,6 +35,7 @@ function App(props) {
             path="/resetConfirmationMail"
             component={ResetConfirmationMail}
           />
+          <Route exact path="" component={Routes} />
           <Route path="/" render={() => <div>404</div>} />
         </Switch>
       </BrowserRouter>

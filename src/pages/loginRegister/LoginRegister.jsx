@@ -9,8 +9,12 @@ import { Page } from "../../elements/page/Page";
 // import { Card } from "primereact/card";
 import { Card } from "../../elements/card/Card";
 import { Login, Register } from "../../components";
+import { withRouter } from "react-router-dom";
 
 const LoginRegister = (props) => {
+  useEffect(() => {
+    localStorage.clear();
+  });
   return (
     <Page padding="none" customClassName="main">
       <div className="main">
@@ -24,5 +28,4 @@ const LoginRegister = (props) => {
     </Page>
   );
 };
-
-export default LoginRegister;
+export default withRouter(LoginRegister);

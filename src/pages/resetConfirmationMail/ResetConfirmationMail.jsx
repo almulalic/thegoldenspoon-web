@@ -3,9 +3,9 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
 import { Card } from "primereact/card";
-import "./ResetConfirmationMail.css";
+import "./ResetConfirmationMail.scss";
 
-export default function ResetConfirmationMail() {
+export const ResetConfirmationMail = () => {
   const footer = (
     <span>
       <Button className="button" label="Submit" />
@@ -50,4 +50,4 @@ export default function ResetConfirmationMail() {
       </Stack>
     </div>
   );
-}
+};

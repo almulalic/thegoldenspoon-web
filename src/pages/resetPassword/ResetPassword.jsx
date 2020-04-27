@@ -3,10 +3,10 @@ import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
 import { Card } from "primereact/card";
-import "./ResetPassword.css";
+import "./ResetPassword.scss";
 import identities from "../../api/identities";
 
-export default function ResetPassword() {
+export const ResetPassword = () => {
   const [passwordInput, setPasswordInput] = useState("");
   const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
   const footer = (
@@ -87,4 +87,4 @@ export default function ResetPassword() {
       </Stack>
     </div>
   );
-}
+};
