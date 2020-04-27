@@ -22,7 +22,9 @@ const LoginRegister = (props) => {
           <div className="login">
             <Login />
           </div>
-          <Register />
+          <div className="register">
+            <Register />
+          </div>
         </div>
       </div>
     </Page>

@@ -213,79 +213,77 @@ export const Register = () => {
   };
 
   return (
-    <div className="register">
-      <div className="overlay"></div>
-      <Stack distribution="fill" alignment="center" vertical>
-        <h1 className="heading">Are you new? Come on in</h1>
-        <Stack distribution="fill" alignment="center">
-          <span className="p-float-label">
-            <InputText
-              id="firstName"
-              label="name"
-              value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
-              size="16"
-            />
-            <label htmlFor="float-input">Name</label>
-          </span>
-          <span className="p-float-label">
-            <InputText
-              id="lastName"
-              label="surname"
-              value={surnameInput}
-              onChange={(e) => setSurnameInput(e.target.value)}
-              size="16"
-            />
-            <label htmlFor="float-input">Surname</label>
-          </span>
-        </Stack>
-
+    <Stack distribution="fill" alignment="center" vertical>
+      <h1 className="heading">Are you new? Come on in</h1>
+      <Stack distribution="fill" alignment="center">
         <span className="p-float-label">
           <InputText
-            id="email"
-            label="email"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
-            size="40"
+            id="firstName"
+            label="name"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            size="16"
           />
-          <label htmlFor="float-input">Email</label>
+          <label htmlFor="float-input">Name</label>
         </span>
-
         <span className="p-float-label">
           <InputText
-            id="username"
-            label="username"
-            value={usernameInput}
-            onChange={(e) => setUsernameInput(e.target.value)}
+            id="lastName"
+            label="surname"
+            value={surnameInput}
+            onChange={(e) => setSurnameInput(e.target.value)}
+            size="16"
+          />
+          <label htmlFor="float-input">Surname</label>
+        </span>
+      </Stack>
+
+      <span className="p-float-label">
+        <InputText
+          id="email"
+          label="email"
+          value={emailInput}
+          onChange={(e) => setEmailInput(e.target.value)}
+          size="40"
+        />
+        <label htmlFor="float-input">Email</label>
+      </span>
+
+      <span className="p-float-label">
+        <InputText
+          id="username"
+          label="username"
+          value={usernameInput}
+          onChange={(e) => setUsernameInput(e.target.value)}
+          size="40"
+        />
+        <label htmlFor="float-input">Username</label>
+      </span>
+
+      <Stack vertical distribution="fill">
+        <span className="p-float-label">
+          <Password
+            id="password"
+            label="password"
+            value={passwordInput}
+            onChange={(e) => setPasswordInput(e.target.value)}
             size="40"
           />
-          <label htmlFor="float-input">Username</label>
+          <label htmlFor="float-input">Password</label>
         </span>
-
-        <Stack vertical distribution="fill">
-          <span className="p-float-label">
-            <Password
-              id="password"
-              label="password"
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-              size="40"
-            />
-            <label htmlFor="float-input">Password</label>
-          </span>
-          <span className="p-float-label">
-            <Password
-              id="password"
-              label="password"
-              value={confirmPasswordInput}
-              onChange={(e) => setConfirmPasswordInput(e.target.value)}
-              size="40"
-              feedback={false}
-            />
-            <label htmlFor="float-input">Confirm password</label>
-          </span>
-        </Stack>
-        {/* <InputMask
+        <span className="p-float-label">
+          <Password
+            id="password"
+            label="password"
+            value={confirmPasswordInput}
+            onChange={(e) => setConfirmPasswordInput(e.target.value)}
+            size="40"
+            feedback={false}
+          />
+          <label htmlFor="float-input">Confirm password</label>
+        </span>
+      </Stack>
+      {/* <InputMask
         mask="99/99/9999"
         placeholder="Birth date (dd/mm/yyyy)"
         label="date"
@@ -303,92 +301,88 @@ export const Register = () => {
           size="40"
         />
       </div> */}
-        <Stack distribution="fill">
-          <Dropdown
-            id="genderDropdown"
-            className="registerDropdown genderDropdown"
-            placeholder="Select gender"
-            label="gender"
-            value={selectedGender}
-            options={genderSelectItems}
-            onChange={(e) => {
-              setSelectedGender(e.value);
-            }}
-          />
+      <Stack distribution="fill">
+        <Dropdown
+          id="genderDropdown"
+          className="registerDropdown genderDropdown"
+          placeholder="Select gender"
+          label="gender"
+          value={selectedGender}
+          options={genderSelectItems}
+          onChange={(e) => {
+            setSelectedGender(e.value);
+          }}
+        />
 
-          <Dropdown
-            id="countryDropdown"
-            className="registerDropdown countryDropdown"
-            placeholder="Select country"
-            label="country"
-            value={selectedCountry}
-            options={CountiresData}
-            onChange={(e) => {
-              setSelectedCity(e.value);
-            }}
-            filter
-            filterPlaceholder="Search by name"
-          />
-        </Stack>
+        <Dropdown
+          id="countryDropdown"
+          className="registerDropdown countryDropdown"
+          placeholder="Select country"
+          label="country"
+          value={selectedCountry}
+          options={CountiresData}
+          onChange={(e) => {
+            setSelectedCity(e.value);
+          }}
+          filter
+          filterPlaceholder="Search by name"
+        />
+      </Stack>
 
-        <Stack vertical distribution="fill">
-          <Captcha
-            siteKey="ASTAKVIRULLAH"
-            onResponse={() => console.log("a")}
-          />
+      <Stack vertical distribution="fill">
+        <Captcha siteKey="ASTAKVIRULLAH" onResponse={() => console.log("a")} />
 
-          <Button
-            disabled={isValidatingFormData}
-            onClick={() => {
-              ValidateForm();
-            }}
-            className="registerButton"
-            label="REGISTER"
-          />
-        </Stack>
+        <Button
+          disabled={isValidatingFormData}
+          onClick={() => {
+            ValidateForm();
+          }}
+          className="registerButton"
+          label="REGISTER"
+        />
+      </Stack>
 
-        <div>
-          {emptyFieldsError ? (
-            <Message severity="error" text="You must fill out every field" />
-          ) : invalidEmailTypeError ? (
-            <Message severity="error" text="Invalid email format" />
-          ) : emailNotUniqueError ? (
+      <div>
+        {emptyFieldsError ? (
+          <Message severity="error" text="You must fill out every field" />
+        ) : invalidEmailTypeError ? (
+          <Message severity="error" text="Invalid email format" />
+        ) : emailNotUniqueError ? (
+          <Message
+            severity="error"
+            text="Account with that email already exists"
+          />
+        ) : usernameNotUniqueError ? (
+          <Message severity="error" text="Username already exists" />
+        ) : passwordDontMatchError ? (
+          <Message severity="error" text="Password's doesen't match" />
+        ) : null}
+      </div>
+
+      <div>
+        {notUniqueError ? (
+          <Message severity="error" text="User must be unique !" />
+        ) : (
+          internalServerError && (
             <Message
               severity="error"
-              text="Account with that email already exists"
+              text={
+                "Internal server error. If this persists please contact your administrator "
+              }
             />
-          ) : usernameNotUniqueError ? (
-            <Message severity="error" text="Username already exists" />
-          ) : passwordDontMatchError ? (
-            <Message severity="error" text="Password's doesen't match" />
-          ) : null}
-        </div>
+          )
+        )}
 
-        <div>
-          {notUniqueError ? (
-            <Message severity="error" text="User must be unique !" />
-          ) : (
-            internalServerError && (
-              <Message
-                severity="error"
-                text={
-                  "Internal server error. If this persists please contact your administrator "
-                }
-              />
-            )
-          )}
-
-          {registrationMessage !== "" && (
-            <div>
-              {registerConfirmationError ? (
-                <Message severity="warning" text={registrationMessage} />
-              ) : (
-                <Message severity="success" text={registrationMessage} />
-              )}
-            </div>
-          )}
-        </div>
-      </Stack>
-    </div>
+        {registrationMessage !== "" && (
+          <div>
+            {registerConfirmationError ? (
+              <Message severity="warning" text={registrationMessage} />
+            ) : (
+              <Message severity="success" text={registrationMessage} />
+            )}
+          </div>
+        )}
+      </div>
+    </Stack>
   );
 };
