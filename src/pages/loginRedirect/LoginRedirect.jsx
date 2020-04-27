@@ -14,6 +14,15 @@ export const LoginRedirect = (props) => {
   const populateLocalStorage = (token) => {
     localStorage.setItem("token", token);
 
+    identities
+      .decodeToken(token)
+      .then((decodedTokenResponse) => {
+        localStorage.setItem("user", JSON.stringify(decodedTokenResponse.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     restaurants
       .fetchCategories()
       .then((restaurantsCategoryResponse) => {
@@ -38,6 +47,30 @@ export const LoginRedirect = (props) => {
           "restaurantSubcategories",
           JSON.stringify(subcategoriesResponse.data)
         );
+
+        restaurants
+          .fetchRestaurants()
+          .then((restaurantsResponse) => {
+            localStorage.setItem(
+              "restaurants",
+              JSON.stringify(restaurantsResponse.data)
+            );
+
+            localStorage.setItem(
+              "categoriesAndSubcategories",
+              JSON.stringify(MergeRestaurantData())
+            );
+
+            history.push("/profile");
+          })
+          .catch((err) => {
+            console.log(err);
+            localStorage.clear();
+            history.push({
+              pathname: "/loginRegister",
+              state: { error: "Restaurants API problem" },
+            });
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -47,35 +80,10 @@ export const LoginRedirect = (props) => {
           state: { error: "Restaurants Subcategories API problem" },
         });
       });
-
-    restaurants
-      .fetchRestaurants()
-      .then((restaurantsResponse) => {
-        localStorage.setItem(
-          "restaurants",
-          JSON.stringify(restaurantsResponse.data)
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-        localStorage.clear();
-        history.push({
-          pathname: "/loginRegister",
-          state: { error: "Restaurants API problem" },
-        });
-      });
-
-    localStorage.setItem(
-      "categoriesAndSubcategories",
-      JSON.stringify(MergeRestaurantData())
-    );
-
-    history.push("/profile");
   };
 
   const validateToken = (token) => {
     identities.validateToken(token).then((tokenResponse) => {
-      console.log(tokenResponse);
       switch (tokenResponse.data) {
         case 1:
           populateLocalStorage(token);

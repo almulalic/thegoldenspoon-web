@@ -31,3 +31,9 @@ h4 {
   float: left;
   margin-left: 2%;
 } */
+
+.Profile-MainContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

@@ -9,7 +9,9 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import restaurantRecord from "../../api/restaurantRecord";
 import { Message } from "primereact/message";
 import _ from "lodash";
-
+import { Button } from "primereact/button";
+import { Toolbar } from "primereact/toolbar";
+import { Stack } from "../../elements/stack/Stack";
 import "./RestaurantRecords.scss";
 import RestaurantCard from "./restaurantCard/RestaurantCard";
 
@@ -23,30 +25,53 @@ export const RestaurantRecords = () => {
   const [
     categoryActiveAccordionIndex,
     setCategoryActiveAccordionIndex,
-  ] = useState();
+  ] = useState([]);
 
   const [
     subcategoruActiveAccordionIndex,
     setSubcategoruActiveAccordionIndex,
     ,
-  ] = useState();
+  ] = useState([]);
 
   // LOADING STATES
-  const [isFetchingRestaurants, setIsFetchinguserRecords] = useState(false);
+  const [isFetchingRecords, setIsFetchingRecords] = useState(false);
+
+  // LOCAL FUNCTIONS
+  const [expandAllCategories, setExpandAllCategories] = useState(false);
+  const [expandAllSubategories, setExpandAllSubcategories] = useState(false);
+
+  const handleExpandAllCategories = (newState) => {
+    setExpandAllCategories(newState);
+    if (newState) setCategoryActiveAccordionIndex([0, 1, 2, 3, 4]);
+    else setCategoryActiveAccordionIndex([]);
+  };
+
+  const handleExpandAllSubcategories = (newState) => {
+    setExpandAllSubcategories(newState);
+    setExpandAllCategories(newState);
+    if (newState)
+      setSubcategoruActiveAccordionIndex((prevState) =>
+        Array.from(Array(39).keys())
+      );
+    else setSubcategoruActiveAccordionIndex([]);
+  };
 
   // API
   const fetchUserRecords = () => {
+    setIsFetchingRecords(true);
     restaurantRecord
-      .fetchUserRecord(47)
+      .fetchUserRecord(JSON.parse(localStorage.getItem("user")).id)
       .then((userRecordsResponse) => {
         setUserRecords(userRecordsResponse.data);
         let _allRecords = GenerateFullData(userRecordsResponse.data);
+        console.log(_allRecords);
         setAllRestaurantRecords(_allRecords);
         setExpandedRecords(GenerateExpandedData(_allRecords));
+        setIsFetchingRecords(false);
       })
       .catch((err) => {
         console.log(err);
-        setIsFetchinguserRecords(false);
+        setIsFetchingRecords(false);
       });
   };
 
@@ -55,18 +80,46 @@ export const RestaurantRecords = () => {
   }, []);
 
   return (
-    <div className="main">
+    <div className="RestaurantRecords">
+      <div className="RestaurantRecords-Navigation">
+        <Toolbar>
+          <Stack distribution="center" alignment="center">
+            <Button
+              label={
+                (expandAllCategories ? `Contract` : `Expand`) +
+                ` all categories`
+              }
+              onClick={() => {
+                handleExpandAllCategories(!expandAllCategories);
+              }}
+              disabled={isFetchingRecords}
+            />
+
+            <Button
+              label={
+                (expandAllSubategories ? `Contract` : `Expand`) +
+                ` all subcategories`
+              }
+              onClick={() => {
+                handleExpandAllSubcategories(!expandAllSubategories);
+              }}
+              disabled={isFetchingRecords}
+            />
+          </Stack>
+        </Toolbar>
+      </div>
       <div
         style={{ display: "flex", justifyContent: "center" }}
-        className="container"
+        className="profile-container"
       >
-        <div style={{ width: "400px", alignSelf: "center", textAlign: "left" }}>
-          {isFetchingRestaurants ? (
+        <div style={{ width: "600px", alignSelf: "center", textAlign: "left" }}>
+          {isFetchingRecords ? (
             <ProgressSpinner />
           ) : (
             <Accordion
               activeIndex={categoryActiveAccordionIndex}
               onTabChange={(e) => setCategoryActiveAccordionIndex(e.index)}
+              multiple
             >
               {expandedRecords.map((category, categoryKey) => {
                 return (
@@ -76,6 +129,7 @@ export const RestaurantRecords = () => {
                       onTabChange={(e) =>
                         setSubcategoruActiveAccordionIndex(e.index)
                       }
+                      multiple
                     >
                       {category.subcategories.map(
                         (subcategory, subcategoryKey) => {

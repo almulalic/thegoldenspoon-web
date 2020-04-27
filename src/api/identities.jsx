@@ -32,4 +32,8 @@ export default {
       .catch((err) => {
         console.log(err);
       }),
+  decodeToken: (token) =>
+    axios.get(BASE_API_URL + `/identity/decodeToken/${token}`).catch((err) => {
+      console.log(err);
+    }),
 };

@@ -1,9 +1,11 @@
 export const GenerateFullData = (userData) => {
+  console.log(userData);
   let _fullData = JSON.parse(localStorage.getItem("restaurants"));
   return _fullData.map((restaurant) => {
-    if (userData[restaurant.id + 1] != null)
+    let temp = userData.find((x) => x.restaurantId === restaurant.id);
+    if (temp)
       return Object.assign({}, restaurant, {
-        record: userData[restaurant.id + 1],
+        record: temp,
       });
     else
       return Object.assign({}, restaurant, {

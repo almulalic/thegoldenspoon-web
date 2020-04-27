@@ -8,4 +8,14 @@ export default {
       .catch((err) => {
         console.log(err);
       }),
+  updateRestaurantRecord: (body) =>
+    axios
+      .post(BASE_API_URL + `/restaurant/updateRestaurantRecord`, body, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+      }),
 };
