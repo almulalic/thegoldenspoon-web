@@ -15,6 +15,7 @@ const Profile = (props) => {
     email: null,
     avatar: null,
     country: null,
+    adress: null,
   });
 
   // LOADING STATES
