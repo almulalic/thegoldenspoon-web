@@ -1,5 +1,4 @@
 export const GenerateFullData = (userData) => {
-  console.log(userData);
   let _fullData = JSON.parse(localStorage.getItem("restaurants"));
   return _fullData.map((restaurant) => {
     let temp = userData.find((x) => x.restaurantId === restaurant.id);

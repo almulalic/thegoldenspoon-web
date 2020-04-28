@@ -8,17 +8,18 @@ export default function CustomRoute({ permission = null, title, ...rest }) {
   let token;
   if (localStorage.token !== undefined) {
     token = localStorage.token;
+    console.log(token);
   } else {
     return <Redirect to="loginRegister" />;
   }
 
   if (permission !== null) {
-    console.log(permission);
     identities
       .decodeToken(token)
       .then((decodedTokenResponse) => {
-        if (decodedTokenResponse !== null) return <Route {...rest} />;
-        else history.push("/loginRegister");
+        if (decodedTokenResponse !== null) {
+          return <Route {...rest} />;
+        } else history.push("/loginRegister");
       })
       .catch((err) => {
         console.log(err);

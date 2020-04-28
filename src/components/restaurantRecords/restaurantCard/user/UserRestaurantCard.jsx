@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Stack } from "../../../elements/stack/Stack";
+import { Stack } from "../../../../elements/stack/Stack";
 import _ from "lodash";
-import "./RestaruantCard.scss";
+import "./UserRestaurantCard.scss";
 import { Rating } from "primereact/rating";
 import { SelectButton } from "primereact/selectbutton";
 import { ProgressSpinner } from "primereact/progressspinner";
-import restaurantRecord from "../../../api/restaurantRecord";
+import restaurantRecord from "../../../../api/restaurantRecord";
 
-const RestaurantCard = ({ restaurant }) => {
+const UserRestaurantCard = ({ restaurant }) => {
   // MAIN STATES
   const [selectedStatus, changeSelectedStatus] = useState(
     restaurant.record.status ?? 0
@@ -15,7 +15,6 @@ const RestaurantCard = ({ restaurant }) => {
   const [isFavorite, setIsFavorite] = useState(
     restaurant.record.isFavorite ?? 0
   );
-
   // LOADING STATES
   const [isUpdatingRecord, setIsUpdatingRecord] = useState(false);
 
@@ -69,7 +68,9 @@ const RestaurantCard = ({ restaurant }) => {
   return (
     <div className="RestaurantCard">
       {isUpdatingRecord ? (
-        <ProgressSpinner />
+        <Stack alignment="center" distribution="center">
+          <ProgressSpinner />
+        </Stack>
       ) : (
         <Stack alignment="center" distribution="center" vertical>
           <h3 style={{ fontWeight: "bold" }}>{restaurant.name}</h3>
@@ -81,15 +82,15 @@ const RestaurantCard = ({ restaurant }) => {
               onChange={(e) => handleStatusChange(e.value, isFavorite)}
               // itemTemplate={renderStatusButton}
             />
-            <p>
+            <div>
               Favorite:{" "}
               <Rating
                 value={isFavorite}
                 onChange={(e) => handleStatusChange(selectedStatus, e.value)}
                 stars={1}
-                cancel={1}
+                cancel
               />{" "}
-            </p>
+            </div>
           </Stack>
         </Stack>
       )}
@@ -97,4 +98,4 @@ const RestaurantCard = ({ restaurant }) => {
   );
 };
 
-export default RestaurantCard;
+export default UserRestaurantCard;

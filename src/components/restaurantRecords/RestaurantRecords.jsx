@@ -13,13 +13,16 @@ import { Button } from "primereact/button";
 import { Toolbar } from "primereact/toolbar";
 import { Stack } from "../../elements/stack/Stack";
 import "./RestaurantRecords.scss";
-import RestaurantCard from "./restaurantCard/RestaurantCard";
+import UserRestaurantCard from "./restaurantCard/user/UserRestaurantCard";
+import GuestRestaurantCard from "./restaurantCard/guest/GuestRestaurantCard";
+import restaurants from "../../api/restaurants";
 
-export const RestaurantRecords = () => {
+export const RestaurantRecords = ({ props }) => {
   // MAIN STATES
   const [expandedRecords, setExpandedRecords] = useState([]);
   const [allRestaurantRecords, setAllRestaurantRecords] = useState([]);
   const [userRecords, setUserRecords] = useState([]);
+  const [isGuest, setIsGuest] = useState(true);
 
   // ACCORDION STATES
   const [
@@ -57,14 +60,14 @@ export const RestaurantRecords = () => {
   };
 
   // API
-  const fetchUserRecords = () => {
+  const fetchUserRecords = (uid) => {
     setIsFetchingRecords(true);
     restaurantRecord
-      .fetchUserRecord(JSON.parse(localStorage.getItem("user")).id)
+      .fetchUserRecord(uid)
       .then((userRecordsResponse) => {
         setUserRecords(userRecordsResponse.data);
+
         let _allRecords = GenerateFullData(userRecordsResponse.data);
-        console.log(_allRecords);
         setAllRestaurantRecords(_allRecords);
         setExpandedRecords(GenerateExpandedData(_allRecords));
         setIsFetchingRecords(false);
@@ -76,7 +79,13 @@ export const RestaurantRecords = () => {
   };
 
   useEffect(() => {
-    fetchUserRecords();
+    if (props.match.path === "/profile") {
+      fetchUserRecords(JSON.parse(localStorage.getItem("user")).id);
+      setIsGuest(false);
+    } else {
+      fetchUserRecords(props.match.params.uid);
+      setIsGuest(true);
+    }
   }, []);
 
   return (
@@ -114,7 +123,9 @@ export const RestaurantRecords = () => {
       >
         <div style={{ width: "600px", alignSelf: "center", textAlign: "left" }}>
           {isFetchingRecords ? (
-            <ProgressSpinner />
+            <Stack alignment="center" distribution="center">
+              <ProgressSpinner />
+            </Stack>
           ) : (
             <Accordion
               activeIndex={categoryActiveAccordionIndex}
@@ -142,10 +153,19 @@ export const RestaurantRecords = () => {
                                 (restaurant, restaurantKey) => {
                                   {
                                     return (
-                                      <RestaurantCard
-                                        restaurant={restaurant}
-                                        key={restaurantKey}
-                                      />
+                                      <div key={restaurantKey}>
+                                        {isGuest ? (
+                                          <GuestRestaurantCard
+                                            restaurant={restaurant}
+                                            key={restaurantKey}
+                                          />
+                                        ) : (
+                                          <UserRestaurantCard
+                                            restaurant={restaurant}
+                                            key={restaurantKey}
+                                          />
+                                        )}
+                                      </div>
                                     );
                                   }
                                 }

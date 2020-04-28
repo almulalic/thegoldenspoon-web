@@ -1,0 +1,24 @@
+.RestaurantCard {
+  background: lightblue;
+  border: 2px solid lightblue;
+  margin: 10px 0 10px 0;
+  border-radius: 5px;
+}
+
+.RestaurantCard-Empty {
+  background: lightblue;
+  border: 2px solid lightblue;
+  margin: 10px 0 10px 0;
+  border-radius: 5px;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  p {
+    color: gray;
+  }
+}
+
+.RestaurantCard-StatusSelect {
+  height: 60px;
+  width: 100px;
+}

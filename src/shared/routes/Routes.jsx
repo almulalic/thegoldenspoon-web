@@ -19,32 +19,38 @@ const Routes = (props) => {
         <CustomRoute
           permission={[1, 2]}
           exact
-          title="Segments"
+          title="Profile"
           path="/profile"
           component={Profile}
         />
-
+        <CustomRoute
+          permission={[1, 2]}
+          exact
+          title="Profile"
+          path="/profile/:username"
+          component={Profile}
+        />
         <CustomRoute
           exact
-          title="Segments"
+          title="Confrim Account"
           path="/accountConfirmation/:token"
           component={AccountConfirmation}
         />
         <CustomRoute
           exact
-          title="Segments"
+          title="Forgot Password"
           path="/forgotPassword"
           component={ForgotPassword}
         />
         <CustomRoute
           exact
-          title="Segments"
+          title="Reset Password"
           path="/resetPassword"
           component={ResetPassword}
         />
         <CustomRoute
           exact
-          title="Segments"
+          title="Resend Confirmation Mail"
           path="/resetConfirmationMail"
           component={ResetConfirmationMail}
         />
