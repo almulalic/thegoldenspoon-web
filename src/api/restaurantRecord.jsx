@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_API_URL } from "./index";
+import apiClient from "./apiClient";
 
 export default {
   fetchUserRecord: (id) =>
@@ -10,11 +11,7 @@ export default {
       }),
   updateRestaurantRecord: (body) =>
     axios
-      .post(BASE_API_URL + `/restaurant/updateRestaurantRecord`, body, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .post(BASE_API_URL + `/restaurant/updateRestaurantRecord`, body)
       .catch((err) => {
         console.log(err);
       }),

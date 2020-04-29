@@ -1,5 +1,6 @@
 import axios from "axios";
-import { BASE_API_URL } from "./index";
+import { BASE_API_URL } from ".";
+import apiClient from "./apiClient";
 
 export default {
   register: (body) =>
@@ -34,6 +35,10 @@ export default {
       }),
   decodeToken: (token) =>
     axios.get(BASE_API_URL + `/identity/decodeToken/${token}`).catch((err) => {
+      console.log(err);
+    }),
+  refreshToken: (body) =>
+    axios.post(BASE_API_URL + `/identity/refreshToken`, body).catch((err) => {
       console.log(err);
     }),
 };

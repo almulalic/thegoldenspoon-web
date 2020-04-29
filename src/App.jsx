@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.scss";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import {
   Profile,
   LoginRegister,
@@ -14,15 +14,18 @@ import "primereact/resources/themes/nova-light/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import Routes from "./shared/routes/Routes";
+import createHistory from "history/createBrowserHistory";
 
 function App(props) {
+  const history = createHistory();
+
   return (
     <div className="App">
-      <BrowserRouter>
+      <Router history={history}>
         <Switch>
           <Route exact path="/" component={LoginRegister} />
           <Route exact path="/loginRegister" component={LoginRegister} />
-          <Route exact path="/loginRedirect/:token" component={LoginRedirect} />
+          <Route exact path="/loginRedirect" component={LoginRedirect} />
           <Route
             exact
             path="/accountConfirmation/:token"
@@ -38,7 +41,7 @@ function App(props) {
           <Route exact path="" component={Routes} />
           <Route path="/" render={() => <div>404</div>} />
         </Switch>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }

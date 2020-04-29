@@ -11,13 +11,14 @@ export const LoginRedirect = (props) => {
 
   let history = useHistory();
 
-  const populateLocalStorage = (token) => {
-    localStorage.setItem("token", token);
-
+  const PopulateLocalStorage = (accessToken, refreshToken) => {
     identities
-      .decodeToken(token)
+      .decodeToken(accessToken)
       .then((decodedTokenResponse) => {
-        localStorage.setItem("user", JSON.stringify(decodedTokenResponse.data));
+        localStorage.setItem(
+          "user",
+          JSON.stringify(decodedTokenResponse.data.user)
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -82,11 +83,13 @@ export const LoginRedirect = (props) => {
       });
   };
 
-  const validateToken = (token) => {
-    identities.validateToken(token).then((tokenResponse) => {
+  const ValidateToken = (accessToken, refreshToken) => {
+    identities.validateToken(accessToken).then((tokenResponse) => {
       switch (tokenResponse.data) {
         case 1:
-          populateLocalStorage(token);
+          PopulateLocalStorage(accessToken, refreshToken);
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
           break;
         case 2:
           localStorage.clear();
@@ -115,7 +118,10 @@ export const LoginRedirect = (props) => {
 
   useEffect(() => {
     if (props.location.state.previousLocation === "loginRegister")
-      validateToken(props.match.params.token);
+      ValidateToken(
+        props.location.state.accessToken,
+        props.location.state.refreshToken
+      );
     else {
       localStorage.clear();
       history.push({

@@ -213,8 +213,7 @@ export const Register = () => {
   };
 
   return (
-    <Stack distribution="fill" alignment="center" vertical>
-      <h1 className="heading">Are you new? Come on in</h1>
+    <Stack distribution="fill" alignment="center" vertical spacing="tight">
       <Stack distribution="fill" alignment="center">
         <span className="p-float-label">
           <InputText
@@ -260,7 +259,7 @@ export const Register = () => {
         <label htmlFor="float-input">Username</label>
       </span>
 
-      <Stack vertical distribution="fill">
+      <Stack vertical distribution="fill" spacing="tight">
         <span className="p-float-label">
           <Password
             id="password"
@@ -282,6 +281,51 @@ export const Register = () => {
           />
           <label htmlFor="float-input">Confirm password</label>
         </span>
+
+        <Stack distribution="fill">
+          <Dropdown
+            id="genderDropdown"
+            className="registerDropdown genderDropdown"
+            placeholder="Select gender"
+            label="gender"
+            value={selectedGender}
+            options={genderSelectItems}
+            onChange={(e) => {
+              setSelectedGender(e.value);
+            }}
+          />
+
+          <Dropdown
+            id="countryDropdown"
+            className="registerDropdown countryDropdown"
+            placeholder="Select country"
+            label="country"
+            value={selectedCountry}
+            options={CountiresData}
+            onChange={(e) => {
+              setSelectedCity(e.value);
+            }}
+            filter
+            filterPlaceholder="Search by name"
+          />
+        </Stack>
+
+        <Stack vertical distribution="fill">
+          <Captcha
+            siteKey="ASTAKVIRULLAH"
+            onResponse={() => console.log("a")}
+          />
+
+          <Button
+            className="p-button-raised"
+            disabled={isValidatingFormData}
+            onClick={() => {
+              ValidateForm();
+            }}
+            className="registerButton"
+            label="REGISTER"
+          />
+        </Stack>
       </Stack>
       {/* <InputMask
         mask="99/99/9999"
@@ -301,47 +345,6 @@ export const Register = () => {
           size="40"
         />
       </div> */}
-      <Stack distribution="fill">
-        <Dropdown
-          id="genderDropdown"
-          className="registerDropdown genderDropdown"
-          placeholder="Select gender"
-          label="gender"
-          value={selectedGender}
-          options={genderSelectItems}
-          onChange={(e) => {
-            setSelectedGender(e.value);
-          }}
-        />
-
-        <Dropdown
-          id="countryDropdown"
-          className="registerDropdown countryDropdown"
-          placeholder="Select country"
-          label="country"
-          value={selectedCountry}
-          options={CountiresData}
-          onChange={(e) => {
-            setSelectedCity(e.value);
-          }}
-          filter
-          filterPlaceholder="Search by name"
-        />
-      </Stack>
-
-      <Stack vertical distribution="fill">
-        <Captcha siteKey="ASTAKVIRULLAH" onResponse={() => console.log("a")} />
-
-        <Button
-          className="p-button-raised"
-          disabled={isValidatingFormData}
-          onClick={() => {
-            ValidateForm();
-          }}
-          className="registerButton"
-          label="REGISTER"
-        />
-      </Stack>
 
       <div>
         {emptyFieldsError ? (

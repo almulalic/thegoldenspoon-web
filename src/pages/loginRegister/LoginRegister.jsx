@@ -17,13 +17,28 @@ const LoginRegister = (props) => {
   });
   return (
     <Page padding="none" customClassName="main">
-      <div className="main">
-        <div className="container">
-          <div className="login">
-            <Login />
+      <div className="loginRegister">
+        <div id="login">
+          <div className="Form-Card">
+            <div className="Form-CardHeader">
+              <h1>Login</h1>
+            </div>
+            <div className="Form-CardBody">
+              <Login />
+            </div>
           </div>
-          <div className="register">
-            <Register />
+        </div>
+        <div id="register">
+          <div className="Form-Card">
+            <div className="Form-CardHeader">
+              <h1>Are you new ?</h1>
+              <h2>Come on in !</h2>
+            </div>
+            <div className="register card">
+              <div className="Form-CardBody">
+                <Register />
+              </div>
+            </div>
           </div>
         </div>
       </div>

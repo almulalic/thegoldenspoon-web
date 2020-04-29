@@ -70,9 +70,14 @@ export const Login = ({ setRedirectingState }) => {
           setIsLoadingReposne(false);
         } else {
           handleErrorClear();
+
           history.push({
-            pathname: `/loginRedirect/${res.data.token}`,
-            state: { previousLocation: "loginRegister" },
+            pathname: `/loginRedirect`,
+            state: {
+              previousLocation: "loginRegister",
+              accessToken: res.data.accessToken,
+              refreshToken: res.data.refreshToken,
+            },
           });
           setIsLoggedIn(true);
           setIsLoadingReposne(false);
@@ -83,9 +88,7 @@ export const Login = ({ setRedirectingState }) => {
 
   return (
     <Stack distribution="fill" alignment="center" vertical spacing="loose">
-      <h1>Login</h1>
-
-      <Stack vertical distribution="fill" spacing="loose">
+      <Stack vertical distribution="fill" spacing="tight">
         <Stack vertical distribution="fill" spacing="tight">
           <span className="p-float-label">
             <InputText
@@ -93,7 +96,7 @@ export const Login = ({ setRedirectingState }) => {
               label="email"
               value={loginEmailInput}
               onChange={(e) => setLoginEmailInput(e.target.value)}
-              size="40"
+              size="35"
             />
             <label htmlFor="float-input ">Email</label>
           </span>
@@ -103,7 +106,7 @@ export const Login = ({ setRedirectingState }) => {
               label="password"
               value={loginPasswordInput}
               onChange={(e) => setLoginPasswordInput(e.target.value)}
-              size="40"
+              size="35"
               feedback={false}
             />
             <label htmlFor="float-input ">
@@ -119,11 +122,14 @@ export const Login = ({ setRedirectingState }) => {
             login(loginEmailInput, loginPasswordInput);
           }}
         />
+
+        <Stack vertical alignment="center" distribution="fillEvenly">
+          <span>
+            <a href="">Forgot password?</a>
+          </span>
+        </Stack>
       </Stack>
 
-      <span>
-        <a href="">Forgot password?</a>
-      </span>
       <div>
         {userDoesentExistError ? (
           <Message

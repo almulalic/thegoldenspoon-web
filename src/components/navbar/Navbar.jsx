@@ -32,6 +32,7 @@ export const Navbar = (props) => {
 
   const handleProifleRedirect = (username) => {
     history.push(`/profile/${username}`);
+    window.location.reload();
   };
 
   const userTemplate = (user) => {
@@ -39,7 +40,7 @@ export const Navbar = (props) => {
       <div
         className="p-clearfix DrowdownTemplate"
         onClick={() => {
-          handleProifleRedirect(user.id);
+          handleProifleRedirect(user.username);
         }}
       >
         <Stack distribution="equalSpacing" alignment="center">
