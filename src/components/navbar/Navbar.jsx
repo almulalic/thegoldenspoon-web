@@ -60,7 +60,14 @@ export const Navbar = (props) => {
   return (
     <div className="NavbarContainer">
       <div className="Logo"></div>
-
+      <p
+        className="logout"
+        onClick={() => {
+          handleProifleRedirect("");
+        }}
+      >
+        My Profile
+      </p>
       <div className="SearchBar">
         <AutoComplete
           value={searchUserInput}

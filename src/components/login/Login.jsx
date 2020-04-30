@@ -70,7 +70,6 @@ export const Login = ({ setRedirectingState }) => {
           setIsLoadingReposne(false);
         } else {
           handleErrorClear();
-
           history.push({
             pathname: `/loginRedirect`,
             state: {

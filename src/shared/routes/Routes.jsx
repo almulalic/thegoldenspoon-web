@@ -8,11 +8,13 @@ import {
   ResetPassword,
   ResetConfirmationMail,
 } from "../../pages";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Router } from "react-router-dom";
 import CustomRoute from "./CustomRoute";
 import { connect } from "react-redux";
-
+import createHistory from "history/createBrowserHistory";
 const Routes = (props) => {
+  const history = createHistory();
+
   return (
     <div className="Content-wrap">
       <Switch>

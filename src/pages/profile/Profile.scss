@@ -35,5 +35,35 @@ h4 {
 .Profile-MainContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
+}
+
+.Profile-UserData {
+  width: 40%;
+}
+
+.Profile-UserData--Heading {
+  font-family: "Dancing Script", cursive;
+  text-align: center;
+  letter-spacing: 0.5rem;
+  padding: 0.5rem;
+}
+
+.Profile-Restaurants {
+  width: 60%;
+}
+
+.Profile-Section {
+  height: 100%;
+  margin: 2rem;
+  border-radius: 10px;
+  box-shadow: 3px 3px 10px rgb(15, 15, 15);
+  background: white;
+}
+
+.bold {
+  font-weight: bold;
 }

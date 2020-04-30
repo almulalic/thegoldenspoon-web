@@ -60,14 +60,16 @@ export const RestaurantRecords = ({ props }) => {
   };
 
   // API
-  const fetchUserRecords = (uid) => {
+  const fetchUserRecords = () => {
     setIsFetchingRecords(true);
+
     restaurantRecord
-      .fetchUserRecord(uid)
+      .fetchUserRecord(props.match.params.username ?? "")
       .then((userRecordsResponse) => {
         setUserRecords(userRecordsResponse.data);
 
         let _allRecords = GenerateFullData(userRecordsResponse.data);
+
         setAllRestaurantRecords(_allRecords);
         setExpandedRecords(GenerateExpandedData(_allRecords));
         setIsFetchingRecords(false);
@@ -77,15 +79,13 @@ export const RestaurantRecords = ({ props }) => {
         setIsFetchingRecords(false);
       });
   };
-
   useEffect(() => {
     if (props.match.path === "/profile") {
-      fetchUserRecords(JSON.parse(localStorage.getItem("user")).id);
       setIsGuest(false);
     } else {
-      fetchUserRecords(props.match.params.uid);
       setIsGuest(true);
     }
+    fetchUserRecords();
   }, []);
 
   return (
@@ -118,10 +118,10 @@ export const RestaurantRecords = ({ props }) => {
         </Toolbar>
       </div>
       <div
-        style={{ display: "flex", justifyContent: "center" }}
-        className="profile-container"
+        style={{ justifyContent: "center" }}
+        className="RestaurantRecords-Container"
       >
-        <div style={{ width: "600px", alignSelf: "center", textAlign: "left" }}>
+        <div style={{ textAlign: "left" }}>
           {isFetchingRecords ? (
             <Stack alignment="center" distribution="center">
               <ProgressSpinner />

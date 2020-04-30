@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.scss";
-import { Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch, BrowserRouter } from "react-router-dom";
 import {
   Profile,
   LoginRegister,
@@ -21,7 +21,7 @@ function App(props) {
 
   return (
     <div className="App">
-      <Router history={history}>
+      <BrowserRouter history={history}>
         <Switch>
           <Route exact path="/" component={LoginRegister} />
           <Route exact path="/loginRegister" component={LoginRegister} />
@@ -41,7 +41,7 @@ function App(props) {
           <Route exact path="" component={Routes} />
           <Route path="/" render={() => <div>404</div>} />
         </Switch>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
