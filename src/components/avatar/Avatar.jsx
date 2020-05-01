@@ -1,6 +1,7 @@
 import React from "react";
 import { defaultAvatar } from "../../assets/avatars/defaultAvatar.jpg";
 import "./Avatar.scss";
+import restaurants from "../../api/restaurants";
 
 const Avatar = (avatar, size) => {
   return (

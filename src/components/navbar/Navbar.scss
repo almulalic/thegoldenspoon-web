@@ -1,25 +1,9 @@
 .NavbarContainer {
   font-family: "Dancing Script", cursive;
   font-size: 20px;
-  color: #e8eff5;
-  background: #0076ac;
+  color: white;
+  background: #007ad9;
   padding: 10px;
-  display: flex;
-}
-
-.Logo {
-  flex: 1;
-}
-
-.SearchBar {
-  flex: 2;
-}
-
-.SearchBar input[type="text"] {
-  float: left;
-  padding: 3px;
-  border-radius: 8px;
-  font-size: 17px;
 }
 
 .UserProfile {
@@ -32,6 +16,7 @@
   width: 1.5rem;
   height: 1.5rem;
   margin: 0px 0px 0px 5px;
+  color: white;
 }
 
 .DrowdownTemplate {

@@ -35,6 +35,7 @@ axios.interceptors.response.use(
         })
         .then((res) => {
           if (res.status === 200) {
+            console.log("Refreshed");
             localStorage.setItem("accessToken", res.data.accessToken);
 
             axios.defaults.headers.common["x-token"] =

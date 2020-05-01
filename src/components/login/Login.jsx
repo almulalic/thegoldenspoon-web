@@ -89,29 +89,35 @@ export const Login = ({ setRedirectingState }) => {
     <Stack distribution="fill" alignment="center" vertical spacing="loose">
       <Stack vertical distribution="fill" spacing="tight">
         <Stack vertical distribution="fill" spacing="tight">
-          <span className="p-float-label">
-            <InputText
-              id="float-input"
-              label="email"
-              value={loginEmailInput}
-              onChange={(e) => setLoginEmailInput(e.target.value)}
-              size="35"
-            />
-            <label htmlFor="float-input ">Email</label>
-          </span>
+          <div className="p-col-12 p-md-4">
+            <div className="p-inputgroup">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-user"></i>
+              </span>
+              <InputText
+                id="float-input"
+                label="email"
+                value={loginEmailInput}
+                onChange={(e) => setLoginEmailInput(e.target.value)}
+                size="30"
+              />
+            </div>
+          </div>
 
-          <span className="p-float-label">
-            <Password
-              label="password"
-              value={loginPasswordInput}
-              onChange={(e) => setLoginPasswordInput(e.target.value)}
-              size="35"
-              feedback={false}
-            />
-            <label htmlFor="float-input ">
-              <span className="float-input ">Password</span>
-            </label>
-          </span>
+          <div className="p-col-12 p-md-4">
+            <div className="p-inputgroup">
+              <span className="p-inputgroup-addon">
+                <i class="pi pi-lock"></i>
+              </span>
+              <Password
+                label="password"
+                value={loginPasswordInput}
+                onChange={(e) => setLoginPasswordInput(e.target.value)}
+                size="30"
+                feedback={false}
+              />
+            </div>
+          </div>
         </Stack>
 
         <Button

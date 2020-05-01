@@ -62,35 +62,38 @@ const Profile = (props) => {
       ) : (
         <div className="Profile-MainContainer">
           <div className="Profile-UserData Profile-Section">
-            <Stack vertical alignment="center" spacing="tight">
-              <h1 className="Profile-UserData--Heading">
-                {props.match.params.username ? "Welcome" : "User: "}{" "}
-                {userData.username}
-              </h1>
-              <Avatar />
-              <div
-                style={{
-                  width: "100%",
-                  height: "2px",
-                  background: "black",
-                  content: ".",
-                }}
-              ></div>
-              <Stack>
-                <span>
-                  <p className="bold">
-                    Full name:
+            <div className="Profile-UserData--Card">
+              <Stack vertical alignment="center" spacing="tight">
+                <Avatar />
+                <div
+                  style={{
+                    width: "100%",
+                    height: "2px",
+                    background: "black",
+                    content: ".",
+                  }}
+                ></div>
+                <Stack alignment="center">
+                  <div
+                    style={{ borderBottomLeftRadius: "10px" }}
+                    className="Profile-UserData--Infosection"
+                  >
                     <span>{userData.firstName + " " + userData.lastName}</span>
-                  </p>
-                  <p className="bold">
-                    Username:<span>{userData.username}</span>
-                  </p>
-                  <p className="bold">
-                    Email :<span>{userData.email}</span>
-                  </p>
-                </span>
+                  </div>
+
+                  <div className="Profile-UserData--Infosection">
+                    <span>{userData.username}</span>
+                  </div>
+
+                  <div
+                    style={{ borderBottomRightRadius: "10px" }}
+                    className="Profile-UserData--Infosection"
+                  >
+                    <span>{userData.email}</span>
+                  </div>
+                </Stack>
               </Stack>
-            </Stack>
+            </div>
           </div>
 
           <div className="Profile-Restaurants ">

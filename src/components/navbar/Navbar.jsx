@@ -6,6 +6,9 @@ import { AutoComplete } from "primereact/autocomplete";
 import users from "../../api/users";
 import { Stack } from "../../elements/stack/Stack";
 
+import { Button } from "primereact/button";
+import { Sidebar } from "primereact/sidebar";
+
 export const Navbar = (props) => {
   const [suggestionsList, setSuggestionsList] = useState([]);
   const [searchUserInput, setSearchUserInput] = useState("");
@@ -57,48 +60,66 @@ export const Navbar = (props) => {
     );
   };
 
+  const [sidebarVisible, setSidebarVisible] = useState(false);
+
   return (
     <div className="NavbarContainer">
-      <div className="Logo"></div>
-      <p
-        className="logout"
-        onClick={() => {
-          handleProifleRedirect("");
-        }}
-      >
-        My Profile
-      </p>
-      <div className="SearchBar">
-        <AutoComplete
-          value={searchUserInput}
-          suggestions={suggestionsList}
-          completeMethod={(e) => filterCountrySingle(e)}
-          field="username"
-          size={30}
-          placeholder="Search other users..."
-          minLength={1}
-          onChange={(e) => setSearchUserInput(e.value)}
-          itemTemplate={userTemplate}
-        />
-      </div>
-      <div className="UserProfile">
-        {userData.username}
-        <img
-          className="icon"
-          src="https://cdn2.iconfinder.com/data/icons/avatar-profile/458/avatar_contact_starwars_user_default_mickey-512.png"
-          alt=""
-        />
-      </div>
-      <div className="logout">
-        <p
-          onClick={() => {
-            localStorage.clear();
-            history.push("/loginRegister");
-          }}
+      <Stack alignment="center" distribution="fill">
+        <Sidebar
+          visible={sidebarVisible}
+          onHide={(e) => setSidebarVisible(false)}
         >
-          Logout
-        </p>
-      </div>
+          Content
+        </Sidebar>
+
+        <Button
+          label="Menu"
+          icon="pi pi-bars"
+          className="p-button-secondary"
+          onClick={() => setSidebarVisible(true)}
+        />
+        <Stack>
+          <p
+            className="logout"
+            onClick={() => {
+              handleProifleRedirect("");
+            }}
+          >
+            My Profile
+          </p>
+        </Stack>
+        <div className="SearchBar">
+          <AutoComplete
+            value={searchUserInput}
+            suggestions={suggestionsList}
+            completeMethod={(e) => filterCountrySingle(e)}
+            field="username"
+            size="50"
+            placeholder="Search other users..."
+            minLength={1}
+            onChange={(e) => setSearchUserInput(e.value)}
+            itemTemplate={userTemplate}
+          />
+        </div>
+        <Stack distribution="trailing" alignment="center">
+          <div className="UserProfile">
+            <Stack spacing="extraTight" alignment="center">
+              <p> {userData.username}</p>
+            </Stack>
+          </div>
+
+          <div className="logout">
+            <p
+              onClick={() => {
+                localStorage.clear();
+                history.push("/loginRegister");
+              }}
+            >
+              Logout
+            </p>
+          </div>
+        </Stack>
+      </Stack>
     </div>
   );
 };
