@@ -45,17 +45,15 @@ export const RestaurantRecords = ({ props }) => {
 
   const handleExpandAllCategories = (newState) => {
     setExpandAllCategories(newState);
+
     if (newState) setCategoryActiveAccordionIndex([0, 1, 2, 3, 4]);
     else setCategoryActiveAccordionIndex([]);
   };
 
   const handleExpandAllSubcategories = (newState) => {
     setExpandAllSubcategories(newState);
-    setExpandAllCategories(newState);
-    if (newState)
-      setSubcategoruActiveAccordionIndex((prevState) =>
-        Array.from(Array(39).keys())
-      );
+    handleExpandAllCategories(newState ? newState : [0, 1, 2, 3, 4]);
+    if (newState) setSubcategoruActiveAccordionIndex([...Array(39).keys()]);
     else setSubcategoruActiveAccordionIndex([]);
   };
 

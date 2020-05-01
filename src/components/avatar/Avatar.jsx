@@ -1,5 +1,6 @@
 import React from "react";
 import { defaultAvatar } from "../../assets/avatars/defaultAvatar.jpg";
+import "./Avatar.scss";
 
 const Avatar = (avatar, size) => {
   return (

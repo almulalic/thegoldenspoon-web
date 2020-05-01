@@ -62,7 +62,7 @@ const Profile = (props) => {
       ) : (
         <div className="Profile-MainContainer">
           <div className="Profile-UserData Profile-Section">
-            <Stack vertical alignment="center">
+            <Stack vertical alignment="center" spacing="tight">
               <h1 className="Profile-UserData--Heading">
                 {props.match.params.username ? "Welcome" : "User: "}{" "}
                 {userData.username}
@@ -92,7 +92,8 @@ const Profile = (props) => {
               </Stack>
             </Stack>
           </div>
-          <div className="Profile-Restaurants Profile-Section">
+
+          <div className="Profile-Restaurants ">
             <RestaurantRecords props={props} />
           </div>
         </div>
