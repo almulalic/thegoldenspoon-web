@@ -1,9 +1,6 @@
 import React from "react";
 import axios from "axios";
 import identities from "./identities";
-import { Redirect } from "react-router-dom";
-import jwt from "jsonwebtoken";
-import { useHistory } from "react-router-dom";
 
 // Add a request interceptor
 axios.interceptors.request.use(

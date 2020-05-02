@@ -62,7 +62,7 @@ export const LoginRedirect = (props) => {
               JSON.stringify(MergeRestaurantData())
             );
 
-            history.push("/profile");
+            history.push("/records");
           })
           .catch((err) => {
             console.log(err);

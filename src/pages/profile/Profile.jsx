@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, RestaurantRecords } from "../../components/index";
-import "./Profile.scss";
+import { Page } from "./../../elements/page/Page";
 import users from "../../api/users";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Redirect } from "react-router-dom";
 import { Card } from "../../elements/card/Card";
-import { Stack } from "../../elements/stack/Stack";
-import Avatar from "./../../components/avatar/Avatar";
 
-const Profile = (props) => {
+export const Profile = (props) => {
   // MAIN STATES
   const [nameInput, setNameInput] = useState("");
   const [userData, setUserData] = useState({
@@ -51,58 +47,18 @@ const Profile = (props) => {
   }, []);
 
   return (
-    <div className="Profile">
-      <Navbar />
+    <Page padding="none">
       {isLoadingProfileData ? (
         <ProgressSpinner />
       ) : noUserError ? (
         <div>
-          We could't with a user with username {props.match.params.username}
+          <Card>
+            We couln't find a user with nickname {props.match.params.username}{" "}
+          </Card>
         </div>
       ) : (
-        <div className="Profile-MainContainer">
-          <div className="Profile-UserData Profile-Section">
-            <div className="Profile-UserData--Card">
-              <Stack vertical alignment="center" spacing="tight">
-                <Avatar />
-                <div
-                  style={{
-                    width: "100%",
-                    height: "2px",
-                    background: "black",
-                    content: ".",
-                  }}
-                ></div>
-                <Stack alignment="center">
-                  <div
-                    style={{ borderBottomLeftRadius: "10px" }}
-                    className="Profile-UserData--Infosection"
-                  >
-                    <span>{userData.firstName + " " + userData.lastName}</span>
-                  </div>
-
-                  <div className="Profile-UserData--Infosection">
-                    <span>{userData.username}</span>
-                  </div>
-
-                  <div
-                    style={{ borderBottomRightRadius: "10px" }}
-                    className="Profile-UserData--Infosection"
-                  >
-                    <span>{userData.email}</span>
-                  </div>
-                </Stack>
-              </Stack>
-            </div>
-          </div>
-
-          <div className="Profile-Restaurants ">
-            <RestaurantRecords props={props} />
-          </div>
-        </div>
+        <div>{userData.firstName}</div>
       )}
-    </div>
+    </Page>
   );
 };
-
-export default Profile;

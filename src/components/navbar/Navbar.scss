@@ -1,9 +1,31 @@
 .NavbarContainer {
-  font-family: "Dancing Script", cursive;
   font-size: 20px;
   color: white;
   background: #007ad9;
   padding: 10px;
+}
+
+.Navbar-Sidebar {
+  background: #007ad9 !important;
+}
+
+.Navbar-Sidebar--Userdata--Username {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+.Navbar-Sidebar--Item--Icon {
+  font-size: 1.1rem;
+
+  color: white !important;
+}
+
+.Navbar-Sidebar--Item--Label {
+  font-size: 1rem;
+  color: white !important;
+
+  font-family: "Roboto";
 }
 
 .UserProfile {

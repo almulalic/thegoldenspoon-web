@@ -21,7 +21,7 @@ function App(props) {
 
   return (
     <div className="App">
-      <BrowserRouter history={history}>
+      <Router history={history}>
         <Switch>
           <Route exact path="/" component={LoginRegister} />
           <Route exact path="/loginRegister" component={LoginRegister} />
@@ -41,7 +41,7 @@ function App(props) {
           <Route exact path="" component={Routes} />
           <Route path="/" render={() => <div>404</div>} />
         </Switch>
-      </BrowserRouter>
+      </Router>
     </div>
   );
 }

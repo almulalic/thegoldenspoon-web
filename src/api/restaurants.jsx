@@ -16,7 +16,7 @@ export default {
         console.log(err);
       }),
   fetchSubcategories: (body) =>
-    axios
+    apiClient
       .get(BASE_API_URL + `/restaurant/fetchSubcategories`, body)
       .catch((err) => {
         console.log(err);

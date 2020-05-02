@@ -1,7 +1,19 @@
-import React, { Fragment } from "react";
+import React, { Fragment, Children } from "react";
 import "./Page.scss";
 import { elementClassNames, variationName } from "../../shared/utils";
 import { Stack } from "../stack/Stack";
+import { Navbar } from "../../components";
+import "@trendmicro/react-sidenav/dist/react-sidenav.css";
+import { useHistory } from "react-router-dom";
+
+const SideNav = require("@trendmicro/react-sidenav");
+const {
+  Toggle,
+  Nav,
+  NavItem,
+  NavIcon,
+  NavText,
+} = require("@trendmicro/react-sidenav");
 
 export type Padding = "none" | "small" | "normal" | "large";
 
@@ -53,16 +65,16 @@ export interface PageProps {
   thumbnailNode?: React.ReactNode;
 
   children?: React.ReactNode;
+  includeNavigation: boolean;
 }
 
 export function Page({
   padding = "normal",
   narrowWidth,
   marginFix = true,
-  title,
-  thumbnail,
-  children,
   customClassName,
+  includeNavigation = true,
+  children,
 }: PageProps) {
   const className = elementClassNames(
     "Page",
@@ -72,32 +84,16 @@ export function Page({
     customClassName && customClassName
   );
 
-  const breadcrumbMarkup = <div></div>;
-
-  const titleMarkup = title ? (
-    <Fragment>
-      <Stack alignment="center">
-        <h1>{title}</h1>
-      </Stack>
-    </Fragment>
-  ) : null;
-
-  const actionsMarkup = <div></div>;
-
-  const headerClass = elementClassNames((thumbnail || title) && "Page--Header");
-
   return (
     <div className={className}>
-      {breadcrumbMarkup}
-      {titleMarkup ? (
-        <div className={headerClass}>
-          <Stack alignment={thumbnail ? "center" : "leading"}>
-            <Stack.Item fill>{titleMarkup}</Stack.Item>
-            {actionsMarkup}
-          </Stack>
+      {includeNavigation ? (
+        <div className="Page--hasNavigation">
+          <Navbar />
+          {children}
         </div>
-      ) : null}
-      {children}
+      ) : (
+        { children }
+      )}
     </div>
   );
 }

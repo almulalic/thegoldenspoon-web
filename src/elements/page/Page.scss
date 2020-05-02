@@ -39,3 +39,7 @@ body {
   margin: 0 auto;
   max-width: layout-width(primary, max);
 }
+
+.Page--hasNavigation {
+  margin-left: 64px;
+}

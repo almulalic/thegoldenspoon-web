@@ -3,14 +3,14 @@ import { BASE_API_URL } from "./index";
 import apiClient from "./apiClient";
 
 export default {
-  fetchUserRecord: (id) =>
-    axios
-      .get(BASE_API_URL + `/restaurant/fetchUserRecord/${id}`)
+  fetchUserRecord: (username) =>
+    apiClient
+      .get(BASE_API_URL + `/restaurant/fetchUserRecord/${username}`)
       .catch((err) => {
         console.log(err);
       }),
   updateRestaurantRecord: (body) =>
-    axios
+    apiClient
       .post(BASE_API_URL + `/restaurant/updateRestaurantRecord`, body)
       .catch((err) => {
         console.log(err);

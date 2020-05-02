@@ -37,6 +37,7 @@ export interface StackProps {
   affectFirst?: boolean;
   padding?: Responsive<Spacing>;
   onClick?(): void;
+  customClassName?: string;
 }
 
 /** Stack Props: wrap, vertical, spacing, alignment, distribution, padding, affectFirst, onClick() */
@@ -50,6 +51,7 @@ export const Stack = memo(function Stack({
   padding,
   onClick,
   wrap,
+  customClassName = "",
 }: StackProps) {
   const className = elementClassNames(
     "Stack",

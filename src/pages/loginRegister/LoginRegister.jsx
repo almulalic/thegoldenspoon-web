@@ -13,10 +13,10 @@ import { withRouter } from "react-router-dom";
 
 const LoginRegister = (props) => {
   useEffect(() => {
-    localStorage.clear();
+    // localStorage.clear();
   });
   return (
-    <Page padding="none" customClassName="main">
+    <Page padding="none" customClassName="main" includeNavbar={false}>
       <div className="loginRegister">
         <div id="login">
           <div className="Form-Card">
