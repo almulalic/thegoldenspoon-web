@@ -5,6 +5,7 @@ import { Stack } from "../stack/Stack";
 import { Navbar } from "../../components";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import { useHistory } from "react-router-dom";
+import { Sidebar } from "../../components/sidebar/Sidebar";
 
 const SideNav = require("@trendmicro/react-sidenav");
 const {
@@ -65,9 +66,8 @@ export interface PageProps {
   thumbnailNode?: React.ReactNode;
 
   children?: React.ReactNode;
-  includeNavigation: boolean;
+  includeNavigation?: boolean;
 }
-
 export function Page({
   padding = "normal",
   narrowWidth,
@@ -88,11 +88,12 @@ export function Page({
     <div className={className}>
       {includeNavigation ? (
         <div className="Page--hasNavigation">
+          <Sidebar />
           <Navbar />
           {children}
         </div>
       ) : (
-        { children }
+        <div>{children}</div>
       )}
     </div>
   );

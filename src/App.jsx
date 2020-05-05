@@ -15,12 +15,13 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import Routes from "./shared/routes/Routes";
 import createHistory from "history/createBrowserHistory";
+import "./assets/styles/main.scss";
 
 function App(props) {
   const history = createHistory();
 
   return (
-    <div className="App">
+    <div className="App custom">
       <Router history={history}>
         <Switch>
           <Route exact path="/" component={LoginRegister} />

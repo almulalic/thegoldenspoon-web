@@ -71,7 +71,7 @@ export const Stack = memo(function Stack({
   });
 
   return (
-    <div onClick={onClick} className={className}>
+    <div onClick={onClick} className={className + " " + customClassName}>
       {itemMarkup}
     </div>
   );

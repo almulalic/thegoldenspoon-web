@@ -4,6 +4,7 @@ html,
 body {
   min-height: 100%;
   height: 100%;
+  background: rgb(229, 229, 229);
 }
 
 .#{$classNameBase}-Page--marginFix {
@@ -41,5 +42,6 @@ body {
 }
 
 .Page--hasNavigation {
-  margin-left: 64px;
+  padding-left: 300px;
+  padding-top: 116px;
 }

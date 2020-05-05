@@ -3,6 +3,10 @@ import { Page } from "./../../elements/page/Page";
 import users from "../../api/users";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Card } from "../../elements/card/Card";
+import { OverviewItem } from "../../components/overviewItem/OverviewItem";
+import { Stack } from "../../elements/stack/Stack";
+import "./Profile.scss";
+import { RestaurantRecords } from "../../components";
 
 export const Profile = (props) => {
   // MAIN STATES
@@ -41,8 +45,17 @@ export const Profile = (props) => {
         console.log(err);
       });
   };
+
+  const [isGuest, setIsGuest] = useState(false);
+
   useEffect(() => {
     setIsLoadingProfileData(true);
+
+    if (props.match.path === "/profile") {
+      setIsGuest(false);
+    } else {
+      setIsGuest(true);
+    }
     fetchUserData();
   }, []);
 
@@ -57,7 +70,34 @@ export const Profile = (props) => {
           </Card>
         </div>
       ) : (
-        <div>{userData.firstName}</div>
+        <Stack customClassName="NoTopPadding" vertical padding="normal">
+          {isGuest && (
+            <div>
+              <h1>Welcome to the profile of {userData.username} </h1>
+            </div>
+          )}
+          <Stack distribution="fill">
+            <OverviewItem
+              version="c1"
+              heading="12"
+              text="restaurants visited this year"
+              icon={"fas fa-utensils"}
+            />
+            <OverviewItem
+              version="c2"
+              heading="10"
+              text="unqiue menu items"
+              icon={"fas fa-archive"}
+            />
+            <OverviewItem
+              version="c3"
+              heading="5"
+              text="restaurants visited this month"
+              icon={"fas fa-utensils"}
+            />
+          </Stack>
+          <RestaurantRecords props={props} />
+        </Stack>
       )}
     </Page>
   );
