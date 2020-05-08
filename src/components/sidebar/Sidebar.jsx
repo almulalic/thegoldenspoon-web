@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./Sidebar.scss";
 import { SidebarItem } from "./sidebarItem/SidebarItem";
 import { useHistory } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
+import "./Sidebar.scss";
 
 export const Sidebar = () => {
   let history = useHistory();
@@ -12,7 +12,6 @@ export const Sidebar = () => {
     <aside className="menu-sidebar2">
       <div className="logo">
         <img src={require("../../assets/pictures/logo.svg")} alt="John Doe" />
-
         <h3>The golden spoon</h3>
       </div>
       <div className="menu-sidebar2__content js-scrollbar1">

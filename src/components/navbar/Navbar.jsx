@@ -4,16 +4,10 @@ import { InputText } from "primereact/inputtext";
 import { AutoComplete } from "primereact/autocomplete";
 import users from "../../api/users";
 import { Stack } from "../../elements/stack/Stack";
-import { Button } from "primereact/button";
-import { Sidebar } from "../sidebar/Sidebar";
-import Avatar from "./../avatar/Avatar";
-import { Card } from "../../elements/card/Card";
-import podium from "../../assets/icons/podium.svg";
-import social from "../../assets/icons/social.svg";
-import statistics from "../../assets/icons/statistics.svg";
 
 import { NavbarMobile } from "./mobile/NavbarMobile";
 import "./Navbar.scss";
+import { GoldenSpoon } from "../goldenSpoon/GoldenSpoon";
 
 export const Navbar = (props) => {
   const [suggestionsList, setSuggestionsList] = useState([]);
@@ -69,6 +63,7 @@ export const Navbar = (props) => {
   };
 
   const [isUserToolbarActive, setIsUserToolbarActive] = useState(false);
+  const [isSpoonPopoverActive, setIsSpoonPopoverActive] = useState(true);
 
   return (
     <div classNameName="NavbarContainer">
@@ -93,42 +88,19 @@ export const Navbar = (props) => {
               </div>
 
               <div className="header-button2">
-                <div className="header-button-item has-noti js-item-menu">
-                  <i className="zmdi zmdi-notifications"></i>
-                  <div className="notifi-dropdown js-dropdown">
-                    <div className="notifi__title">
-                      <p>You have 3 Notifications</p>
-                    </div>
-                    <div className="notifi__item">
-                      <div className="bg-c1 img-cir img-40">
-                        <i className="zmdi zmdi-email-open"></i>
-                      </div>
-                      <div className="content">
-                        <p>You got a email notification</p>
-                        <span className="date">April 12, 2018 06:50</span>
-                      </div>
-                    </div>
-                    <div className="notifi__item">
-                      <div className="bg-c2 img-cir img-40">
-                        <i className="zmdi zmdi-account-box"></i>
-                      </div>
-                      <div className="content">
-                        <p>Your account has been blocked</p>
-                        <span className="date">April 12, 2018 06:50</span>
-                      </div>
-                    </div>
-                    <div className="notifi__item">
-                      <div className="bg-c3 img-cir img-40">
-                        <i className="zmdi zmdi-file-text"></i>
-                      </div>
-                      <div className="content">
-                        <p>You got a new file</p>
-                        <span className="date">April 12, 2018 06:50</span>
-                      </div>
-                    </div>
-                    <div className="notifi__footer">
-                      <a href="#">All notifications</a>
-                    </div>
+                <div
+                  className={`header-button-item has-noti js-item-menu  ${
+                    isSpoonPopoverActive ? "show-dropdown" : ""
+                  }`}
+                >
+                  <i
+                    className="fa fa-spoon"
+                    onClick={() =>
+                      setIsSpoonPopoverActive(!isSpoonPopoverActive)
+                    }
+                  />
+                  <div className={`notifi-dropdown js-dropdown `}>
+                    <GoldenSpoon />
                   </div>
                 </div>
                 <div className="header-button-item mr-0 js-sidebar-btn">

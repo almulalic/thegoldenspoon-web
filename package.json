@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.6",
     "axios": "^0.19.2",
     "axios-auth-refresh": "^2.2.5",
+    "chart.js": "^2.9.3",
     "chartjs": "^0.3.24",
     "classnames": "^2.2.6",
     "fullcalendar": "^3.10.1",

@@ -2,10 +2,14 @@ import React, { useState } from "react";
 import { Stack } from "../../../../elements/stack/Stack";
 import _ from "lodash";
 import "./UserRestaurantCard.scss";
-import { Rating } from "primereact/rating";
+import { Rating } from "../../../rating/Rating";
 import { SelectButton } from "primereact/selectbutton";
 import { ProgressSpinner } from "primereact/progressspinner";
 import restaurantRecord from "../../../../api/restaurantRecord";
+import { Calendar } from "primereact/calendar";
+import { Dialog } from "primereact/dialog";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Button } from "primereact/button";
 
 const UserRestaurantCard = ({ restaurant }) => {
   // MAIN STATES
@@ -15,6 +19,10 @@ const UserRestaurantCard = ({ restaurant }) => {
   const [isFavorite, setIsFavorite] = useState(
     restaurant.record.isFavorite ?? 0
   );
+  const [dateVisited, setDateVisited] = useState();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [commentInput, setCommentInput] = useState("");
+
   // LOADING STATES
   const [isUpdatingRecord, setIsUpdatingRecord] = useState(false);
 
@@ -82,15 +90,55 @@ const UserRestaurantCard = ({ restaurant }) => {
               onChange={(e) => handleStatusChange(e.value, isFavorite)}
               // itemTemplate={renderStatusButton}
             />
-            <div>
-              Favorite:{" "}
-              <Rating
-                value={isFavorite}
-                onChange={(e) => handleStatusChange(selectedStatus, e.value)}
-                stars={1}
-                cancel
-              />{" "}
-            </div>
+
+            <p>Favorite: </p>
+            {isFavorite ? (
+              <i
+                className="pi pi-star Rating--NotSelected"
+                onClick={() => setIsFavorite(!isFavorite)}
+              />
+            ) : (
+              <i
+                className="pi pi-star-o Rating--Selected"
+                onClick={() => setIsFavorite(!isFavorite)}
+              />
+            )}
+            <Stack alignment="center">
+              <p>Date visited</p>
+              <Calendar
+                value={dateVisited}
+                onChange={(e) => setDateVisited(e.target.value)}
+                showIcon={true}
+              />
+            </Stack>
+
+            <Dialog
+              header="Menu"
+              visible={isModalVisible}
+              style={{ width: "50vw" }}
+              modal={true}
+              onHide={() => setModalVisible(false)}
+            >
+              <Stack
+                alignment="
+                center"
+              >
+                <InputTextarea
+                  rows={5}
+                  cols={30}
+                  value={commentInput}
+                  onChange={(e) => setCommentInput(e.target.value)}
+                />
+              </Stack>
+            </Dialog>
+            <Stack>
+              <p>Menu</p>
+              <Button
+                label="Show"
+                icon="pi pi-info-circle"
+                onClick={(e) => setModalVisible(true)}
+              />
+            </Stack>
           </Stack>
         </Stack>
       )}

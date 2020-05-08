@@ -7,6 +7,7 @@ import { OverviewItem } from "../../components/overviewItem/OverviewItem";
 import { Stack } from "../../elements/stack/Stack";
 import "./Profile.scss";
 import { RestaurantRecords } from "../../components";
+import { ProfileCard } from "./../../components/ProfileCard/ProfileCard";
 
 export const Profile = (props) => {
   // MAIN STATES
@@ -30,7 +31,25 @@ export const Profile = (props) => {
 
   const fetchUserData = async () => {
     users
-      .fetchUser(props.match.params.username ?? "")
+      .fetchUser("")
+      .then((userDataResponse) => {
+        if (userDataResponse.data.length > 0) {
+          setUserData(userDataResponse.data[0]);
+          setIsLoadingProfileData(false);
+          setNoUserError(false);
+        } else {
+          setIsLoadingProfileData(false);
+          setNoUserError(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const fetchGuestData = async (username) => {
+    users
+      .fetchUser(username)
       .then((userDataResponse) => {
         if (userDataResponse.data.length > 0) {
           setUserData(userDataResponse.data[0]);
@@ -52,11 +71,12 @@ export const Profile = (props) => {
     setIsLoadingProfileData(true);
 
     if (props.match.path === "/profile") {
+      fetchUserData();
       setIsGuest(false);
     } else {
+      fetchGuestData(props.match.params.username);
       setIsGuest(true);
     }
-    fetchUserData();
   }, []);
 
   return (
@@ -71,12 +91,8 @@ export const Profile = (props) => {
         </div>
       ) : (
         <Stack customClassName="NoTopPadding" vertical padding="normal">
-          {isGuest && (
-            <div>
-              <h1>Welcome to the profile of {userData.username} </h1>
-            </div>
-          )}
-          <Stack distribution="fill">
+          <Stack distribution="fillEvenly">
+            {isGuest && <ProfileCard user={userData} />}
             <OverviewItem
               version="c1"
               heading="12"

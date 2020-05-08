@@ -9,10 +9,10 @@ export const OverviewItem = ({ heading, text, icon, version, chart }) => {
           <div className="icon">
             <i className={icon}></i>
           </div>
-          <div className="text">
-            <h2>{heading}</h2>
-            <span>{text}</span>
-          </div>
+        </div>
+        <div className="text">
+          <h2>{heading}</h2>
+          <span>{text}</span>
         </div>
         {chart && (
           <div className="overview-chart">
