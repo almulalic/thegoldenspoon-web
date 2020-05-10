@@ -41,14 +41,14 @@ export const Navbar = (props) => {
   const userTemplate = (user) => {
     return (
       <div
-        classNameName="p-clearfix DrowdownTemplate"
+        className="p-clearfix DrowdownTemplate"
         onClick={() => {
           handleProifleRedirect(user.username);
         }}
       >
         <Stack distribution="equalSpacing" alignment="center">
           <img
-            classNameName="Flag"
+            className="Flag"
             src={require(`../../assets/flags/${
               user.country === "" ? "AL" : user.country
             }.png`)}
@@ -63,10 +63,10 @@ export const Navbar = (props) => {
   };
 
   const [isUserToolbarActive, setIsUserToolbarActive] = useState(false);
-  const [isSpoonPopoverActive, setIsSpoonPopoverActive] = useState(true);
+  const [isSpoonPopoverActive, setIsSpoonPopoverActive] = useState(false);
 
   return (
-    <div classNameName="NavbarContainer">
+    <div className="NavbarContainer">
       <NavbarMobile />
       <header className="header-desktop2">
         <div className="section__content section__content--p30">
@@ -100,7 +100,7 @@ export const Navbar = (props) => {
                     }
                   />
                   <div className={`notifi-dropdown js-dropdown `}>
-                    <GoldenSpoon />
+                    {isSpoonPopoverActive && <GoldenSpoon />}
                   </div>
                 </div>
                 <div className="header-button-item mr-0 js-sidebar-btn">
@@ -148,18 +148,18 @@ export const Navbar = (props) => {
         </div>
       </header>
 
-      {/* <div classNameName="SearchBar">
+      {/* <div className="SearchBar">
          
         </div>
 
         <Stack distribution="trailing" alignment="center">
-          <div classNameName="UserProfile">
+          <div className="UserProfile">
             <Stack spacing="extraTight" alignment="center">
               
             </Stack>
           </div>
 
-          <div classNameName="logout">
+          <div className="logout">
             <p
               onClick={() => {
                 localStorage.clear();

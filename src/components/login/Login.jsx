@@ -6,12 +6,6 @@ import { Button } from "primereact/button";
 import { Stack } from "../../elements/stack/Stack";
 import { Message } from "primereact/message";
 import { useHistory } from "react-router-dom";
-import {
-  Inplace,
-  InplaceDisplay,
-  InplaceContent,
-} from "primereact/components/inplace/Inplace";
-import { Captcha } from "primereact/captcha";
 import "./Login.scss";
 
 export const Login = ({ setRedirectingState }) => {
@@ -89,34 +83,30 @@ export const Login = ({ setRedirectingState }) => {
     <Stack distribution="fill" alignment="center" vertical spacing="loose">
       <Stack vertical distribution="fill" spacing="tight">
         <Stack vertical distribution="fill" spacing="tight">
-          <div className="p-col-12 p-md-4">
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-user"></i>
-              </span>
-              <InputText
-                id="float-input"
-                label="email"
-                value={loginEmailInput}
-                onChange={(e) => setLoginEmailInput(e.target.value)}
-                size="30"
-              />
-            </div>
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-user"></i>
+            </span>
+            <InputText
+              id="float-input"
+              label="email"
+              value={loginEmailInput}
+              onChange={(e) => setLoginEmailInput(e.target.value)}
+              size="30"
+            />
           </div>
 
-          <div className="p-col-12 p-md-4">
-            <div className="p-inputgroup">
-              <span className="p-inputgroup-addon">
-                <i class="pi pi-lock"></i>
-              </span>
-              <Password
-                label="password"
-                value={loginPasswordInput}
-                onChange={(e) => setLoginPasswordInput(e.target.value)}
-                size="30"
-                feedback={false}
-              />
-            </div>
+          <div className="p-inputgroup">
+            <span className="p-inputgroup-addon">
+              <i class="pi pi-lock"></i>
+            </span>
+            <Password
+              label="password"
+              value={loginPasswordInput}
+              onChange={(e) => setLoginPasswordInput(e.target.value)}
+              size="30"
+              feedback={false}
+            />
           </div>
         </Stack>
 

@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",
+    "multiselectjs": "^1.0.0",
     "node-sass": "^4.14.0",
     "primeflex": "^1.0.0",
     "primeicons": "^2.0.0",

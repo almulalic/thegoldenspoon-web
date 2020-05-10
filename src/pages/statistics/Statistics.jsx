@@ -37,15 +37,15 @@ export const Statistics = (props) => {
             "#FF6384",
             "#36A2EB",
             "#FFCE56",
-            "#FFCE56",
-            "#FFCE56",
+            "#dd51f1",
+            "#5fa529",
           ],
           hoverBackgroundColor: [
             "#FF6384",
             "#36A2EB",
             "#FFCE56",
-            "#FFCE56",
-            "#FFCE56",
+            "#dd51f1",
+            "#5fa529",
           ],
         },
       ],
@@ -160,7 +160,7 @@ export const Statistics = (props) => {
 
   const GetStatisticsData = () => {
     statistics
-      .fetchUserStatistics("andsnyder")
+      .fetchUserStatistics()
       .then((statisticsResponse) => {
         setStatisticsData(statisticsResponse.data);
         setUsersCategoriesStats(
@@ -192,7 +192,7 @@ export const Statistics = (props) => {
         <Stack vertical>
           <Stack alignment="center" distribution="center">
             <BorderCard title="Total visited">
-              {statisticsData?.total}
+              {statisticsData?.statusTotals[2]}
             </BorderCard>
             <BorderCard title="Total Booked">
               {statisticsData?.statusTotals[1]}

@@ -59,13 +59,6 @@ const Routes = (props) => {
           path="/statistics"
           component={Statistics}
         />
-        {/* <CustomRoute
-          permission={[1, 2]}
-          exact
-          title="Statistics"
-          path="/statistics/:username"
-          component={Statistics}
-        /> */}
 
         <CustomRoute
           permission={[1, 2]}

@@ -1,0 +1,36 @@
+.Leaderboard-Country {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+
+  img {
+    margin-right: 1rem;
+  }
+  p {
+    margin: 0;
+  }
+}
+
+.Leaderboard-Index {
+  padding: 0 !important;
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.5rem;
+  width: 3rem;
+}
+
+.Leaderboard-Index-1 {
+  background: gold;
+}
+
+.Leaderboard-Index-2 {
+  background: silver;
+}
+
+.Leaderboard-Index-3 {
+  background: orange;
+}
+
+.Leaderboard-Index-0 {
+  background: white;
+}
