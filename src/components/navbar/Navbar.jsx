@@ -23,8 +23,8 @@ export const Navbar = (props) => {
       users.fetchAllUsers().then((usersResponse) => {
         _currentList = usersResponse.data;
 
-        results = usersResponse.data.filter((country) => {
-          return country.username
+        results = usersResponse.data.filter((countryId) => {
+          return countryId.username
             .toLowerCase()
             .startsWith(event.query.toLowerCase());
         });
@@ -50,7 +50,7 @@ export const Navbar = (props) => {
           <img
             className="Flag"
             src={require(`../../assets/flags/${
-              user.country === "" ? "AL" : user.country
+              user.countryId === "" ? "AL" : user.countryId
             }.png`)}
           />
 
