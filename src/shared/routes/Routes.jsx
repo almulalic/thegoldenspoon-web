@@ -10,6 +10,9 @@ import {
   ForgotPassword,
   ResetPassword,
   ResetConfirmationMail,
+  EditProfile,
+  RestaurantManager,
+  Page404,
 } from "../../pages";
 import { BrowserRouter, Route, Switch, Router } from "react-router-dom";
 import CustomRoute from "./CustomRoute";
@@ -53,6 +56,13 @@ const Routes = (props) => {
         />
 
         <CustomRoute
+          exact
+          title="Edit Profile"
+          path="/editProfile"
+          component={EditProfile}
+        />
+
+        <CustomRoute
           permission={[1, 2]}
           exact
           title="Statistics"
@@ -66,6 +76,14 @@ const Routes = (props) => {
           title="Leaderboards"
           path="/leaderboards"
           component={Leaderboards}
+        />
+
+        <CustomRoute
+          permission={[1, 2]}
+          exact
+          title="Restaurant Manager"
+          path="/restaurantManager"
+          component={RestaurantManager}
         />
 
         <CustomRoute
@@ -91,6 +109,12 @@ const Routes = (props) => {
           title="Resend Confirmation Mail"
           path="/resetConfirmationMail"
           component={ResetConfirmationMail}
+        />
+
+        <CustomRoute
+          title="Resend Confirmation Mail"
+          path="/"
+          component={Page404}
         />
       </Switch>
     </div>

@@ -32,17 +32,33 @@ const UserRestaurantCard = ({ restaurant }) => {
     { label: "Eaten here", value: 2 },
   ];
 
-  const handleStatusChange = (status, favorite) => {
+  const handleStatusChange = (status) => {
     setIsUpdatingRecord(true);
 
     restaurantRecord
-      .updateRestaurantRecord({
+      .upsertRestaurantRecord({
         restaurantId: restaurant.id,
         status: status,
-        isFavorite: favorite,
       })
       .then(() => {
         changeSelectedStatus(status);
+        setIsUpdatingRecord(false);
+      })
+      .catch((err) => {
+        setIsUpdatingRecord(false);
+        console.log(err);
+      });
+  };
+
+  const handleFavoriteChange = (favorite) => {
+    setIsUpdatingRecord(true);
+
+    restaurantRecord
+      .upsertRestaurantRecord({
+        restaurantId: restaurant.id,
+        isFavorite: favorite,
+      })
+      .then(() => {
         setIsFavorite(favorite);
         setIsUpdatingRecord(false);
       })
@@ -52,26 +68,23 @@ const UserRestaurantCard = ({ restaurant }) => {
       });
   };
 
-  // const renderStatusButton = (option) => {
-  //   return (
-  //     <div
-  //       style={{
-  //         textAlign: "center",
-  //         fontWeight: "bold",
-  //         width: "100px",
-  //         color: "black",
-  //         background:
-  //           option.value === 0
-  //             ? "lightsalmon"
-  //             : option.value === 1
-  //             ? "lightgoldenrodyellow"
-  //             : "lightgreen",
-  //       }}
-  //     >
-  //       <div style={{ marginTop: "1em" }}>{option.label}</div>
-  //     </div>
-  //   );
-  // };
+  const handleDateChange = (date) => {
+    setIsUpdatingRecord(true);
+
+    restaurantRecord
+      .upsertRestaurantRecord({
+        restaurantId: restaurant.id,
+        dateVisited: date,
+      })
+      .then(() => {
+        setDateVisited(date);
+        setIsUpdatingRecord(false);
+      })
+      .catch((err) => {
+        setIsUpdatingRecord(false);
+        console.log(err);
+      });
+  };
 
   return (
     <div className="RestaurantCard">
@@ -87,7 +100,7 @@ const UserRestaurantCard = ({ restaurant }) => {
               value={selectedStatus}
               options={statusOptions}
               className="RestaurantCard-StatusE"
-              onChange={(e) => handleStatusChange(e.value, isFavorite)}
+              onChange={(e) => handleStatusChange(e.value)}
               // itemTemplate={renderStatusButton}
             />
 
@@ -95,19 +108,19 @@ const UserRestaurantCard = ({ restaurant }) => {
             {isFavorite ? (
               <i
                 className="pi pi-star Rating--NotSelected"
-                onClick={() => setIsFavorite(!isFavorite)}
+                onClick={(e) => handleFavoriteChange(!isFavorite)}
               />
             ) : (
               <i
                 className="pi pi-star-o Rating--Selected"
-                onClick={() => setIsFavorite(!isFavorite)}
+                onClick={(e) => handleFavoriteChange(!isFavorite)}
               />
             )}
             <Stack alignment="center">
               <p>Date visited</p>
               <Calendar
                 value={dateVisited}
-                onChange={(e) => setDateVisited(e.target.value)}
+                onChange={(e) => handleDateChange(e.target.value)}
                 showIcon={true}
               />
             </Stack>

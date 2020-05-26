@@ -10,7 +10,7 @@ export const SidebarItem = ({
   let history = useHistory();
   const handlePageChange = (e) => {
     e.preventDefault();
-    history.push(`/${pageLink.toLowerCase()}`);
+    history.push(`/${pageLink}`);
   };
 
   return (

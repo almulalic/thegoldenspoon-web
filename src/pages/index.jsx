@@ -1,5 +1,7 @@
 export { default as LoginRegister } from "./loginRegister/LoginRegister";
-
+export { Page404 } from "./page404/Page404";
+export { RestaurantManager } from "./restaurantManager/RestaurantManager";
+export { EditProfile } from "./editProfile/EditProfile";
 export { ResetPassword } from "./resetPassword/ResetPassword";
 export { ForgotPassword } from "./forgotPassword/ForgotPassword";
 export { Records } from "./records/Records";

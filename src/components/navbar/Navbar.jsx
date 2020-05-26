@@ -8,6 +8,7 @@ import { Stack } from "../../elements/stack/Stack";
 import { NavbarMobile } from "./mobile/NavbarMobile";
 import "./Navbar.scss";
 import { GoldenSpoon } from "../goldenSpoon/GoldenSpoon";
+import { SettingsDropdown } from "./../settingsDropdown/SettingsDropdown";
 
 export const Navbar = (props) => {
   const [suggestionsList, setSuggestionsList] = useState([]);
@@ -50,7 +51,7 @@ export const Navbar = (props) => {
           <img
             className="Flag"
             src={require(`../../assets/flags/${
-              user.countryId === "" ? "AL" : user.countryId
+              user.country.id === "" ? "AL" : user.country.id
             }.png`)}
           />
 
@@ -117,30 +118,7 @@ export const Navbar = (props) => {
                       setting-menu js-right-sidebar d-none d-lg-block 
                       ${isUserToolbarActive ? "show-sidebar" : ""}`}
                 >
-                  <div className="account-dropdown__body">
-                    <div className="account-dropdown__item">
-                      <a href="#">
-                        <i className="zmdi zmdi-account"></i>Account
-                      </a>
-                    </div>
-                    <div className="account-dropdown__item">
-                      <a href="#">
-                        <i className="zmdi zmdi-settings"></i>Setting
-                      </a>
-                    </div>
-                    <div className="account-dropdown__item">
-                      <a href="#">
-                        <i
-                          className="zmdi zmdi-power"
-                          onClick={() => {
-                            localStorage.clear();
-                            history.push("/loginRegister");
-                          }}
-                        ></i>
-                        Sing out
-                      </a>
-                    </div>
-                  </div>
+                  <SettingsDropdown />
                 </div>
               </div>
             </div>

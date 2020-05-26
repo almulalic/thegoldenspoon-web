@@ -33,8 +33,8 @@ export const Profile = (props) => {
     users
       .fetchUser("")
       .then((userDataResponse) => {
-        if (userDataResponse.data.length > 0) {
-          setUserData(userDataResponse.data[0]);
+        if (userDataResponse.data) {
+          setUserData(userDataResponse.data);
           setIsLoadingProfileData(false);
           setNoUserError(false);
         } else {
@@ -51,8 +51,8 @@ export const Profile = (props) => {
     users
       .fetchUser(username)
       .then((userDataResponse) => {
-        if (userDataResponse.data.length > 0) {
-          setUserData(userDataResponse.data[0]);
+        if (userDataResponse.data) {
+          setUserData(userDataResponse.data);
           setIsLoadingProfileData(false);
           setNoUserError(false);
         } else {

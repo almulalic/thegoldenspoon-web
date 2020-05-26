@@ -21,4 +21,17 @@ export default {
       .catch((err) => {
         console.log(err);
       }),
+  fetchNewRestaurants: (body) =>
+    apiClient
+      .get(BASE_API_URL + `/restaurant/fetchNewRestaurants`, body)
+      .catch((err) => {
+        console.log(err);
+      }),
+
+  addNewRestaurant: (body) =>
+    apiClient
+      .put(BASE_API_URL + `/restaurant/addNewRestaurant`, body)
+      .catch((err) => {
+        console.log(err);
+      }),
 };

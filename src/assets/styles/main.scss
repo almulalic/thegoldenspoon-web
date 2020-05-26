@@ -1596,19 +1596,21 @@ section {
   right: 33px;
 }
 
-.account-dropdown__item a {
+.account-dropdown__item p {
   display: block;
   color: #333;
   padding: 15px 25px;
   font-size: 14px;
+  margin: 0;
+  cursor: pointer;
 }
 
-.account-dropdown__item a:hover {
+.account-dropdown__item p:hover {
   background: #4272d7;
   color: #fff;
 }
 
-.account-dropdown__item a i {
+.account-dropdown__item p i {
   line-height: 1;
   margin-right: 20px;
   font-size: 18px;
@@ -2207,8 +2209,6 @@ section {
   left: 0;
   height: 100%;
 }
-
-
 
 .account2 {
   padding: 38px;
@@ -2903,8 +2903,6 @@ section {
     order: 2;
   }
 }
-
-
 
 .overview-chart {
   height: 115px;

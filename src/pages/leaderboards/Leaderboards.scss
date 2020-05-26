@@ -34,3 +34,14 @@
 .Leaderboard-Index-0 {
   background: white;
 }
+
+.Leaderboard-Flag {
+  height: 25px;
+  padding: 0;
+}
+
+.Leaderboard-Table {
+  .p-datatable-row {
+    font-weight: bold;
+  }
+}

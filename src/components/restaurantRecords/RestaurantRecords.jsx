@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   GenerateFullData,
-  GetStatusName,
   GenerateExpandedData,
 } from "../../shared/RestaurantUtils";
 import { Accordion, AccordionTab } from "primereact/accordion";
@@ -127,7 +126,10 @@ export const RestaurantRecords = ({ props }) => {
           ) : (
             <Accordion
               activeIndex={categoryActiveAccordionIndex}
-              onTabChange={(e) => setCategoryActiveAccordionIndex(e.index)}
+              onTabChange={(e) => {
+                console.log("expand");
+                setCategoryActiveAccordionIndex(e.index);
+              }}
               multiple
             >
               {expandedRecords.map((category, categoryKey) => {

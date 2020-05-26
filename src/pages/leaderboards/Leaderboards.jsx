@@ -36,19 +36,6 @@ export const Leaderboards = () => {
     setStelectedStatus(newStatus);
   };
 
-  const representatives = [
-    { name: "Amy Elsner", image: "amyelsner.png" },
-    { name: "Anna Fali", image: "annafali.png" },
-    { name: "Asiya Javayant", image: "asiyajavayant.png" },
-    { name: "Bernardo Dominic", image: "bernardodominic.png" },
-    { name: "Elwin Sharvill", image: "elwinsharvill.png" },
-    { name: "Ioni Bowcher", image: "ionibowcher.png" },
-    { name: "Ivan Magalhaes", image: "ivanmagalhaes.png" },
-    { name: "Onyama Limba", image: "onyamalimba.png" },
-    { name: "Stephen Shaw", image: "stephenshaw.png" },
-    { name: "XuXue Feng", image: "xuxuefeng.png" },
-  ];
-
   const statuses = ["not visited", "booked for next trip", "visited"];
 
   const statusFilter = (
@@ -90,14 +77,13 @@ export const Leaderboards = () => {
 
   const header = (
     <div>
-      List of Customers
+      LEADERBOARDS
       <div className="p-datatable-globalfilter-container">
         {/* <InputText
           type="search"
           onInput={(e) => this.setState({ globalFilter: e.target.value })}
           placeholder="Global Search"
         /> */}
-        <input type="text" />
       </div>
     </div>
   );
@@ -123,7 +109,10 @@ export const Leaderboards = () => {
   const renderFlag = (rowData) => {
     return (
       <div className="Leaderboard-Country">
-        <img src={require(`../../assets/flags/${rowData.country.code}.png`)} />
+        <img
+          className="Leaderboard-Flag"
+          src={require(`../../assets/flags/${rowData.country.code}.png`)}
+        />
         <p>{rowData.country.name}</p>
       </div>
     );
@@ -138,7 +127,7 @@ export const Leaderboards = () => {
           value={leaderboardData}
           header={header}
           responsive
-          className="p-datatable-customers"
+          className="Leaderboard-Table"
           dataKey="id"
           loadingBody={isLoadingLeaderboard}
           rowHover

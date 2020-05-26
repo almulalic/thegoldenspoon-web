@@ -233,7 +233,7 @@ export const Register = () => {
             onChange={(e) => setSurnameInput(e.target.value)}
             size="16"
           />
-          <label htmlFor="float-input">Surname</label>
+          <label htmlFor="float-input">Last Name</label>
         </span>
       </Stack>
 

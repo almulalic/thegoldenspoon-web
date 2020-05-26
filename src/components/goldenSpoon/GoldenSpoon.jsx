@@ -49,7 +49,11 @@ export const GoldenSpoon = () => {
             vertical
             spacing="none"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 174.07 839.93">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 174.07 839.93"
+              className="GoldenSpoon-Svg"
+            >
               <g id="Layer_2" data-name="Layer 2">
                 <g
                   id="Layer_1-2"

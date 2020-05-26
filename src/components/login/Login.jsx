@@ -10,7 +10,7 @@ import "./Login.scss";
 
 export const Login = ({ setRedirectingState }) => {
   // MAIN STATES
-  const [loginEmailInput, setLoginEmailInput] = useState("");
+  const [loginCredentialInput, setLoginCredentialInput] = useState("");
   const [loginPasswordInput, setLoginPasswordInput] = useState("");
 
   let history = useHistory();
@@ -38,45 +38,47 @@ export const Login = ({ setRedirectingState }) => {
   // FINAL STATES
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const login = (email, password) => {
+  const login = (credential, password) => {
     setIsLoadingReposne(true);
-    identities.login({ email: email, password: password }).then((res) => {
-      if (res !== undefined) {
-        if (res.data === 1) {
-          handleErrorClear();
-          setUserDoesentExistError(true);
-          setIsLoggedIn(false);
-          setIsLoadingReposne(false);
-        } else if (res.data === 2) {
-          handleErrorClear();
-          setLoginDataNotValidError(true);
-          setIsLoggedIn(false);
-          setIsLoadingReposne(false);
-        } else if (res.data === 3) {
-          handleErrorClear();
-          setAccountNotConfirmedError(true);
-          setIsLoggedIn(false);
-          setIsLoadingReposne(false);
-        } else if (res.data === 4) {
-          handleErrorClear();
-          setInternalServerError(true);
-          setIsLoggedIn(false);
-          setIsLoadingReposne(false);
-        } else {
-          handleErrorClear();
-          history.push({
-            pathname: `/loginRedirect`,
-            state: {
-              previousLocation: "loginRegister",
-              accessToken: res.data.accessToken,
-              refreshToken: res.data.refreshToken,
-            },
-          });
-          setIsLoggedIn(true);
-          setIsLoadingReposne(false);
+    identities
+      .login({ credential: credential, password: password })
+      .then((res) => {
+        if (res !== undefined) {
+          if (res.data === 1) {
+            handleErrorClear();
+            setUserDoesentExistError(true);
+            setIsLoggedIn(false);
+            setIsLoadingReposne(false);
+          } else if (res.data === 2) {
+            handleErrorClear();
+            setLoginDataNotValidError(true);
+            setIsLoggedIn(false);
+            setIsLoadingReposne(false);
+          } else if (res.data === 3) {
+            handleErrorClear();
+            setAccountNotConfirmedError(true);
+            setIsLoggedIn(false);
+            setIsLoadingReposne(false);
+          } else if (res.data === 4) {
+            handleErrorClear();
+            setInternalServerError(true);
+            setIsLoggedIn(false);
+            setIsLoadingReposne(false);
+          } else {
+            handleErrorClear();
+            history.push({
+              pathname: `/loginRedirect`,
+              state: {
+                previousLocation: "loginRegister",
+                accessToken: res.data.accessToken,
+                refreshToken: res.data.refreshToken,
+              },
+            });
+            setIsLoggedIn(true);
+            setIsLoadingReposne(false);
+          }
         }
-      }
-    });
+      });
   };
 
   return (
@@ -89,9 +91,9 @@ export const Login = ({ setRedirectingState }) => {
             </span>
             <InputText
               id="float-input"
-              label="email"
-              value={loginEmailInput}
-              onChange={(e) => setLoginEmailInput(e.target.value)}
+              label="credential"
+              value={loginCredentialInput}
+              onChange={(e) => setLoginCredentialInput(e.target.value)}
               size="30"
             />
           </div>
@@ -114,7 +116,7 @@ export const Login = ({ setRedirectingState }) => {
           className="p-button-raised Login-loginButton"
           label="LOGIN"
           onClick={() => {
-            login(loginEmailInput, loginPasswordInput);
+            login(loginCredentialInput, loginPasswordInput);
           }}
         />
 

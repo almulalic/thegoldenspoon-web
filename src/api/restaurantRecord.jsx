@@ -5,13 +5,13 @@ import apiClient from "./apiClient";
 export default {
   fetchUserRecord: (username) =>
     apiClient
-      .get(BASE_API_URL + `/restaurant/fetchUserRecord/${username}`)
+      .get(BASE_API_URL + `/restaurantRecord/fetchUserRecord/${username}`)
       .catch((err) => {
         console.log(err);
       }),
-  updateRestaurantRecord: (body) =>
+  upsertRestaurantRecord: (body) =>
     apiClient
-      .post(BASE_API_URL + `/restaurant/updateRestaurantRecord`, body)
+      .put(BASE_API_URL + `/restaurantRecord/upsertRestaurantRecord`, body)
       .catch((err) => {
         console.log(err);
       }),

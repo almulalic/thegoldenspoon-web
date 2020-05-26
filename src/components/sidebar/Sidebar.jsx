@@ -37,9 +37,13 @@ export const Sidebar = () => {
         <nav className="navbar-sidebar2">
           <ul className="list-unstyled navbar__list">
             <SidebarItem text="Profile" icon="fas fa-address-card" />
-            {/* <SidebarItem text="Records" icon="fab fa-elementor" /> */}
             <SidebarItem text="Statistics" icon="fas fa-chart-bar" />
             <SidebarItem text="Leaderboards" icon="fa fa-group" />
+            <SidebarItem
+              text="Restaurant Manager"
+              icon="fas fa-server"
+              pageLink="restaurantManager"
+            />
           </ul>
           <div style={{ display: "flex", justifyContent: "center" }}>
             <a

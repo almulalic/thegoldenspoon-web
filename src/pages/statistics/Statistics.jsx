@@ -163,6 +163,7 @@ export const Statistics = (props) => {
       .fetchUserStatistics()
       .then((statisticsResponse) => {
         setStatisticsData(statisticsResponse.data);
+        console.log(statisticsResponse);
         setUsersCategoriesStats(
           NormalizeCategoriesData(statisticsResponse.data)
         );
@@ -196,6 +197,9 @@ export const Statistics = (props) => {
             </BorderCard>
             <BorderCard title="Total Booked">
               {statisticsData?.statusTotals[1]}
+            </BorderCard>
+            <BorderCard title="Total Favorites">
+              {statisticsData?.totalFavorites}
             </BorderCard>
           </Stack>
           <Stack alignment="center" distribution="center">
