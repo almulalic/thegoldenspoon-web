@@ -53,7 +53,7 @@ export const EditProfile = () => {
   useEffect(() => {
     fetchUserData();
   }, []);
-  console.log(moment(userData.bornOn.slice(0, 10)).format("DD/MM/YYYY"));
+
   const [avatarSource, setAvatarSource] = useState();
 
   const handleChange = useCallback((newValue, id) => {

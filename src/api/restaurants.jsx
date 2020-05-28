@@ -34,4 +34,25 @@ export default {
       .catch((err) => {
         console.log(err);
       }),
+
+  fetchRestaurant: (id) =>
+    apiClient
+      .get(BASE_API_URL + `/restaurant/fetchRestaurant/${id}`)
+      .catch((err) => {
+        console.log(err);
+      }),
+
+  modifyRestaurnat: (id) =>
+    apiClient
+      .get(BASE_API_URL + `/restaurant/modifyRestaurant/${id}`)
+      .catch((err) => {
+        console.log(err);
+      }),
+
+  removeRestaurant: (id) =>
+    apiClient
+      .delete(BASE_API_URL + `/restaurant/removeRestaurant/${id}`)
+      .catch((err) => {
+        console.log(err);
+      }),
 };

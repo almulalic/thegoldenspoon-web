@@ -19,6 +19,8 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { Checkbox } from "primereact/checkbox";
 import { Card } from "primereact/card";
 import lookup from "../../api/lookup";
+import { decodeCamelCase } from "./../../shared/utils";
+import { toast } from "react-toastify";
 
 export const RestaurantManager = () => {
   const [restaurantData, setRestaurantData] = useState({
@@ -152,14 +154,65 @@ export const RestaurantManager = () => {
   const addRestaurant = (body) => {
     restaurants
       .addNewRestaurant(body)
-      .then(() => {
-        console.log("added");
+      .then((response) => {
+        if (response.data == 1) toast.error("Id not found or already deleted");
+        else toast.success("Restaurant successfully added");
         fetchRestaurantsData();
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const fetchRestaurant = (id, populate = false) => {
+    restaurants
+      .fetchRestaurant(id)
+      .then(
+        (res) =>
+          populate &&
+          (res.data != 1
+            ? setModifiedData(res.data)
+            : setModifiedData({ name: "" }))
+      )
+      .catch((err) => console.log(err));
+  };
+
+  const [modifiedData, setModifiedData] = useState({
+    name: "",
+    resortId: 1,
+    themeParkId: 1,
+    land: "",
+    pavilion: "",
+    resortHotel: "",
+    type: 0,
+    experience: 0,
+    mealPeriod: 0,
+    availability: 0,
+    cusine: "",
+    isGoldenSpoonPoint: false,
+    isBonusPoint: false,
+    hasMobileOrder: false,
+    createdAt: new Date(),
+  });
+
+  const modifyRestaurant = (id) => {
+    restaurants
+      .modifyRestaurnat(id)
+      .then((res) => console.log(res))
+      .then((res) => console.log(res));
+  };
+
+  const [removeItemId, setRemoveItemId] = useState();
+  const removeRestaurant = (id) => {
+    restaurants
+      .removeRestaurant(id)
+      .then((resp) => {
+        toast.success("Item successfully removed");
+        fetchRestaurantsData();
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <Page>
       <Stack vertical spacing="loose">
@@ -345,7 +398,6 @@ export const RestaurantManager = () => {
                   field="modifiedAt"
                   header="Last Modified"
                   body={(rowData) => {
-                    console.log(rowData);
                     return (
                       rowData.modifiedAt.slice(0, 10) +
                       " " +
@@ -388,7 +440,8 @@ export const RestaurantManager = () => {
                       Cusine MUST be separated by space, database interpets
                       commas as a separator sign and will try to divide it into
                       multiple columns, also comma separation is not suitable
-                      for searching and csv exports which can be vital for app.
+                      for searching and csv exports which can be vital for the
+                      app.
                       <br /> <span style={{ fontWeight: "bold" }}>
                         Good:
                       </span>{" "}
@@ -685,10 +738,106 @@ export const RestaurantManager = () => {
                 </Card>
               </TabPanel>
               <TabPanel leftIcon="fas fa-edit" header="Edit">
-                Modify{" "}
+                <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
+                  <p>
+                    <span style={{ fontWeight: "bold" }}>
+                      1. Search and modify -{" "}
+                    </span>
+                    Modifing restaruant is as easy as adding, you just need to
+                    enter ID of the item, click search and then edit the info
+                    that you get
+                  </p>
+                  <p>
+                    <span style={{ fontWeight: "bold" }}>
+                      2. Editable columns -{" "}
+                    </span>
+                    Try to click on the column, if it turns into input field it
+                    means that you can edit it like a normal spreadsheet column,
+                    it will be saved when you click outside the cell. If nothing
+                    happens it is not implemented yet and it will be in near
+                    future.
+                  </p>
+                  <p>
+                    <span style={{ fontWeight: "bold" }}>3. Cusine - </span>
+                    Cusine MUST be separated by space, database interpets commas
+                    as a separator sign and will try to divide it into multiple
+                    columns, also comma separation is not suitable for searching
+                    and csv exports which can be vital for the app.
+                    <br /> <span style={{ fontWeight: "bold" }}>
+                      Good:
+                    </span>{" "}
+                    American Turkish Asian
+                    <br /> <span style={{ fontWeight: "bold" }}>
+                      {" "}
+                      Bad:{" "}
+                    </span>{" "}
+                    America,Turkish,Asian
+                  </p>
+                  <p style={{ fontWeight: "bold", color: "red" }}>
+                    Please also note that,for now, data is not veified and
+                    everything can pass, check the input before you click add,
+                    but if you do make a mistake you can always edit it in edit
+                    tab.
+                  </p>
+                </Stack>
               </TabPanel>
               <TabPanel leftIcon="fas fa-trash-alt" header="Remove">
-                Remove{" "}
+                <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
+                  <p>
+                    <span style={{ fontWeight: "bold" }}>
+                      1. Search and remove -{" "}
+                    </span>
+                    Removing restaruant is as easy as adding, you just need to
+                    enter ID of the item, click search and then click on remove
+                    the remove the item.
+                  </p>
+
+                  <p style={{ fontWeight: "bold", color: "red" }}>
+                    Please also note that restaurants won't be deleted, they
+                    will be remvoed from the list, so if you remove something by
+                    accident it can be reverted, but please try to avoid
+                    deleting something if possible because it will waste memory
+                  </p>
+                </Stack>
+                <InputText
+                  value={removeItemId}
+                  onChange={(e) => setRemoveItemId(e.target.value)}
+                />
+                <Button
+                  label="Search"
+                  onClick={() => {
+                    fetchRestaurant(removeItemId, true);
+                  }}
+                />
+                {modifiedData.name !== "" ? (
+                  <Stack vertical spacing="tight">
+                    <Stack vertical spacing="extraTight">
+                      <span>
+                        <span style={{ fontWeight: "bold" }}> Name: </span>
+                        {modifiedData.name}
+                      </span>
+                      <span>
+                        <span style={{ fontWeight: "bold" }}>
+                          Created Date:{" "}
+                        </span>
+                        {modifiedData.createdAt}
+                      </span>
+                    </Stack>
+                    <Stack vertical spacing="extraTight">
+                      <p style={{ color: "red" }}>
+                        Are you sure that you want to delete this item ?{" "}
+                      </p>
+                      <Button
+                        label="Remove"
+                        onClick={() => {
+                          removeRestaurant(removeItemId);
+                        }}
+                      />
+                    </Stack>
+                  </Stack>
+                ) : (
+                  <p>No item found or the field is blank </p>
+                )}
               </TabPanel>
             </TabView>
           </ScrollPanel>

@@ -16,12 +16,26 @@ import "primeicons/primeicons.css";
 import Routes from "./shared/routes/Routes";
 import createHistory from "history/createBrowserHistory";
 import "./assets/styles/main.scss";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App(props) {
   const history = createHistory();
 
   return (
     <div className="App custom">
+      <ToastContainer
+        position="top-right"
+        autoClose={2500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       <Router history={history}>
         <Switch>
           <Route exact path="/" component={LoginRegister} />
