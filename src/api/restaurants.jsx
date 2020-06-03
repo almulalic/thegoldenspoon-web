@@ -42,9 +42,9 @@ export default {
         console.log(err);
       }),
 
-  modifyRestaurnat: (id) =>
+  modifyRestaurnat: (body) =>
     apiClient
-      .get(BASE_API_URL + `/restaurant/modifyRestaurant/${id}`)
+      .put(BASE_API_URL + `/restaurant/modifyRestaurant`, body)
       .catch((err) => {
         console.log(err);
       }),

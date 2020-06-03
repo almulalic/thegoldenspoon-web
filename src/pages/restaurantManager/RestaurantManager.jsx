@@ -1,69 +1,33 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Page } from "./../../elements/page/Page";
-import { BorderCard } from "./../../elements/borderCard/BorderCard";
 import { InputText } from "primereact/inputtext";
 import { Stack } from "../../elements/stack/Stack";
-import { InputMask } from "primereact/inputmask";
 import { Dropdown } from "primereact/dropdown";
-import { moment } from "moment";
-import CountriesData from "../../shared/json/countriesList.json";
 import { DataTable } from "primereact/datatable";
 import restaurants from "../../api/restaurants";
 import { Column } from "primereact/column";
 import "./RestaurantManager.scss";
 import { ScrollPanel } from "primereact/scrollpanel";
-import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { TabView, TabPanel } from "primereact/tabview";
 import { Checkbox } from "primereact/checkbox";
 import { Card } from "primereact/card";
 import lookup from "../../api/lookup";
-import { decodeCamelCase } from "./../../shared/utils";
 import { toast } from "react-toastify";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 export const RestaurantManager = () => {
-  const [restaurantData, setRestaurantData] = useState({
-    name: "",
-    resortId: 1,
-    themeParkId: 1,
-    land: "",
-    pavilion: "",
-    resortHotel: "",
-    type: 0,
-    experience: 0,
-    mealPeriod: 0,
-    availability: 0,
-    cusine: "",
-    isGoldenSpoonPoint: false,
-    isBonusPoint: false,
-    hasMobileOrder: false,
-    createdAt: new Date(),
-  });
-
-  const handleChange = useCallback((newValue, id) => {
-    setRestaurantData((prevState) => ({
-      ...prevState,
-      [id]: newValue,
-    }));
-  }, []);
-
+  const [isEditVisible, setEditVisible] = useState(true);
   const [isLoadingData, setIsLoadingData] = useState(true);
-
-  const header = (
-    <div>
-      RESTAURANTS MANAGER
-      <div className="p-datatable-globalfilter-container">
-        {/* <InputText
-          type="search"
-          onInput={(e) => this.setState({ globalFilter: e.target.value })}
-          placeholder="Global Search"
-        /> */}
-      </div>
-    </div>
-  );
-
   const [restaurantsData, setRestaurantsData] = useState();
+
+  const [restaurantResorts, setRestaurantResorts] = useState([]);
+  const [restaurantThemePark, setRestaurantThemePark] = useState([]);
+  const [restaurantTypes, setRestaurantTypes] = useState([]);
+  const [restaurantExperience, setRestaurantExperience] = useState([]);
+  const [restaurantMealPeriod, setRestaurantMealPeriod] = useState([]);
+  const [restaurantAvailability, setRestaurantAvailability] = useState([]);
 
   const fetchRestaurantsData = () => {
     restaurants
@@ -80,12 +44,23 @@ export const RestaurantManager = () => {
       });
   };
 
-  const [restaurantTypes, setRestaurantTypes] = useState([]);
-  const [restaurantExperience, setRestaurantExperience] = useState([]);
-  const [restaurantMealPeriod, setRestaurantMealPeriod] = useState([]);
-  const [restaurantAvailability, setRestaurantAvailability] = useState([]);
-
   const fetchLookups = () => {
+    lookup
+      .FetchResorts()
+      .then((response) => {
+        setRestaurantResorts(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    lookup
+      .FetchThemeParks()
+      .then((response) => {
+        setRestaurantThemePark(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     lookup
       .FetchRestaurantTypes()
       .then((response) => {
@@ -129,6 +104,19 @@ export const RestaurantManager = () => {
     fetchLookups();
   }, []);
 
+  const header = (
+    <div>
+      RESTAURANTS MANAGER
+      <div className="p-datatable-globalfilter-container">
+        {/* <InputText
+          type="search"
+          onInput={(e) => this.setState({ globalFilter: e.target.value })}
+          placeholder="Global Search"
+        /> */}
+      </div>
+    </div>
+  );
+
   const render = (rowData, row) => {
     if (row.field === "type") return restaurantTypes[rowData.type];
     else if (row.field === "experience")
@@ -148,8 +136,42 @@ export const RestaurantManager = () => {
       return rowData.hasMobileOrder ? "Y" : "N";
   };
 
-  const [isEditVisible, setEditVisible] = useState(true);
   const [optionsTabActiveIndex, setOptionsTabActiveIndex] = useState(0);
+
+  const handleChange = useCallback((newValue, id) => {
+    setRestaurantData((prevState) => ({
+      ...prevState,
+      [id]: newValue,
+    }));
+  }, []);
+
+  const handleModifyChange = useCallback((newValue, id) => {
+    setModifiedData((prevState) => ({
+      ...prevState,
+      [id]: newValue,
+    }));
+  }, []);
+
+  // FETCH SINGLE RESTAURANT
+
+  const fetchRestaurant = (id, purpose, populate = false) => {
+    restaurants
+      .fetchRestaurant(id)
+      .then((res) => {
+        if (populate) {
+          if (purpose == "modify") {
+            if (res.data != 1) setModifiedData(res.data);
+            else setModifiedData({ name: "" });
+          } else {
+            if (res.data != 1) setRemoveData(res.data);
+            else setRemoveData({ name: "" });
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // ADD RESTAURANT
 
   const addRestaurant = (body) => {
     restaurants
@@ -164,20 +186,7 @@ export const RestaurantManager = () => {
       });
   };
 
-  const fetchRestaurant = (id, populate = false) => {
-    restaurants
-      .fetchRestaurant(id)
-      .then(
-        (res) =>
-          populate &&
-          (res.data != 1
-            ? setModifiedData(res.data)
-            : setModifiedData({ name: "" }))
-      )
-      .catch((err) => console.log(err));
-  };
-
-  const [modifiedData, setModifiedData] = useState({
+  const [restaurantData, setRestaurantData] = useState({
     name: "",
     resortId: 1,
     themeParkId: 1,
@@ -195,14 +204,48 @@ export const RestaurantManager = () => {
     createdAt: new Date(),
   });
 
+  // MODIFY RESTAURANT
+
+  const [modifyRestaurantId, setModifyRestaurantId] = useState();
+  const [modifiedData, setModifiedData] = useState({
+    name: "",
+    resortId: 1,
+    themeParkId: 1,
+    land: "",
+    pavilion: "",
+    resortHotel: "",
+    type: 0,
+    experience: 0,
+    mealPeriod: 0,
+    availability: 0,
+    cusine: "",
+    isGoldenSpoonPoint: false,
+    isBonusPoint: false,
+    hasMobileOrder: false,
+    createdAt: new Date(),
+  });
+  const [modifiedMessage, setModifiedMessage] = useState();
   const modifyRestaurant = (id) => {
     restaurants
       .modifyRestaurnat(id)
-      .then((res) => console.log(res))
-      .then((res) => console.log(res));
+      .then((res) => {
+        setModifiedMessage("Successfully modified!");
+        fetchRestaurantsData();
+      })
+      .catch((err) => {
+        console.log(err);
+        setModifiedMessage("Error");
+      });
   };
 
+  // REMOVE RESTAURANT
+
   const [removeItemId, setRemoveItemId] = useState();
+  const [removeData, setRemoveData] = useState({
+    name: "",
+    createdAt: new Date(),
+  });
+
   const removeRestaurant = (id) => {
     restaurants
       .removeRestaurant(id)
@@ -212,6 +255,19 @@ export const RestaurantManager = () => {
       })
       .catch((err) => console.log(err));
   };
+
+  const loadingBody = (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <ProgressSpinner />
+    </div>
+  );
 
   return (
     <Page>
@@ -237,7 +293,8 @@ export const RestaurantManager = () => {
                 responsive
                 className="RestaurantsManager-Table"
                 dataKey="id"
-                loadingBody={isLoadingData}
+                loading={isLoadingData}
+                loadingBody={loadingBody}
                 rowHover
                 // globalFilter={this.state.globalFilter}
                 // selection={this.state.selectedCustomers}
@@ -462,277 +519,276 @@ export const RestaurantManager = () => {
 
                   <div className="EditProfile-InnerCardContent">
                     <Stack alignment="center" vertical>
-                      <Stack>
-                        <Stack alignment="center">
-                          <span className="p-float-label">
-                            <InputText
-                              id="name"
-                              label="Name"
-                              value={restaurantData.firstName}
-                              onChange={(e) =>
-                                handleChange(e.target.value, "name")
-                              }
-                            />
-
-                            <label htmlFor="float-input">Restaurant Name</label>
-                          </span>
-
-                          <Dropdown
-                            id="resortDropdown"
-                            className="EditProfile-resortDropdown"
-                            placeholder="Resort"
-                            label="resort"
-                            value={restaurantData.resort}
+                      <Stack alignment="center">
+                        <span className="p-float-label">
+                          <InputText
+                            id="restaurantName"
+                            label="Restaurant Name"
+                            value={restaurantData.name}
                             onChange={(e) =>
-                              handleChange(e.target.value, "resort")
+                              handleChange(e.target.value, "name")
                             }
-                            className="EditProfile-FullWidthDropdown"
-                          />
-                          <Dropdown
-                            id="themeParkDropdown"
-                            className="EditProfile-resortDropdown"
-                            placeholder="Theme Park"
-                            label="themePark"
-                            value={restaurantData.resort}
-                            onChange={(e) =>
-                              handleChange(e.target.value, "themePark")
-                            }
-                            className="EditProfile-FullWidthDropdown"
                           />
 
-                          <span className="p-float-label">
-                            <InputText
-                              id="land"
-                              label="Land"
-                              value={restaurantData.land}
-                              onChange={(e) =>
-                                handleChange(e.target.value, "land")
-                              }
-                            />
+                          <label html For="float-input">
+                            Restaurant Name
+                          </label>
+                        </span>
 
-                            <label html For="float-input">
-                              Land{" "}
-                              <span
-                                style={{
-                                  color: "blue",
-                                  fontWeight: "bold",
-                                  fontSize: "10px",
-                                }}
-                              >
-                                {" "}
-                                - optional{" "}
-                              </span>
-                            </label>
-                          </span>
-
-                          <span className="p-float-label">
-                            <InputText
-                              id="pavilion"
-                              label="Pavilion"
-                              value={restaurantData.pavilion}
-                              onChange={(e) =>
-                                handleChange(e.target.value, "pavilion")
-                              }
-                            />
-
-                            <label html For="float-input">
-                              Pavilion{" "}
-                              <span
-                                style={{
-                                  color: "blue",
-                                  fontWeight: "bold",
-                                  fontSize: "10px",
-                                }}
-                              >
-                                {" "}
-                                - optional{" "}
-                              </span>
-                            </label>
-                          </span>
-
-                          <span className="p-float-label">
-                            <InputText
-                              id="resortHotel"
-                              label="Resort Hotel"
-                              value={restaurantData.resortHotel}
-                              onChange={(e) =>
-                                handleChange(e.target.value, "resortHotel")
-                              }
-                            />
-
-                            <label html For="float-input">
-                              Resort Hotel{" "}
-                              <span
-                                style={{
-                                  color: "blue",
-                                  fontWeight: "bold",
-                                  fontSize: "10px",
-                                }}
-                              >
-                                {" "}
-                                - optional{" "}
-                              </span>
-                            </label>
-                          </span>
-                        </Stack>
-
-                        <Stack alignment="center">
-                          <Dropdown
-                            id="typeDropdown"
-                            className="EditProfile-resortDropdown"
-                            placeholder="Type"
-                            label="types"
-                            value={restaurantData.type}
-                            options={restaurantTypes}
-                            onChange={(e) =>
-                              handleChange(e.target.value, "type")
-                            }
-                            className="EditProfile-FullWidthDropdown"
-                          />
-                          <Dropdown
-                            id="experience"
-                            className="EditProfile-resortDropdown"
-                            placeholder="Experience"
-                            label="experience"
-                            value={restaurantData.experience}
-                            options={restaurantExperience}
-                            onChange={(e) =>
-                              handleChange(e.target.value, "experience")
-                            }
-                            className="EditProfile-FullWidthDropdown"
-                          />
-                          <Dropdown
-                            id="mealPeriod"
-                            className="EditProfile-resortDropdown"
-                            placeholder="Meal Period"
-                            label="mealPeriod"
-                            value={restaurantData.mealPeriod}
-                            options={restaurantMealPeriod}
-                            onChange={(e) =>
-                              handleChange(e.target.value, "mealPeriod")
-                            }
-                            className="EditProfile-FullWidthDropdown"
-                          />
-                          <Dropdown
-                            id="availability"
-                            className="EditProfile-resortDropdown"
-                            placeholder="Availability"
-                            label="availability"
-                            value={restaurantData.availability}
-                            options={restaurantAvailability}
-                            onChange={(e) =>
-                              handleChange(e.target.value, "availability")
-                            }
-                            className="EditProfile-FullWidthDropdown"
-                          />
-
-                          <span className="p-float-label">
-                            <InputText
-                              id="cusine"
-                              label="Cusine"
-                              ch
-                              value={restaurantData.cusine}
-                              onChange={(e) =>
-                                handleChange(e.target.value, "cusine")
-                              }
-                            />
-
-                            <label html For="float-input">
-                              Cusine{" "}
-                              <span
-                                style={{
-                                  color: "blue",
-                                  fontWeight: "bold",
-                                  fontSize: "10px",
-                                }}
-                              >
-                                {" "}
-                                - max 160 charachters{" "}
-                              </span>
-                            </label>
-                          </span>
-
-                          <div>
-                            <Checkbox
-                              inputId="goldenSpoon"
-                              onChange={() =>
-                                handleChange(
-                                  !restaurantData.isGoldenSpoonPoint,
-                                  "isGoldenSpoonPoint"
-                                )
-                              }
-                              checked={restaurantData.isGoldenSpoonPoint}
-                            />
-                            <label
-                              htmlFor="goldenSpoon"
-                              className="p-checkbox-label"
-                              style={{
-                                fontWeight: "bold",
-                                userSelect: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Golden Spoon
-                            </label>
-                          </div>
-
-                          <div>
-                            <Checkbox
-                              inputId="isBonusPoint"
-                              onChange={() =>
-                                handleChange(
-                                  !restaurantData.isBonusPoint,
-                                  "isBonusPoint"
-                                )
-                              }
-                              checked={restaurantData.isBonusPoint}
-                            />
-                            <label
-                              htmlFor="isBonusPoint"
-                              className="p-checkbox-label"
-                              style={{
-                                fontWeight: "bold",
-                                userSelect: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Bonus Point
-                            </label>
-                          </div>
-
-                          <div>
-                            <Checkbox
-                              inputId="hasMobileOrder"
-                              onChange={() =>
-                                handleChange(
-                                  !restaurantData.hasMobileOrder,
-                                  "hasMobileOrder"
-                                )
-                              }
-                              checked={restaurantData.hasMobileOrder}
-                            />
-                            <label
-                              htmlFor="hasMobileOrder"
-                              className="p-checkbox-label"
-                              style={{
-                                fontWeight: "bold",
-                                userSelect: "none",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Mobile Order
-                            </label>
-                          </div>
-                        </Stack>
-
-                        <Button
-                          label="Add"
-                          style={{ width: "100%" }}
-                          onClick={() => {
-                            addRestaurant(restaurantData);
-                          }}
+                        <Dropdown
+                          id="resortDropdown"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Resort"
+                          label="resort"
+                          value={restaurantData.resortId}
+                          options={restaurantResorts}
+                          onChange={(e) =>
+                            handleChange(e.target.value, "resort")
+                          }
+                          className="EditProfile-FullWidthDropdown"
                         />
+                        <Dropdown
+                          id="themeParkDropdown"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Theme Park"
+                          label="themePark"
+                          value={restaurantData.themeParkId}
+                          options={restaurantThemePark}
+                          onChange={(e) =>
+                            handleChange(e.target.value, "themePark")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="land"
+                            label="Land"
+                            value={restaurantData.land}
+                            onChange={(e) =>
+                              handleChange(e.target.value, "land")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Land{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              - optional{" "}
+                            </span>
+                          </label>
+                        </span>
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="pavilion"
+                            label="Pavilion"
+                            value={restaurantData.pavilion}
+                            onChange={(e) =>
+                              handleChange(e.target.value, "pavilion")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Pavilion{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {" "}
+                              - optional{" "}
+                            </span>
+                          </label>
+                        </span>
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="resortHotel"
+                            label="Resort Hotel"
+                            value={restaurantData.resortHotel}
+                            onChange={(e) =>
+                              handleChange(e.target.value, "resortHotel")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Resort Hotel{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {" "}
+                              - optional{" "}
+                            </span>
+                          </label>
+                        </span>
                       </Stack>
+
+                      <Stack alignment="center">
+                        <Dropdown
+                          id="typeDropdown"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Type"
+                          label="types"
+                          value={restaurantData.type}
+                          options={restaurantTypes}
+                          onChange={(e) => handleChange(e.target.value, "type")}
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="experience"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Experience"
+                          label="experience"
+                          value={restaurantData.experience}
+                          options={restaurantExperience}
+                          onChange={(e) =>
+                            handleChange(e.target.value, "experience")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="mealPeriod"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Meal Period"
+                          label="mealPeriod"
+                          value={restaurantData.mealPeriod}
+                          options={restaurantMealPeriod}
+                          onChange={(e) =>
+                            handleChange(e.target.value, "mealPeriod")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="availability"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Availability"
+                          label="availability"
+                          value={restaurantData.availability}
+                          options={restaurantAvailability}
+                          onChange={(e) =>
+                            handleChange(e.target.value, "availability")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="cusine"
+                            label="Cusine"
+                            ch
+                            value={restaurantData.cusine}
+                            onChange={(e) =>
+                              handleChange(e.target.value, "cusine")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Cusine{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {" "}
+                              - max 160 charachters{" "}
+                            </span>
+                          </label>
+                        </span>
+
+                        <div>
+                          <Checkbox
+                            inputId="goldenSpoon"
+                            onChange={() =>
+                              handleChange(
+                                !restaurantData.isGoldenSpoonPoint,
+                                "isGoldenSpoonPoint"
+                              )
+                            }
+                            checked={restaurantData.isGoldenSpoonPoint}
+                          />
+                          <label
+                            htmlFor="goldenSpoon"
+                            className="p-checkbox-label"
+                            style={{
+                              fontWeight: "bold",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Golden Spoon
+                          </label>
+                        </div>
+
+                        <div>
+                          <Checkbox
+                            inputId="isBonusPoint"
+                            onChange={() =>
+                              handleChange(
+                                !restaurantData.isBonusPoint,
+                                "isBonusPoint"
+                              )
+                            }
+                            checked={restaurantData.isBonusPoint}
+                          />
+                          <label
+                            htmlFor="isBonusPoint"
+                            className="p-checkbox-label"
+                            style={{
+                              fontWeight: "bold",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Bonus Point
+                          </label>
+                        </div>
+
+                        <div>
+                          <Checkbox
+                            inputId="hasMobileOrder"
+                            onChange={() =>
+                              handleChange(
+                                !restaurantData.hasMobileOrder,
+                                "hasMobileOrder"
+                              )
+                            }
+                            checked={restaurantData.hasMobileOrder}
+                          />
+                          <label
+                            htmlFor="hasMobileOrder"
+                            className="p-checkbox-label"
+                            style={{
+                              fontWeight: "bold",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Mobile Order
+                          </label>
+                        </div>
+                      </Stack>
+
+                      <Button
+                        label="Add"
+                        style={{ width: "100%" }}
+                        onClick={() => {
+                          addRestaurant(restaurantData);
+                        }}
+                      />
                     </Stack>
                   </div>
                 </Card>
@@ -780,6 +836,296 @@ export const RestaurantManager = () => {
                     tab.
                   </p>
                 </Stack>
+                <Stack>
+                  <InputText
+                    value={modifyRestaurantId}
+                    onChange={(e) => setModifyRestaurantId(e.target.value)}
+                  />
+                  <Button
+                    label="Search"
+                    onClick={() => {
+                      fetchRestaurant(modifyRestaurantId, "modify", true);
+                    }}
+                  />
+                </Stack>
+                <br />
+                <br />
+                {modifiedData.name !== "" && (
+                  <Stack spacing="loose">
+                    <Stack alignment="center">
+                      <span className="p-float-label">
+                        <InputText
+                          id="restaurantName"
+                          label="Restaurant Name"
+                          value={modifiedData.name}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "name")
+                          }
+                        />
+
+                        <label html For="float-input">
+                          Restaurant Name
+                        </label>
+                      </span>
+
+                      <Dropdown
+                        id="resortDropdown"
+                        className="EditProfile-resortDropdown"
+                        placeholder="Resort"
+                        label="resort"
+                        value={restaurantData.resortId}
+                        options={restaurantResorts}
+                        onChange={(e) => handleChange(e.target.value, "resort")}
+                        className="EditProfile-FullWidthDropdown"
+                      />
+                      <Dropdown
+                        id="themeParkDropdown"
+                        className="EditProfile-resortDropdown"
+                        placeholder="Theme Park"
+                        label="themePark"
+                        value={restaurantData.themeParkId}
+                        options={restaurantThemePark}
+                        onChange={(e) =>
+                          handleChange(e.target.value, "themePark")
+                        }
+                        className="EditProfile-FullWidthDropdown"
+                      />
+
+                      <span className="p-float-label">
+                        <InputText
+                          id="land"
+                          label="Land"
+                          value={modifiedData.land}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "land")
+                          }
+                        />
+
+                        <label html For="float-input">
+                          Land{" "}
+                          <span
+                            style={{
+                              color: "blue",
+                              fontWeight: "bold",
+                              fontSize: "10px",
+                            }}
+                          >
+                            - optional{" "}
+                          </span>
+                        </label>
+                      </span>
+
+                      <span className="p-float-label">
+                        <InputText
+                          id="pavilion"
+                          label="Pavilion"
+                          value={modifiedData.pavilion}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "pavilion")
+                          }
+                        />
+
+                        <label html For="float-input">
+                          Pavilion{" "}
+                          <span
+                            style={{
+                              color: "blue",
+                              fontWeight: "bold",
+                              fontSize: "10px",
+                            }}
+                          >
+                            {" "}
+                            - optional{" "}
+                          </span>
+                        </label>
+                      </span>
+
+                      <span className="p-float-label">
+                        <InputText
+                          id="resortHotel"
+                          label="Resort Hotel"
+                          value={modifiedData.resortHotel}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "resortHotel")
+                          }
+                        />
+
+                        <label html For="float-input">
+                          Resort Hotel{" "}
+                          <span
+                            style={{
+                              color: "blue",
+                              fontWeight: "bold",
+                              fontSize: "10px",
+                            }}
+                          >
+                            {" "}
+                            - optional{" "}
+                          </span>
+                        </label>
+                      </span>
+                    </Stack>
+
+                    <Stack alignment="center">
+                      <Dropdown
+                        id="typeDropdown"
+                        className="EditProfile-resortDropdown"
+                        placeholder="Type"
+                        label="types"
+                        value={modifiedData.type}
+                        options={restaurantTypes}
+                        onChange={(e) =>
+                          handleModifyChange(e.target.value, "type")
+                        }
+                        className="EditProfile-FullWidthDropdown"
+                      />
+                      <Dropdown
+                        id="experience"
+                        className="EditProfile-resortDropdown"
+                        placeholder="Experience"
+                        label="experience"
+                        value={modifiedData.experience}
+                        options={restaurantExperience}
+                        onChange={(e) =>
+                          handleModifyChange(e.target.value, "experience")
+                        }
+                        className="EditProfile-FullWidthDropdown"
+                      />
+                      <Dropdown
+                        id="mealPeriod"
+                        className="EditProfile-resortDropdown"
+                        placeholder="Meal Period"
+                        label="mealPeriod"
+                        value={modifiedData.mealPeriod}
+                        options={restaurantMealPeriod}
+                        onChange={(e) =>
+                          handleModifyChange(e.target.value, "mealPeriod")
+                        }
+                        className="EditProfile-FullWidthDropdown"
+                      />
+                      <Dropdown
+                        id="availability"
+                        className="EditProfile-resortDropdown"
+                        placeholder="Availability"
+                        label="availability"
+                        value={modifiedData.availability}
+                        options={restaurantAvailability}
+                        onChange={(e) =>
+                          handleModifyChange(e.target.value, "availability")
+                        }
+                        className="EditProfile-FullWidthDropdown"
+                      />
+
+                      <span className="p-float-label">
+                        <InputText
+                          id="cusine"
+                          label="Cusine"
+                          ch
+                          value={modifiedData.cusine}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "cusine")
+                          }
+                        />
+
+                        <label html For="float-input">
+                          Cusine{" "}
+                          <span
+                            style={{
+                              color: "blue",
+                              fontWeight: "bold",
+                              fontSize: "10px",
+                            }}
+                          >
+                            {" "}
+                            - max 160 charachters{" "}
+                          </span>
+                        </label>
+                      </span>
+
+                      <div>
+                        <Checkbox
+                          inputId="goldenSpoon"
+                          onChange={() =>
+                            handleModifyChange(
+                              !modifiedData.isGoldenSpoonPoint,
+                              "isGoldenSpoonPoint"
+                            )
+                          }
+                          checked={modifiedData.isGoldenSpoonPoint}
+                        />
+                        <label
+                          htmlFor="goldenSpoon"
+                          className="p-checkbox-label"
+                          style={{
+                            fontWeight: "bold",
+                            userSelect: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Golden Spoon
+                        </label>
+                      </div>
+
+                      <div>
+                        <Checkbox
+                          inputId="isBonusPoint"
+                          onChange={() =>
+                            handleModifyChange(
+                              !modifiedData.isBonusPoint,
+                              "isBonusPoint"
+                            )
+                          }
+                          checked={modifiedData.isBonusPoint}
+                        />
+                        <label
+                          htmlFor="isBonusPoint"
+                          className="p-checkbox-label"
+                          style={{
+                            fontWeight: "bold",
+                            userSelect: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Bonus Point
+                        </label>
+                      </div>
+
+                      <div>
+                        <Checkbox
+                          inputId="hasMobileOrder"
+                          onChange={() =>
+                            handleModifyChange(
+                              !modifiedData.hasMobileOrder,
+                              "hasMobileOrder"
+                            )
+                          }
+                          checked={modifiedData.hasMobileOrder}
+                        />
+                        <label
+                          htmlFor="hasMobileOrder"
+                          className="p-checkbox-label"
+                          style={{
+                            fontWeight: "bold",
+                            userSelect: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Mobile Order
+                        </label>
+                      </div>
+                    </Stack>
+
+                    <Button
+                      label="Save Changes"
+                      style={{ width: "100%" }}
+                      onClick={() => {
+                        modifyRestaurant(modifiedData);
+                      }}
+                    />
+
+                    <p style={{ fontWeight: "bold" }}>{modifiedMessage}</p>
+                  </Stack>
+                )}
               </TabPanel>
               <TabPanel leftIcon="fas fa-trash-alt" header="Remove">
                 <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
@@ -806,21 +1152,21 @@ export const RestaurantManager = () => {
                 <Button
                   label="Search"
                   onClick={() => {
-                    fetchRestaurant(removeItemId, true);
+                    fetchRestaurant(removeItemId, "remove", true);
                   }}
                 />
-                {modifiedData.name !== "" ? (
+                {removeData.name !== "" ? (
                   <Stack vertical spacing="tight">
                     <Stack vertical spacing="extraTight">
                       <span>
                         <span style={{ fontWeight: "bold" }}> Name: </span>
-                        {modifiedData.name}
+                        {removeData.name}
                       </span>
                       <span>
                         <span style={{ fontWeight: "bold" }}>
                           Created Date:{" "}
                         </span>
-                        {modifiedData.createdAt}
+                        {removeData.createdAt}
                       </span>
                     </Stack>
                     <Stack vertical spacing="extraTight">

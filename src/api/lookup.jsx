@@ -2,6 +2,16 @@ import { BASE_API_URL } from ".";
 import apiClient from "./apiClient";
 
 export default {
+  FetchResorts: (body) =>
+    apiClient.get(BASE_API_URL + `/lookup/FetchResorts`).catch((err) => {
+      console.log(err);
+    }),
+
+  FetchThemeParks: (body) =>
+    apiClient.get(BASE_API_URL + `/lookup/FetchThemeParks`).catch((err) => {
+      console.log(err);
+    }),
+
   FetchRestaurantTypes: (body) =>
     apiClient
       .get(BASE_API_URL + `/lookup/FetchRestaurantTypes`)
