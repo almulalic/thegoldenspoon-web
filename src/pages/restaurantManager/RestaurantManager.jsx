@@ -16,6 +16,8 @@ import { Card } from "primereact/card";
 import lookup from "../../api/lookup";
 import { toast } from "react-toastify";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { decodeCamelCase } from "../../shared/utils";
+import { Availability } from "../../shared/types/RestaurantTypes";
 
 export const RestaurantManager = () => {
   const [isEditVisible, setEditVisible] = useState(true);
@@ -29,17 +31,21 @@ export const RestaurantManager = () => {
   const [restaurantMealPeriod, setRestaurantMealPeriod] = useState([]);
   const [restaurantAvailability, setRestaurantAvailability] = useState([]);
 
+  const Humanize = (arr) => {
+    return arr.map((x) => {
+      return decodeCamelCase(x);
+    });
+  };
+
   const fetchRestaurantsData = () => {
     restaurants
       .fetchNewRestaurants()
       .then((response) => {
         setRestaurantsData(response.data);
-
         setIsLoadingData(false);
       })
       .catch((err) => {
         console.log(err);
-
         setIsLoadingData(false);
       });
   };
@@ -48,7 +54,7 @@ export const RestaurantManager = () => {
     lookup
       .FetchResorts()
       .then((response) => {
-        setRestaurantResorts(response.data);
+        setRestaurantResorts(Humanize(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -56,7 +62,7 @@ export const RestaurantManager = () => {
     lookup
       .FetchThemeParks()
       .then((response) => {
-        setRestaurantThemePark(response.data);
+        setRestaurantThemePark(Humanize(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -64,7 +70,7 @@ export const RestaurantManager = () => {
     lookup
       .FetchRestaurantTypes()
       .then((response) => {
-        setRestaurantTypes(response.data);
+        setRestaurantTypes(Humanize(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -73,7 +79,7 @@ export const RestaurantManager = () => {
     lookup
       .FetchRestaurantExperience()
       .then((response) => {
-        setRestaurantExperience(response.data);
+        setRestaurantExperience(Humanize(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -82,7 +88,7 @@ export const RestaurantManager = () => {
     lookup
       .FetchResturantMealPeriod()
       .then((response) => {
-        setRestaurantMealPeriod(response.data);
+        setRestaurantMealPeriod(Humanize(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -91,7 +97,7 @@ export const RestaurantManager = () => {
     lookup
       .FetchResturantAvailability()
       .then((response) => {
-        setRestaurantAvailability(response.data);
+        setRestaurantAvailability(Humanize(response.data));
       })
       .catch((err) => {
         console.log(err);
@@ -117,8 +123,24 @@ export const RestaurantManager = () => {
     </div>
   );
 
+  const loadingBody = (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <ProgressSpinner />
+    </div>
+  );
+
   const render = (rowData, row) => {
-    if (row.field === "type") return restaurantTypes[rowData.type];
+    if (row.field === "resort") return restaurantResorts[rowData.resortId];
+    else if (row.field === "themePark")
+      return restaurantThemePark[rowData.themeParkId];
+    else if (row.field === "type") return restaurantTypes[rowData.type];
     else if (row.field === "experience")
       return restaurantExperience[rowData.experience];
     else if (row.field === "mealPeriod")
@@ -138,30 +160,24 @@ export const RestaurantManager = () => {
 
   const [optionsTabActiveIndex, setOptionsTabActiveIndex] = useState(0);
 
-  const handleChange = useCallback((newValue, id) => {
-    setRestaurantData((prevState) => ({
-      ...prevState,
-      [id]: newValue,
-    }));
-  }, []);
-
-  const handleModifyChange = useCallback((newValue, id) => {
-    setModifiedData((prevState) => ({
-      ...prevState,
-      [id]: newValue,
-    }));
-  }, []);
-
   // FETCH SINGLE RESTAURANT
 
-  const fetchRestaurant = (id, purpose, populate = false) => {
+  const fetchRestaurant = (id, purpose, populate = true) => {
     restaurants
       .fetchRestaurant(id)
       .then((res) => {
         if (populate) {
           if (purpose == "modify") {
+            res.data.resortId = restaurantResorts[res.data.resortId];
+            res.data.themeParkId = restaurantThemePark[res.data.themeParkId];
+            res.data.type = restaurantTypes[res.data.type];
+            res.data.experience = restaurantExperience[res.data.experience];
+            res.data.mealPeriod = restaurantMealPeriod[res.data.mealPeriod];
+            res.data.availability =
+              restaurantAvailability[res.data.availability];
             if (res.data != 1) setModifiedData(res.data);
-            else setModifiedData({ name: "" });
+
+            setModifiedDataVisible(true);
           } else {
             if (res.data != 1) setRemoveData(res.data);
             else setRemoveData({ name: "" });
@@ -173,7 +189,45 @@ export const RestaurantManager = () => {
 
   // ADD RESTAURANT
 
+  const [addRestaurantData, setAddRestaurantData] = useState({
+    name: "",
+    resortId: "",
+    themeParkId: "",
+    land: "",
+    pavilion: "",
+    resortHotel: "",
+    type: 0,
+    experience: 0,
+    mealPeriod: 0,
+    availability: 0,
+    cusine: "",
+    isGoldenSpoonPoint: false,
+    isBonusPoint: false,
+    hasMobileOrder: false,
+    createdAt: new Date(),
+  });
+
   const addRestaurant = (body) => {
+    body.resortId = restaurantResorts.indexOf(body.resortId);
+    body.themeParkId = restaurantThemePark.indexOf(body.themeParkId);
+    body.type = restaurantTypes.indexOf(body.type);
+    body.experience = restaurantExperience.indexOf(body.experience);
+    body.mealPeriod = restaurantMealPeriod.indexOf(body.mealPeriod);
+    body.availability = restaurantAvailability.indexOf(body.availability);
+
+    let flag = false;
+    Object.values(body).forEach((x) => {
+      if (x == -1) {
+        flag = true;
+        return;
+      }
+    });
+
+    if (flag) {
+      toast.error("Bad request, check dropdowns, some are missing or invalid");
+      return;
+    }
+
     restaurants
       .addNewRestaurant(body)
       .then((response) => {
@@ -182,59 +236,84 @@ export const RestaurantManager = () => {
         fetchRestaurantsData();
       })
       .catch((err) => {
-        console.log(err);
+        toast.error("Bad request, please check your input");
       });
   };
 
-  const [restaurantData, setRestaurantData] = useState({
-    name: "",
-    resortId: 1,
-    themeParkId: 1,
-    land: "",
-    pavilion: "",
-    resortHotel: "",
-    type: 0,
-    experience: 0,
-    mealPeriod: 0,
-    availability: 0,
-    cusine: "",
-    isGoldenSpoonPoint: false,
-    isBonusPoint: false,
-    hasMobileOrder: false,
-    createdAt: new Date(),
-  });
+  const handleAddChange = useCallback((newValue, id) => {
+    setAddRestaurantData((prevState) => ({
+      ...prevState,
+      [id]: newValue,
+    }));
+  }, []);
 
   // MODIFY RESTAURANT
-
+  const [isUpdatingRestaurant, setIsUpdatingRestaurant] = useState(false);
   const [modifyRestaurantId, setModifyRestaurantId] = useState();
   const [modifiedData, setModifiedData] = useState({
     name: "",
-    resortId: 1,
-    themeParkId: 1,
+    resortId: "",
+    themeParkId: "",
     land: "",
     pavilion: "",
     resortHotel: "",
-    type: 0,
-    experience: 0,
-    mealPeriod: 0,
-    availability: 0,
+    type: "",
+    experience: "",
+    mealPeriod: "",
+    availability: "",
     cusine: "",
     isGoldenSpoonPoint: false,
     isBonusPoint: false,
     hasMobileOrder: false,
     createdAt: new Date(),
   });
-  const [modifiedMessage, setModifiedMessage] = useState();
-  const modifyRestaurant = (id) => {
+  const [modifiedDataVisible, setModifiedDataVisible] = useState(false);
+
+  const handleModifyChange = useCallback((newValue, id) => {
+    setModifiedData((prevState) => ({
+      ...prevState,
+      [id]: newValue,
+    }));
+  }, []);
+
+  const modifyRestaurant = (modData) => {
+    setIsUpdatingRestaurant(true);
+    modData.resortId = restaurantResorts.indexOf(modData.resortId);
+    modData.themeParkId = restaurantThemePark.indexOf(modData.themeParkId);
+    modData.type = restaurantTypes.indexOf(modData.type);
+    modData.experience = restaurantExperience.indexOf(modData.experience);
+    modData.mealPeriod = restaurantMealPeriod.indexOf(modData.mealPeriod);
+    modData.availability = restaurantAvailability.indexOf(modData.availability);
+
     restaurants
-      .modifyRestaurnat(id)
+      .modifyRestaurnat(modData)
       .then((res) => {
-        setModifiedMessage("Successfully modified!");
-        fetchRestaurantsData();
+        if (res.data == 1) {
+          toast.error("Id not found or already deleted");
+          setIsUpdatingRestaurant(false);
+        } else {
+          toast.success("Restaurant successfully modified");
+          fetchRestaurantsData();
+          setIsUpdatingRestaurant(false);
+        }
+
+        modData.resortId = restaurantResorts[modData.resortId];
+        modData.themeParkId = restaurantThemePark[modData.themeParkId];
+        modData.type = restaurantTypes[modData.type];
+        modData.experience = restaurantExperience[modData.experience];
+        modData.mealPeriod = restaurantMealPeriod[modData.mealPeriod];
+        modData.availability = restaurantAvailability[modData.availability];
       })
       .catch((err) => {
         console.log(err);
-        setModifiedMessage("Error");
+        toast.error("Bad request, please check your input");
+        modData.resortId = restaurantResorts[modData.resortId];
+        modData.themeParkId = restaurantThemePark[modData.themeParkId];
+        modData.type = restaurantTypes[modData.type];
+        modData.experience = restaurantExperience[modData.experience];
+        modData.mealPeriod = restaurantMealPeriod[modData.mealPeriod];
+        modData.availability = restaurantAvailability[modData.availability];
+        setIsUpdatingRestaurant(false);
       });
   };
 
@@ -249,25 +328,18 @@ export const RestaurantManager = () => {
   const removeRestaurant = (id) => {
     restaurants
       .removeRestaurant(id)
-      .then((resp) => {
-        toast.success("Item successfully removed");
-        fetchRestaurantsData();
+      .then((res) => {
+        if (res.data == 1) toast.error("Id not found or already deleted");
+        else {
+          fetchRestaurantsData();
+          toast.success("Restaurant successfully removed");
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        toast.error("Bad request, please check your input");
+      });
   };
-
-  const loadingBody = (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
-      <ProgressSpinner />
-    </div>
-  );
 
   return (
     <Page>
@@ -332,6 +404,7 @@ export const RestaurantManager = () => {
                   sortable
                   filter
                   filterPlaceholder="Filter"
+                  body={render}
                 />
                 <Column
                   field="themePark"
@@ -340,6 +413,7 @@ export const RestaurantManager = () => {
                   sortable
                   filter
                   filterPlaceholder="Filter"
+                  body={render}
                 />
                 <Column
                   field="land"
@@ -468,11 +542,12 @@ export const RestaurantManager = () => {
                 />
               </DataTable>
             </div>
+
             <TabView
               activeIndex={optionsTabActiveIndex}
               onTabChange={(e) => setOptionsTabActiveIndex(e.index)}
             >
-              <TabPanel leftIcon="fas fa-plus" header="Add New">
+              <TabPanel leftIcon="fas fa-plus" header="Add">
                 <Card title="Add Restaurant">
                   <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
                     <p>
@@ -518,15 +593,15 @@ export const RestaurantManager = () => {
                   </Stack>
 
                   <div className="EditProfile-InnerCardContent">
-                    <Stack alignment="center" vertical>
+                    <Stack vertical>
                       <Stack alignment="center">
                         <span className="p-float-label">
                           <InputText
                             id="restaurantName"
                             label="Restaurant Name"
-                            value={restaurantData.name}
+                            value={addRestaurantData.name}
                             onChange={(e) =>
-                              handleChange(e.target.value, "name")
+                              handleAddChange(e.target.value, "name")
                             }
                           />
 
@@ -540,11 +615,11 @@ export const RestaurantManager = () => {
                           className="EditProfile-resortDropdown"
                           placeholder="Resort"
                           label="resort"
-                          value={restaurantData.resortId}
+                          value={addRestaurantData.resortId}
                           options={restaurantResorts}
-                          onChange={(e) =>
-                            handleChange(e.target.value, "resort")
-                          }
+                          onChange={(e) => {
+                            handleAddChange(e.target.value, "resortId");
+                          }}
                           className="EditProfile-FullWidthDropdown"
                         />
                         <Dropdown
@@ -552,10 +627,10 @@ export const RestaurantManager = () => {
                           className="EditProfile-resortDropdown"
                           placeholder="Theme Park"
                           label="themePark"
-                          value={restaurantData.themeParkId}
+                          value={addRestaurantData.themeParkId}
                           options={restaurantThemePark}
                           onChange={(e) =>
-                            handleChange(e.target.value, "themePark")
+                            handleAddChange(e.target.value, "themeParkId")
                           }
                           className="EditProfile-FullWidthDropdown"
                         />
@@ -564,9 +639,9 @@ export const RestaurantManager = () => {
                           <InputText
                             id="land"
                             label="Land"
-                            value={restaurantData.land}
+                            value={addRestaurantData.land}
                             onChange={(e) =>
-                              handleChange(e.target.value, "land")
+                              handleAddChange(e.target.value, "land")
                             }
                           />
 
@@ -588,9 +663,9 @@ export const RestaurantManager = () => {
                           <InputText
                             id="pavilion"
                             label="Pavilion"
-                            value={restaurantData.pavilion}
+                            value={addRestaurantData.pavilion}
                             onChange={(e) =>
-                              handleChange(e.target.value, "pavilion")
+                              handleAddChange(e.target.value, "pavilion")
                             }
                           />
 
@@ -613,9 +688,9 @@ export const RestaurantManager = () => {
                           <InputText
                             id="resortHotel"
                             label="Resort Hotel"
-                            value={restaurantData.resortHotel}
+                            value={addRestaurantData.resortHotel}
                             onChange={(e) =>
-                              handleChange(e.target.value, "resortHotel")
+                              handleAddChange(e.target.value, "resortHotel")
                             }
                           />
 
@@ -641,9 +716,11 @@ export const RestaurantManager = () => {
                           className="EditProfile-resortDropdown"
                           placeholder="Type"
                           label="types"
-                          value={restaurantData.type}
+                          value={addRestaurantData.type}
                           options={restaurantTypes}
-                          onChange={(e) => handleChange(e.target.value, "type")}
+                          onChange={(e) =>
+                            handleAddChange(e.target.value, "type")
+                          }
                           className="EditProfile-FullWidthDropdown"
                         />
                         <Dropdown
@@ -651,10 +728,10 @@ export const RestaurantManager = () => {
                           className="EditProfile-resortDropdown"
                           placeholder="Experience"
                           label="experience"
-                          value={restaurantData.experience}
+                          value={addRestaurantData.experience}
                           options={restaurantExperience}
                           onChange={(e) =>
-                            handleChange(e.target.value, "experience")
+                            handleAddChange(e.target.value, "experience")
                           }
                           className="EditProfile-FullWidthDropdown"
                         />
@@ -663,10 +740,10 @@ export const RestaurantManager = () => {
                           className="EditProfile-resortDropdown"
                           placeholder="Meal Period"
                           label="mealPeriod"
-                          value={restaurantData.mealPeriod}
+                          value={addRestaurantData.mealPeriod}
                           options={restaurantMealPeriod}
                           onChange={(e) =>
-                            handleChange(e.target.value, "mealPeriod")
+                            handleAddChange(e.target.value, "mealPeriod")
                           }
                           className="EditProfile-FullWidthDropdown"
                         />
@@ -675,10 +752,10 @@ export const RestaurantManager = () => {
                           className="EditProfile-resortDropdown"
                           placeholder="Availability"
                           label="availability"
-                          value={restaurantData.availability}
+                          value={addRestaurantData.availability}
                           options={restaurantAvailability}
                           onChange={(e) =>
-                            handleChange(e.target.value, "availability")
+                            handleAddChange(e.target.value, "availability")
                           }
                           className="EditProfile-FullWidthDropdown"
                         />
@@ -688,9 +765,9 @@ export const RestaurantManager = () => {
                             id="cusine"
                             label="Cusine"
                             ch
-                            value={restaurantData.cusine}
+                            value={addRestaurantData.cusine}
                             onChange={(e) =>
-                              handleChange(e.target.value, "cusine")
+                              handleAddChange(e.target.value, "cusine")
                             }
                           />
 
@@ -713,12 +790,12 @@ export const RestaurantManager = () => {
                           <Checkbox
                             inputId="goldenSpoon"
                             onChange={() =>
-                              handleChange(
-                                !restaurantData.isGoldenSpoonPoint,
+                              handleAddChange(
+                                !addRestaurantData.isGoldenSpoonPoint,
                                 "isGoldenSpoonPoint"
                               )
                             }
-                            checked={restaurantData.isGoldenSpoonPoint}
+                            checked={addRestaurantData.isGoldenSpoonPoint}
                           />
                           <label
                             htmlFor="goldenSpoon"
@@ -737,12 +814,12 @@ export const RestaurantManager = () => {
                           <Checkbox
                             inputId="isBonusPoint"
                             onChange={() =>
-                              handleChange(
-                                !restaurantData.isBonusPoint,
+                              handleAddChange(
+                                !addRestaurantData.isBonusPoint,
                                 "isBonusPoint"
                               )
                             }
-                            checked={restaurantData.isBonusPoint}
+                            checked={addRestaurantData.isBonusPoint}
                           />
                           <label
                             htmlFor="isBonusPoint"
@@ -761,12 +838,355 @@ export const RestaurantManager = () => {
                           <Checkbox
                             inputId="hasMobileOrder"
                             onChange={() =>
-                              handleChange(
-                                !restaurantData.hasMobileOrder,
+                              handleAddChange(
+                                !addRestaurantData.hasMobileOrder,
                                 "hasMobileOrder"
                               )
                             }
-                            checked={restaurantData.hasMobileOrder}
+                            checked={addRestaurantData.hasMobileOrder}
+                          />
+                          <label
+                            htmlFor="hasMobileOrder"
+                            className="p-checkbox-label"
+                            style={{
+                              fontWeight: "bold",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Mobile Order
+                          </label>
+                        </div>
+                        <Button
+                          label="Add"
+                          style={{ width: "100%" }}
+                          onClick={() => {
+                            addRestaurant(addRestaurantData);
+                          }}
+                        />
+                      </Stack>
+                    </Stack>
+                  </div>
+                </Card>
+              </TabPanel>
+              <TabPanel leftIcon="fas fa-edit" header="Edit">
+                <Card title="Edit Restaurant">
+                  <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
+                    <p>
+                      <span style={{ fontWeight: "bold" }}>
+                        1. Search and modify -{" "}
+                      </span>
+                      Modifing restaruant is as easy as adding, you just need to
+                      enter ID of the item, click search and then edit the info
+                      that you get
+                    </p>
+                    <p>
+                      <span style={{ fontWeight: "bold" }}>
+                        2. Editable columns -{" "}
+                      </span>
+                      Try to click on the column, if it turns into input field
+                      it means that you can edit it like a normal spreadsheet
+                      column, it will be saved when you click outside the cell.
+                      If nothing happens it is not implemented yet and it will
+                      be in near future.
+                    </p>
+                    <p>
+                      <span style={{ fontWeight: "bold" }}>3. Cusine - </span>
+                      Cusine MUST be separated by space, database interpets
+                      commas as a separator sign and will try to divide it into
+                      multiple columns, also comma separation is not suitable
+                      for searching and csv exports which can be vital for the
+                      app.
+                      <br /> <span style={{ fontWeight: "bold" }}>
+                        Good:
+                      </span>{" "}
+                      American Turkish Asian
+                      <br /> <span style={{ fontWeight: "bold" }}>
+                        {" "}
+                        Bad:{" "}
+                      </span>{" "}
+                      America,Turkish,Asian
+                    </p>
+                    <p>
+                      <span style={{ fontWeight: "bold" }}>4. Search - </span>
+                      Items are searched by ID, it was implemented that way
+                      because of execution time. You can use filter input fields
+                      to find the restaurant you need and then use the ID
+                    </p>
+                    <p style={{ fontWeight: "bold", color: "red" }}>
+                      Please also note that,for now, data is not veified and
+                      everything can pass, check the input before you click add,
+                      but if you do make a mistake you can always edit it in
+                      edit tab.
+                    </p>
+                  </Stack>
+                  <Stack>
+                    <InputText
+                      value={modifyRestaurantId}
+                      onChange={(e) => setModifyRestaurantId(e.target.value)}
+                    />
+                    <Button
+                      id="searchRestaurantModify"
+                      label="Search"
+                      onClick={() => {
+                        fetchRestaurant(modifyRestaurantId, "modify", true);
+                      }}
+                    />
+                  </Stack>
+                  <br />
+                  <br />
+                  {modifiedDataVisible && (
+                    <Stack spacing="loose">
+                      <Stack alignment="center">
+                        <span className="p-float-label">
+                          <InputText
+                            id="restaurantName"
+                            label="Restaurant Name"
+                            value={modifiedData.name}
+                            onChange={(e) =>
+                              handleModifyChange(e.target.value, "name")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Restaurant Name
+                          </label>
+                        </span>
+
+                        <Dropdown
+                          id="resortDropdown"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Resort"
+                          label="resort"
+                          value={modifiedData.resortId}
+                          options={restaurantResorts}
+                          onChange={(e) => {
+                            handleModifyChange(e.target.value, "resortId");
+                          }}
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="themeParkDropdown"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Theme Park"
+                          label="themePark"
+                          value={modifiedData.themeParkId}
+                          options={restaurantThemePark}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "themeParkId")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="land"
+                            label="Land"
+                            value={modifiedData.land}
+                            onChange={(e) =>
+                              handleModifyChange(e.target.value, "land")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Land{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              - optional{" "}
+                            </span>
+                          </label>
+                        </span>
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="pavilion"
+                            label="Pavilion"
+                            value={modifiedData.pavilion}
+                            onChange={(e) =>
+                              handleModifyChange(e.target.value, "pavilion")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Pavilion{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {" "}
+                              - optional{" "}
+                            </span>
+                          </label>
+                        </span>
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="resortHotel"
+                            label="Resort Hotel"
+                            value={modifiedData.resortHotel}
+                            onChange={(e) =>
+                              handleModifyChange(e.target.value, "resortHotel")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Resort Hotel{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {" "}
+                              - optional{" "}
+                            </span>
+                          </label>
+                        </span>
+                      </Stack>
+
+                      <Stack alignment="center">
+                        <Dropdown
+                          id="typeDropdown"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Type"
+                          label="types"
+                          value={modifiedData.type}
+                          options={restaurantTypes}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "type")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="experience"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Experience"
+                          label="experience"
+                          value={modifiedData.experience}
+                          options={restaurantExperience}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "experience")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="mealPeriod"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Meal Period"
+                          label="mealPeriod"
+                          value={modifiedData.mealPeriod}
+                          options={restaurantMealPeriod}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "mealPeriod")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+                        <Dropdown
+                          id="availability"
+                          className="EditProfile-resortDropdown"
+                          placeholder="Availability"
+                          label="availability"
+                          value={modifiedData.availability}
+                          options={restaurantAvailability}
+                          onChange={(e) =>
+                            handleModifyChange(e.target.value, "availability")
+                          }
+                          className="EditProfile-FullWidthDropdown"
+                        />
+
+                        <span className="p-float-label">
+                          <InputText
+                            id="cusine"
+                            label="Cusine"
+                            ch
+                            value={modifiedData.cusine}
+                            onChange={(e) =>
+                              handleModifyChange(e.target.value, "cusine")
+                            }
+                          />
+
+                          <label html For="float-input">
+                            Cusine{" "}
+                            <span
+                              style={{
+                                color: "blue",
+                                fontWeight: "bold",
+                                fontSize: "10px",
+                              }}
+                            >
+                              {" "}
+                              - max 160 charachters{" "}
+                            </span>
+                          </label>
+                        </span>
+
+                        <div>
+                          <Checkbox
+                            inputId="goldenSpoon"
+                            onChange={() =>
+                              handleModifyChange(
+                                !modifiedData.isGoldenSpoonPoint,
+                                "isGoldenSpoonPoint"
+                              )
+                            }
+                            checked={modifiedData.isGoldenSpoonPoint}
+                          />
+                          <label
+                            htmlFor="goldenSpoon"
+                            className="p-checkbox-label"
+                            style={{
+                              fontWeight: "bold",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Golden Spoon
+                          </label>
+                        </div>
+
+                        <div>
+                          <Checkbox
+                            inputId="isBonusPoint"
+                            onChange={() =>
+                              handleModifyChange(
+                                !modifiedData.isBonusPoint,
+                                "isBonusPoint"
+                              )
+                            }
+                            checked={modifiedData.isBonusPoint}
+                          />
+                          <label
+                            htmlFor="isBonusPoint"
+                            className="p-checkbox-label"
+                            style={{
+                              fontWeight: "bold",
+                              userSelect: "none",
+                              cursor: "pointer",
+                            }}
+                          >
+                            Bonus Point
+                          </label>
+                        </div>
+
+                        <div>
+                          <Checkbox
+                            inputId="hasMobileOrder"
+                            onChange={() =>
+                              handleModifyChange(
+                                !modifiedData.hasMobileOrder,
+                                "hasMobileOrder"
+                              )
+                            }
+                            checked={modifiedData.hasMobileOrder}
                           />
                           <label
                             htmlFor="hasMobileOrder"
@@ -783,407 +1203,78 @@ export const RestaurantManager = () => {
                       </Stack>
 
                       <Button
-                        label="Add"
+                        disabled={isUpdatingRestaurant}
+                        id="saveChanges"
+                        label="Save Changes"
                         style={{ width: "100%" }}
                         onClick={() => {
-                          addRestaurant(restaurantData);
+                          modifyRestaurant(modifiedData);
                         }}
                       />
                     </Stack>
-                  </div>
+                  )}
                 </Card>
               </TabPanel>
-              <TabPanel leftIcon="fas fa-edit" header="Edit">
-                <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
-                  <p>
-                    <span style={{ fontWeight: "bold" }}>
-                      1. Search and modify -{" "}
-                    </span>
-                    Modifing restaruant is as easy as adding, you just need to
-                    enter ID of the item, click search and then edit the info
-                    that you get
-                  </p>
-                  <p>
-                    <span style={{ fontWeight: "bold" }}>
-                      2. Editable columns -{" "}
-                    </span>
-                    Try to click on the column, if it turns into input field it
-                    means that you can edit it like a normal spreadsheet column,
-                    it will be saved when you click outside the cell. If nothing
-                    happens it is not implemented yet and it will be in near
-                    future.
-                  </p>
-                  <p>
-                    <span style={{ fontWeight: "bold" }}>3. Cusine - </span>
-                    Cusine MUST be separated by space, database interpets commas
-                    as a separator sign and will try to divide it into multiple
-                    columns, also comma separation is not suitable for searching
-                    and csv exports which can be vital for the app.
-                    <br /> <span style={{ fontWeight: "bold" }}>
-                      Good:
-                    </span>{" "}
-                    American Turkish Asian
-                    <br /> <span style={{ fontWeight: "bold" }}>
-                      {" "}
-                      Bad:{" "}
-                    </span>{" "}
-                    America,Turkish,Asian
-                  </p>
-                  <p style={{ fontWeight: "bold", color: "red" }}>
-                    Please also note that,for now, data is not veified and
-                    everything can pass, check the input before you click add,
-                    but if you do make a mistake you can always edit it in edit
-                    tab.
-                  </p>
-                </Stack>
-                <Stack>
+              <TabPanel leftIcon="fas fa-trash-alt" header="Remove">
+                <Card title="Remove Restaurant">
+                  <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
+                    <p>
+                      <span style={{ fontWeight: "bold" }}>
+                        1. Search and remove -{" "}
+                      </span>
+                      Removing restaruant is as easy as adding, you just need to
+                      enter ID of the item, click search and then click on
+                      remove the remove the item.
+                    </p>
+
+                    <p style={{ fontWeight: "bold", color: "red" }}>
+                      Please also note that restaurants won't be deleted, they
+                      will be remvoed from the list, so if you remove something
+                      by accident it can be reverted, but please try to avoid
+                      deleting something if possible because it will waste
+                      memory
+                    </p>
+                  </Stack>
                   <InputText
-                    value={modifyRestaurantId}
-                    onChange={(e) => setModifyRestaurantId(e.target.value)}
+                    value={removeItemId}
+                    onChange={(e) => setRemoveItemId(e.target.value)}
                   />
                   <Button
                     label="Search"
                     onClick={() => {
-                      fetchRestaurant(modifyRestaurantId, "modify", true);
+                      fetchRestaurant(removeItemId, "remove", true);
                     }}
                   />
-                </Stack>
-                <br />
-                <br />
-                {modifiedData.name !== "" && (
-                  <Stack spacing="loose">
-                    <Stack alignment="center">
-                      <span className="p-float-label">
-                        <InputText
-                          id="restaurantName"
-                          label="Restaurant Name"
-                          value={modifiedData.name}
-                          onChange={(e) =>
-                            handleModifyChange(e.target.value, "name")
-                          }
-                        />
-
-                        <label html For="float-input">
-                          Restaurant Name
-                        </label>
-                      </span>
-
-                      <Dropdown
-                        id="resortDropdown"
-                        className="EditProfile-resortDropdown"
-                        placeholder="Resort"
-                        label="resort"
-                        value={restaurantData.resortId}
-                        options={restaurantResorts}
-                        onChange={(e) => handleChange(e.target.value, "resort")}
-                        className="EditProfile-FullWidthDropdown"
-                      />
-                      <Dropdown
-                        id="themeParkDropdown"
-                        className="EditProfile-resortDropdown"
-                        placeholder="Theme Park"
-                        label="themePark"
-                        value={restaurantData.themeParkId}
-                        options={restaurantThemePark}
-                        onChange={(e) =>
-                          handleChange(e.target.value, "themePark")
-                        }
-                        className="EditProfile-FullWidthDropdown"
-                      />
-
-                      <span className="p-float-label">
-                        <InputText
-                          id="land"
-                          label="Land"
-                          value={modifiedData.land}
-                          onChange={(e) =>
-                            handleModifyChange(e.target.value, "land")
-                          }
-                        />
-
-                        <label html For="float-input">
-                          Land{" "}
-                          <span
-                            style={{
-                              color: "blue",
-                              fontWeight: "bold",
-                              fontSize: "10px",
-                            }}
-                          >
-                            - optional{" "}
-                          </span>
-                        </label>
-                      </span>
-
-                      <span className="p-float-label">
-                        <InputText
-                          id="pavilion"
-                          label="Pavilion"
-                          value={modifiedData.pavilion}
-                          onChange={(e) =>
-                            handleModifyChange(e.target.value, "pavilion")
-                          }
-                        />
-
-                        <label html For="float-input">
-                          Pavilion{" "}
-                          <span
-                            style={{
-                              color: "blue",
-                              fontWeight: "bold",
-                              fontSize: "10px",
-                            }}
-                          >
-                            {" "}
-                            - optional{" "}
-                          </span>
-                        </label>
-                      </span>
-
-                      <span className="p-float-label">
-                        <InputText
-                          id="resortHotel"
-                          label="Resort Hotel"
-                          value={modifiedData.resortHotel}
-                          onChange={(e) =>
-                            handleModifyChange(e.target.value, "resortHotel")
-                          }
-                        />
-
-                        <label html For="float-input">
-                          Resort Hotel{" "}
-                          <span
-                            style={{
-                              color: "blue",
-                              fontWeight: "bold",
-                              fontSize: "10px",
-                            }}
-                          >
-                            {" "}
-                            - optional{" "}
-                          </span>
-                        </label>
-                      </span>
-                    </Stack>
-
-                    <Stack alignment="center">
-                      <Dropdown
-                        id="typeDropdown"
-                        className="EditProfile-resortDropdown"
-                        placeholder="Type"
-                        label="types"
-                        value={modifiedData.type}
-                        options={restaurantTypes}
-                        onChange={(e) =>
-                          handleModifyChange(e.target.value, "type")
-                        }
-                        className="EditProfile-FullWidthDropdown"
-                      />
-                      <Dropdown
-                        id="experience"
-                        className="EditProfile-resortDropdown"
-                        placeholder="Experience"
-                        label="experience"
-                        value={modifiedData.experience}
-                        options={restaurantExperience}
-                        onChange={(e) =>
-                          handleModifyChange(e.target.value, "experience")
-                        }
-                        className="EditProfile-FullWidthDropdown"
-                      />
-                      <Dropdown
-                        id="mealPeriod"
-                        className="EditProfile-resortDropdown"
-                        placeholder="Meal Period"
-                        label="mealPeriod"
-                        value={modifiedData.mealPeriod}
-                        options={restaurantMealPeriod}
-                        onChange={(e) =>
-                          handleModifyChange(e.target.value, "mealPeriod")
-                        }
-                        className="EditProfile-FullWidthDropdown"
-                      />
-                      <Dropdown
-                        id="availability"
-                        className="EditProfile-resortDropdown"
-                        placeholder="Availability"
-                        label="availability"
-                        value={modifiedData.availability}
-                        options={restaurantAvailability}
-                        onChange={(e) =>
-                          handleModifyChange(e.target.value, "availability")
-                        }
-                        className="EditProfile-FullWidthDropdown"
-                      />
-
-                      <span className="p-float-label">
-                        <InputText
-                          id="cusine"
-                          label="Cusine"
-                          ch
-                          value={modifiedData.cusine}
-                          onChange={(e) =>
-                            handleModifyChange(e.target.value, "cusine")
-                          }
-                        />
-
-                        <label html For="float-input">
-                          Cusine{" "}
-                          <span
-                            style={{
-                              color: "blue",
-                              fontWeight: "bold",
-                              fontSize: "10px",
-                            }}
-                          >
-                            {" "}
-                            - max 160 charachters{" "}
-                          </span>
-                        </label>
-                      </span>
-
-                      <div>
-                        <Checkbox
-                          inputId="goldenSpoon"
-                          onChange={() =>
-                            handleModifyChange(
-                              !modifiedData.isGoldenSpoonPoint,
-                              "isGoldenSpoonPoint"
-                            )
-                          }
-                          checked={modifiedData.isGoldenSpoonPoint}
-                        />
-                        <label
-                          htmlFor="goldenSpoon"
-                          className="p-checkbox-label"
-                          style={{
-                            fontWeight: "bold",
-                            userSelect: "none",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Golden Spoon
-                        </label>
-                      </div>
-
-                      <div>
-                        <Checkbox
-                          inputId="isBonusPoint"
-                          onChange={() =>
-                            handleModifyChange(
-                              !modifiedData.isBonusPoint,
-                              "isBonusPoint"
-                            )
-                          }
-                          checked={modifiedData.isBonusPoint}
-                        />
-                        <label
-                          htmlFor="isBonusPoint"
-                          className="p-checkbox-label"
-                          style={{
-                            fontWeight: "bold",
-                            userSelect: "none",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Bonus Point
-                        </label>
-                      </div>
-
-                      <div>
-                        <Checkbox
-                          inputId="hasMobileOrder"
-                          onChange={() =>
-                            handleModifyChange(
-                              !modifiedData.hasMobileOrder,
-                              "hasMobileOrder"
-                            )
-                          }
-                          checked={modifiedData.hasMobileOrder}
-                        />
-                        <label
-                          htmlFor="hasMobileOrder"
-                          className="p-checkbox-label"
-                          style={{
-                            fontWeight: "bold",
-                            userSelect: "none",
-                            cursor: "pointer",
-                          }}
-                        >
-                          Mobile Order
-                        </label>
-                      </div>
-                    </Stack>
-
-                    <Button
-                      label="Save Changes"
-                      style={{ width: "100%" }}
-                      onClick={() => {
-                        modifyRestaurant(modifiedData);
-                      }}
-                    />
-
-                    <p style={{ fontWeight: "bold" }}>{modifiedMessage}</p>
-                  </Stack>
-                )}
-              </TabPanel>
-              <TabPanel leftIcon="fas fa-trash-alt" header="Remove">
-                <Stack vertical spacing="none" style={{ fontSize: "16px" }}>
-                  <p>
-                    <span style={{ fontWeight: "bold" }}>
-                      1. Search and remove -{" "}
-                    </span>
-                    Removing restaruant is as easy as adding, you just need to
-                    enter ID of the item, click search and then click on remove
-                    the remove the item.
-                  </p>
-
-                  <p style={{ fontWeight: "bold", color: "red" }}>
-                    Please also note that restaurants won't be deleted, they
-                    will be remvoed from the list, so if you remove something by
-                    accident it can be reverted, but please try to avoid
-                    deleting something if possible because it will waste memory
-                  </p>
-                </Stack>
-                <InputText
-                  value={removeItemId}
-                  onChange={(e) => setRemoveItemId(e.target.value)}
-                />
-                <Button
-                  label="Search"
-                  onClick={() => {
-                    fetchRestaurant(removeItemId, "remove", true);
-                  }}
-                />
-                {removeData.name !== "" ? (
-                  <Stack vertical spacing="tight">
-                    <Stack vertical spacing="extraTight">
-                      <span>
-                        <span style={{ fontWeight: "bold" }}> Name: </span>
-                        {removeData.name}
-                      </span>
-                      <span>
-                        <span style={{ fontWeight: "bold" }}>
-                          Created Date:{" "}
+                  {removeData.name !== "" ? (
+                    <Stack vertical spacing="tight">
+                      <Stack vertical spacing="extraTight">
+                        <span>
+                          <span style={{ fontWeight: "bold" }}> Name: </span>
+                          {removeData.name}
                         </span>
-                        {removeData.createdAt}
-                      </span>
+                        <span>
+                          <span style={{ fontWeight: "bold" }}>
+                            Created Date:{" "}
+                          </span>
+                          {removeData.createdAt}
+                        </span>
+                      </Stack>
+                      <Stack vertical spacing="extraTight">
+                        <p style={{ color: "red" }}>
+                          Are you sure that you want to delete this item ?{" "}
+                        </p>
+                        <Button
+                          label="Remove"
+                          onClick={() => {
+                            removeRestaurant(removeItemId);
+                          }}
+                        />
+                      </Stack>
                     </Stack>
-                    <Stack vertical spacing="extraTight">
-                      <p style={{ color: "red" }}>
-                        Are you sure that you want to delete this item ?{" "}
-                      </p>
-                      <Button
-                        label="Remove"
-                        onClick={() => {
-                          removeRestaurant(removeItemId);
-                        }}
-                      />
-                    </Stack>
-                  </Stack>
-                ) : (
-                  <p>No item found or the field is blank </p>
-                )}
+                  ) : (
+                    <p>No item found or the field is blank </p>
+                  )}
+                </Card>
               </TabPanel>
             </TabView>
           </ScrollPanel>
