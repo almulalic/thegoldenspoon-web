@@ -168,19 +168,23 @@ export const RestaurantManager = () => {
       .then((res) => {
         if (populate) {
           if (purpose == "modify") {
-            res.data.resortId = restaurantResorts[res.data.resortId];
-            res.data.themeParkId = restaurantThemePark[res.data.themeParkId];
-            res.data.type = restaurantTypes[res.data.type];
-            res.data.experience = restaurantExperience[res.data.experience];
-            res.data.mealPeriod = restaurantMealPeriod[res.data.mealPeriod];
-            res.data.availability =
-              restaurantAvailability[res.data.availability];
-            if (res.data != 1) setModifiedData(res.data);
-
-            setModifiedDataVisible(true);
+            if (res.data != 1) {
+              res.data.resortId = restaurantResorts[res.data.resortId];
+              res.data.themeParkId = restaurantThemePark[res.data.themeParkId];
+              res.data.type = restaurantTypes[res.data.type];
+              res.data.experience = restaurantExperience[res.data.experience];
+              res.data.mealPeriod = restaurantMealPeriod[res.data.mealPeriod];
+              res.data.availability =
+                restaurantAvailability[res.data.availability];
+              setModifiedData(res.data);
+              setModifiedDataVisible(true);
+            } else toast.error("Id not found or already deleted");
           } else {
             if (res.data != 1) setRemoveData(res.data);
-            else setRemoveData({ name: "" });
+            else {
+              toast.error("Id not found or already deleted");
+              setRemoveData({ name: "" });
+            }
           }
         }
       })
@@ -196,10 +200,10 @@ export const RestaurantManager = () => {
     land: "",
     pavilion: "",
     resortHotel: "",
-    type: 0,
-    experience: 0,
-    mealPeriod: 0,
-    availability: 0,
+    type: "",
+    experience: "",
+    mealPeriod: "",
+    availability: "",
     cusine: "",
     isGoldenSpoonPoint: false,
     isBonusPoint: false,
@@ -231,8 +235,44 @@ export const RestaurantManager = () => {
     restaurants
       .addNewRestaurant(body)
       .then((response) => {
-        if (response.data == 1) toast.error("Id not found or already deleted");
-        else toast.success("Restaurant successfully added");
+        if (response.data == 1) {
+          addRestaurantData.resortId = restaurantResorts.indexOf(body.resortId);
+          addRestaurantData.themeParkId = restaurantThemePark.indexOf(
+            body.themeParkId
+          );
+          addRestaurantData.type = restaurantTypes.indexOf(body.type);
+          addRestaurantData.experience = restaurantExperience.indexOf(
+            body.experience
+          );
+          addRestaurantData.mealPeriod = restaurantMealPeriod.indexOf(
+            body.mealPeriod
+          );
+          addRestaurantData.availability = restaurantAvailability.indexOf(
+            body.availability
+          );
+
+          toast.error("Id not found or already deleted");
+        } else {
+          setRestaurantsData({
+            name: "",
+            resortId: "",
+            themeParkId: "",
+            land: "",
+            pavilion: "",
+            resortHotel: "",
+            type: "",
+            experience: "",
+            mealPeriod: "",
+            availability: "",
+            cusine: "",
+            isGoldenSpoonPoint: false,
+            isBonusPoint: false,
+            hasMobileOrder: false,
+            createdAt: new Date(),
+          });
+          toast.success("Restaurant successfully added");
+          setRestaurantsData();
+        }
         fetchRestaurantsData();
       })
       .catch((err) => {
